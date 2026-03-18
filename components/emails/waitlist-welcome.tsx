@@ -40,7 +40,7 @@ export default function WaitlistWelcomeEmail({ name, position, email }: Waitlist
             </Section>
 
             <Section style={features}>
-              <Text style={featuresTitle}>What's waiting for you</Text>
+              <Text style={featuresTitle}>What&apos;s waiting for you</Text>
               <Text style={featureItem}><strong>💰 Budget Firewall</strong><br />Hard caps. Soft alerts. No surprise invoices.</Text>
               <Text style={featureItem}><strong>⚡ Context Optimizer</strong><br />-40% tokens. Same output quality.</Text>
               <Text style={featureItem}><strong>🎯 Model Router</strong><br />GateCtr picks the right LLM. You pay less.</Text>

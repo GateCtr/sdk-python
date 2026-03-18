@@ -8,6 +8,20 @@ import { expect, afterEach, vi } from 'vitest';
 import { cleanup } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 
+// Mock next-intl globally to avoid ESM resolution issues with next/navigation
+vi.mock('next-intl', () => ({
+  useTranslations: () => (key: string) => key,
+  useLocale: () => 'en',
+  getTranslations: async () => (key: string) => key,
+  getLocale: async () => 'en',
+}));
+
+vi.mock('next-intl/server', () => ({
+  getTranslations: async () => (key: string) => key,
+  getLocale: async () => 'en',
+  getMessages: async () => ({}),
+}));
+
 // Cleanup after each test
 afterEach(() => {
   cleanup();

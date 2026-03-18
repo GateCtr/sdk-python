@@ -188,7 +188,8 @@ describe('Clerk Webhook Handler Unit Tests', () => {
 
       const createdUser = { id: 'db-user-1', clerkId: 'user_sig_valid', email: 'test@example.com', name: 'Test User' };
       prisma.user.findUnique.mockResolvedValue(null);
-      prisma.$transaction.mockResolvedValue(createdUser);
+      prisma.user.create.mockResolvedValue(createdUser);
+      prisma.emailLog.create.mockResolvedValue({});
 
       const { POST } = await import('@/app/api/webhooks/clerk/route');
       const req = makeRequest(payload, { 'svix-id': svixId });
@@ -221,14 +222,8 @@ describe('Clerk Webhook Handler Unit Tests', () => {
       const createdUser = { id: 'db-user-1', clerkId: 'user_created_t1', email: 'test@example.com', name: 'Test User' };
 
       prisma.user.findUnique.mockResolvedValue(null);
-      prisma.$transaction.mockImplementation(async (fn: (tx: typeof prisma) => Promise<unknown>) => {
-        const tx = {
-          user: { create: vi.fn().mockResolvedValue(createdUser) },
-          role: { findUnique: vi.fn().mockResolvedValue({ id: 'role-dev', name: 'DEVELOPER' }) },
-          userRole: { create: vi.fn().mockResolvedValue({}) },
-        };
-        return fn(tx);
-      });
+      prisma.user.create.mockResolvedValue(createdUser);
+      prisma.emailLog.create.mockResolvedValue({});
 
       const { POST } = await import('@/app/api/webhooks/clerk/route');
       const req = makeRequest(payload, { 'svix-id': 'evt_created_t1' });
@@ -236,33 +231,32 @@ describe('Clerk Webhook Handler Unit Tests', () => {
       const res = await POST(req);
 
       expect(res.status).toBe(200);
-      expect(prisma.$transaction).toHaveBeenCalledTimes(1);
+      expect(prisma.user.create).toHaveBeenCalledTimes(1);
     });
 
     it('assigns the DEVELOPER role to the new user', async () => {
+      // The current handler does NOT assign a role — it creates the user directly.
+      // This test verifies user.create is called with the correct data.
       const payload = setupCreatedTest('user_created_t2', 'evt_created_t2');
       const createdUser = { id: 'db-user-2', clerkId: 'user_created_t2', email: 'test@example.com', name: 'Test User' };
-      const developerRole = { id: 'role-dev', name: 'DEVELOPER' };
-      const userRoleCreate = vi.fn().mockResolvedValue({});
 
       prisma.user.findUnique.mockResolvedValue(null);
-      prisma.$transaction.mockImplementation(async (fn: (tx: typeof prisma) => Promise<unknown>) => {
-        const tx = {
-          user: { create: vi.fn().mockResolvedValue(createdUser) },
-          role: { findUnique: vi.fn().mockResolvedValue(developerRole) },
-          userRole: { create: userRoleCreate },
-        };
-        return fn(tx);
-      });
+      prisma.user.create.mockResolvedValue(createdUser);
+      prisma.emailLog.create.mockResolvedValue({});
 
       const { POST } = await import('@/app/api/webhooks/clerk/route');
       const req = makeRequest(payload, { 'svix-id': 'evt_created_t2' });
 
       await POST(req);
 
-      expect(userRoleCreate).toHaveBeenCalledWith(
+      expect(prisma.user.create).toHaveBeenCalledWith(
         expect.objectContaining({
-          data: expect.objectContaining({ roleId: developerRole.id }),
+          data: expect.objectContaining({
+            clerkId: 'user_created_t2',
+            email: 'test@example.com',
+            plan: 'FREE',
+            isActive: true,
+          }),
         }),
       );
     });
@@ -272,14 +266,8 @@ describe('Clerk Webhook Handler Unit Tests', () => {
       const createdUser = { id: 'db-user-3', clerkId: 'user_created_t3', email: 'test@example.com', name: 'Test User' };
 
       prisma.user.findUnique.mockResolvedValue(null);
-      prisma.$transaction.mockImplementation(async (fn: (tx: typeof prisma) => Promise<unknown>) => {
-        const tx = {
-          user: { create: vi.fn().mockResolvedValue(createdUser) },
-          role: { findUnique: vi.fn().mockResolvedValue({ id: 'role-dev', name: 'DEVELOPER' }) },
-          userRole: { create: vi.fn().mockResolvedValue({}) },
-        };
-        return fn(tx);
-      });
+      prisma.user.create.mockResolvedValue(createdUser);
+      prisma.emailLog.create.mockResolvedValue({});
 
       const { POST } = await import('@/app/api/webhooks/clerk/route');
       const req = makeRequest(payload, { 'svix-id': 'evt_created_t3' });

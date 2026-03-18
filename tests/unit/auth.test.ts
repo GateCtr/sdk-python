@@ -52,7 +52,7 @@ describe('Auth Utilities Unit Tests', () => {
     
     // Get mocked modules
     const clerkModule = await import('@clerk/nextjs/server');
-    mockAuth = clerkModule.auth as ReturnType<typeof vi.fn>;
+    mockAuth = clerkModule.auth as unknown as ReturnType<typeof vi.fn>;
     
     const { prisma } = await import('@/lib/prisma');
     mockPrismaUser = prisma.user as unknown as { findUnique: ReturnType<typeof vi.fn> };
