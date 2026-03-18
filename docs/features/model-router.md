@@ -17,7 +17,7 @@ Simple requests go to cheaper models. Complex ones go to the best model for the 
 
 ```typescript
 const response = await client.complete({
-  model: 'auto', // triggers the Model Router
+  model: "auto", // triggers the Model Router
   messages,
 });
 
@@ -35,11 +35,11 @@ const client = new GateCtr({
 
 ## Routing logic
 
-| Request type | Typical selection |
-|---|---|
-| Simple Q&A, short tasks | `gpt-3.5-turbo`, `mistral-small` |
-| Summarization, classification | `gpt-4o-mini`, `claude-3-haiku` |
-| Complex reasoning, code | `gpt-4o`, `claude-3-5-sonnet` |
+| Request type                  | Typical selection                |
+| ----------------------------- | -------------------------------- |
+| Simple Q&A, short tasks       | `gpt-3.5-turbo`, `mistral-small` |
+| Summarization, classification | `gpt-4o-mini`, `claude-3-haiku`  |
+| Complex reasoning, code       | `gpt-4o`, `claude-3-5-sonnet`    |
 
 ## Configure provider preferences
 

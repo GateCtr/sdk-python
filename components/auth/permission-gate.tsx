@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 /**
  * PermissionGate
@@ -9,8 +9,8 @@
  * Requirements: 5.1, 5.2
  */
 
-import type { Permission } from '@/lib/permissions';
-import { useHasPermission, usePermissions } from '@/hooks/use-permissions';
+import type { Permission } from "@/lib/permissions";
+import { useHasPermission, usePermissions } from "@/hooks/use-permissions";
 
 interface PermissionGateProps {
   permission: Permission;
@@ -19,7 +19,11 @@ interface PermissionGateProps {
   children: React.ReactNode;
 }
 
-export function PermissionGate({ permission, fallback = null, children }: PermissionGateProps) {
+export function PermissionGate({
+  permission,
+  fallback = null,
+  children,
+}: PermissionGateProps) {
   const { isLoading } = usePermissions();
   const hasPermission = useHasPermission(permission);
 

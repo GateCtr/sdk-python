@@ -66,7 +66,8 @@ export default function TestComponentsPage() {
               <AlertCircle className="h-4 w-4" />
               <AlertTitle>Information</AlertTitle>
               <AlertDescription>
-                Votre session expirera dans 5 minutes. Veuillez sauvegarder votre travail.
+                Votre session expirera dans 5 minutes. Veuillez sauvegarder
+                votre travail.
               </AlertDescription>
             </Alert>
 
@@ -74,7 +75,8 @@ export default function TestComponentsPage() {
               <AlertCircle className="h-4 w-4" />
               <AlertTitle>Erreur</AlertTitle>
               <AlertDescription>
-                Impossible de se connecter au serveur. Veuillez réessayer plus tard.
+                Impossible de se connecter au serveur. Veuillez réessayer plus
+                tard.
               </AlertDescription>
             </Alert>
           </div>
@@ -150,16 +152,26 @@ export default function TestComponentsPage() {
               <CardContent>
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-muted-foreground">Tokens utilisés</span>
+                    <span className="text-sm text-muted-foreground">
+                      Tokens utilisés
+                    </span>
                     <span className="font-mono font-bold">1,234,567</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-muted-foreground">Budget restant</span>
-                    <span className="font-mono font-bold text-secondary">$450.00</span>
+                    <span className="text-sm text-muted-foreground">
+                      Budget restant
+                    </span>
+                    <span className="font-mono font-bold text-secondary">
+                      $450.00
+                    </span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-muted-foreground">Économies</span>
-                    <span className="font-mono font-bold text-green-600">-40%</span>
+                    <span className="text-sm text-muted-foreground">
+                      Économies
+                    </span>
+                    <span className="font-mono font-bold text-green-600">
+                      -40%
+                    </span>
                   </div>
                 </div>
               </CardContent>

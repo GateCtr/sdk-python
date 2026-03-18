@@ -6,12 +6,12 @@ inclusion: always
 
 ## Core Identity
 
-| Dimension | Value |
-|---|---|
-| Category | LLM Middleware / AI Cost Infrastructure |
-| Positioning | "The intelligent gateway for every LLM request" |
-| Primary USP | Budget control + token optimization + AI routing — one platform, zero code changes |
-| Counter-positioning | Not an LLM wrapper. Not a RAG framework. Not a chatbot builder. |
+| Dimension           | Value                                                                              |
+| ------------------- | ---------------------------------------------------------------------------------- |
+| Category            | LLM Middleware / AI Cost Infrastructure                                            |
+| Positioning         | "The intelligent gateway for every LLM request"                                    |
+| Primary USP         | Budget control + token optimization + AI routing — one platform, zero code changes |
+| Counter-positioning | Not an LLM wrapper. Not a RAG framework. Not a chatbot builder.                    |
 
 ## What GateCtr Is
 
@@ -22,6 +22,7 @@ inclusion: always
 ## What GateCtr Is NOT
 
 Never position GateCtr as:
+
 - A RAG / retrieval system
 - A prompt engineering tool
 - A chatbot or agent builder
@@ -32,11 +33,11 @@ If asked "is it like X?", the answer is: "GateCtr controls the traffic. X builds
 
 ## Competitive Landscape
 
-| Competitor | What they do | GateCtr difference |
-|---|---|---|
-| LangSmith | LLM observability & tracing | GateCtr adds budget enforcement + routing on top |
-| PortkeyAI | LLM gateway with fallbacks | GateCtr adds context optimization (-40% tokens) |
-| Helicone | Request logging & analytics | GateCtr acts, not just observes — it routes and blocks |
+| Competitor | What they do                | GateCtr difference                                     |
+| ---------- | --------------------------- | ------------------------------------------------------ |
+| LangSmith  | LLM observability & tracing | GateCtr adds budget enforcement + routing on top       |
+| PortkeyAI  | LLM gateway with fallbacks  | GateCtr adds context optimization (-40% tokens)        |
+| Helicone   | Request logging & analytics | GateCtr acts, not just observes — it routes and blocks |
 
 **Key differentiator:** Competitors observe. GateCtr controls.
 
@@ -62,9 +63,9 @@ They are technical. They are skeptical of marketing. Lead with numbers and facts
 
 ## Bilingual Positioning (FR)
 
-| EN | FR |
-|---|---|
-| "The intelligent gateway for every LLM request" | "La passerelle intelligente pour chaque requête LLM" |
-| "Competitors observe. GateCtr controls." | "Les autres observent. GateCtr contrôle." |
-| "One endpoint swap. No code changes." | "Un seul changement d'endpoint. Zéro modification de code." |
-| "Every request. Every token. Measured." | "Chaque requête. Chaque token. Mesuré." |
+| EN                                              | FR                                                          |
+| ----------------------------------------------- | ----------------------------------------------------------- |
+| "The intelligent gateway for every LLM request" | "La passerelle intelligente pour chaque requête LLM"        |
+| "Competitors observe. GateCtr controls."        | "Les autres observent. GateCtr contrôle."                   |
+| "One endpoint swap. No code changes."           | "Un seul changement d'endpoint. Zéro modification de code." |
+| "Every request. Every token. Measured."         | "Chaque requête. Chaque token. Mesuré."                     |

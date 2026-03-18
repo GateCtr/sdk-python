@@ -28,7 +28,7 @@ GateCtr résout le problème croissant des équipes qui intègrent des LLMs : au
 
 ### Proposition de valeur
 
-GateCtr agit comme un hub middleware universel entre vos applications et les fournisseurs LLM. 
+GateCtr agit comme un hub middleware universel entre vos applications et les fournisseurs LLM.
 
 - ⚡ Zéro changement de votre clé API
 - 🚀 Intégration en moins de 5 minutes
@@ -53,67 +53,83 @@ Chaque requête traverse GateCtr avant d'atteindre le fournisseur LLM. La répon
 
 ### Pipeline de traitement
 
-| Étape | Description | Module |
-|-------|-------------|--------|
-| 1. Envoi | L'app/agent envoie un prompt via SDK ou API | SDK / API Layer |
-| 2. Optimisation | Compression du contexte, nettoyage du prompt, réduction des tokens | Context Optimizer |
-| 3. Contrôle | Vérification des limites budget/tokens, validation sécurité | Budget Firewall |
-| 4. Routage | Sélection du modèle LLM optimal (coût + performance) | Model Router |
-| 5. Exécution | Envoi de la requête au provider LLM avec la clé API utilisateur | LLM Provider |
-| 6. Analytics | Logging de la réponse, calcul consommation, déclenchement webhooks | Analytics + Webhooks |
+| Étape           | Description                                                        | Module               |
+| --------------- | ------------------------------------------------------------------ | -------------------- |
+| 1. Envoi        | L'app/agent envoie un prompt via SDK ou API                        | SDK / API Layer      |
+| 2. Optimisation | Compression du contexte, nettoyage du prompt, réduction des tokens | Context Optimizer    |
+| 3. Contrôle     | Vérification des limites budget/tokens, validation sécurité        | Budget Firewall      |
+| 4. Routage      | Sélection du modèle LLM optimal (coût + performance)               | Model Router         |
+| 5. Exécution    | Envoi de la requête au provider LLM avec la clé API utilisateur    | LLM Provider         |
+| 6. Analytics    | Logging de la réponse, calcul consommation, déclenchement webhooks | Analytics + Webhooks |
 
 ### Modules principaux
 
 #### SDK / API Layer
+
 Interface principale d'entrée. Envoi des prompts, configuration des clés API, options de workflow.
+
 - Compatible Node.js, Python, REST
 - Intégration avec toutes apps SaaS ou agents IA
 - Setup en 5 minutes
 
 #### Context Optimizer
+
 Compression intelligente des prompts et gestion de l'historique conversationnel.
+
 - Réduction jusqu'à -40% des tokens
 - Prompt rewriting automatique
 - Context pruning intelligent
 - Suppression des redondances
 
 #### Cost & Budget Firewall
+
 Définition de limites de tokens et budget par utilisateur, workflow ou projet.
+
 - Hard caps (blocage automatique)
 - Soft alerts (notifications)
 - Limites par utilisateur/projet
 - Prévention des coûts excessifs
 
 #### Model Router & Fallback
+
 Sélection automatique du fournisseur LLM le plus adapté selon le coût et la performance.
+
 - Support multi-provider
 - Auto-fallback en cas d'erreur
 - Cost scoring intelligent
 - Fallback automatique si indisponibilité
 
 #### Token & Usage Analytics
+
 Dashboard temps réel de la consommation de tokens par user, projet ou endpoint.
+
 - Monitoring en temps réel
 - Alertes configurables
 - Reporting exportable
 - Historique complet pour audit
 
 #### Security Layer
+
 Chiffrement et sécurisation de toutes les communications.
+
 - Chiffrement AES des données en transit et au repos
 - TLS obligatoire sur toutes les connexions
 - Isolation multi-tenant stricte
 - Validation et sanitization de tous les inputs
 
 #### Webhooks Engine
+
 Notifications automatisées configurables sur événements critiques.
+
 - Dépassement de budget
 - Pics de consommation
 - Erreurs de requête ou seuils définis
 - Intégrations: Slack, Teams, Email, ERP, BI
 
 #### RBAC & Multi-User
+
 Gestion des rôles et permissions pour environnements entreprise.
+
 - Rôles: Admin, Manager, Developer, Viewer
 - Audit logs complets
 - Segmentation par équipe, département ou projet
@@ -327,30 +343,35 @@ gatectr/
 ## Fonctionnalités principales
 
 ### Contrôle des coûts
+
 - Budget Firewall avec limites par projet et utilisateur
 - Dashboard temps réel de consommation de tokens
 - Alertes automatiques sur dépassement de budget
 - Rapports détaillés d'utilisation
 
 ### Optimisation
+
 - Context Optimizer pour réduire jusqu'à 40% les tokens
 - Model Router pour sélection automatique du meilleur modèle LLM
 - Cache intelligent avec Redis pour éviter les appels redondants
 - Traitement asynchrone des requêtes avec BullMQ
 
 ### Sécurité
+
 - Chiffrement AES des clés API
 - Communication TLS sécurisée
 - Isolation multi-tenant
 - Authentification robuste avec Clerk
 
 ### Intégrations
+
 - Webhooks automatisés vers vos outils
 - Connecteurs natifs: Slack, Teams, ERP, BI
 - API REST compatible avec tous les providers LLM
 - Notifications par email avec Resend
 
 ### Monitoring
+
 - Suivi en temps réel avec Sentry
 - Métriques détaillées de performance
 - Logs d'audit complets
@@ -432,31 +453,33 @@ UPSTASH_REDIS_REST_TOKEN="your-token"
 
 ### Roles & Permissions
 
-| Role | Permissions |
-|------|-------------|
-| SUPER_ADMIN | All permissions |
-| ADMIN | users:read/write, analytics:read/export, billing:read/write, system:read, audit:read |
-| MANAGER | analytics:read, users:read, billing:read |
-| DEVELOPER | analytics:read |
-| VIEWER | analytics:read |
-| SUPPORT | users:read, audit:read |
+| Role        | Permissions                                                                          |
+| ----------- | ------------------------------------------------------------------------------------ |
+| SUPER_ADMIN | All permissions                                                                      |
+| ADMIN       | users:read/write, analytics:read/export, billing:read/write, system:read, audit:read |
+| MANAGER     | analytics:read, users:read, billing:read                                             |
+| DEVELOPER   | analytics:read                                                                       |
+| VIEWER      | analytics:read                                                                       |
+| SUPPORT     | users:read, audit:read                                                               |
 
 New users are assigned the **DEVELOPER** role by default.
 
 ### Checking Permissions
 
 **Server components / API routes:**
+
 ```typescript
-import { requirePermission, requireAdmin } from '@/lib/auth';
+import { requirePermission, requireAdmin } from "@/lib/auth";
 
 // Throws if user lacks permission
-await requirePermission('users:read');
+await requirePermission("users:read");
 
 // Throws if user is not SUPER_ADMIN or ADMIN
 await requireAdmin();
 ```
 
 **Client components:**
+
 ```typescript
 import { PermissionGate } from '@/components/auth/permission-gate';
 import { RoleGate } from '@/components/auth/role-gate';
@@ -471,11 +494,12 @@ import { RoleGate } from '@/components/auth/role-gate';
 ```
 
 **Hooks:**
-```typescript
-import { useHasPermission, useHasAnyPermission } from '@/hooks/use-permissions';
-import { useIsAdmin } from '@/hooks/use-roles';
 
-const canReadUsers = useHasPermission('users:read');
+```typescript
+import { useHasPermission, useHasAnyPermission } from "@/hooks/use-permissions";
+import { useIsAdmin } from "@/hooks/use-roles";
+
+const canReadUsers = useHasPermission("users:read");
 const isAdmin = useIsAdmin();
 ```
 
@@ -487,6 +511,7 @@ const isAdmin = useIsAdmin();
 4. Copy the **Signing Secret** → set as `CLERK_WEBHOOK_SECRET`
 
 For local development, use the [Clerk CLI](https://clerk.com/docs/testing/webhooks):
+
 ```bash
 clerk webhooks proxy http://localhost:3000/api/webhooks/clerk
 ```
@@ -494,11 +519,13 @@ clerk webhooks proxy http://localhost:3000/api/webhooks/clerk
 ### Database Seeding
 
 After running migrations, seed roles and permissions:
+
 ```bash
 pnpm prisma db seed
 ```
 
 To verify:
+
 ```bash
 pnpm prisma studio
 # Check the Role, Permission, and RolePermission tables

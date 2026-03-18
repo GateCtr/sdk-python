@@ -3,6 +3,7 @@
 ## Ce qui a été implémenté
 
 ### 1. Handler de webhook complet
+
 - ✅ Vérification de signature Svix
 - ✅ Gestion de `user.created` (création + rôle DEVELOPER + email)
 - ✅ Gestion de `user.updated` (mise à jour des infos)
@@ -12,6 +13,7 @@
 - ✅ Gestion d'erreurs robuste
 
 ### 2. Email de bienvenue
+
 - ✅ Template React Email bilingue (EN/FR)
 - ✅ Envoi asynchrone via Resend
 - ✅ Logging dans la table `email_logs`
@@ -19,6 +21,7 @@
 - ✅ Lien de désabonnement inclus
 
 ### 3. Documentation
+
 - ✅ Guide de configuration Clerk (docs/SETUP_CLERK.md)
 - ✅ Guide de test des webhooks (docs/WEBHOOK_TESTING.md)
 - ✅ Script de vérification automatique
@@ -32,6 +35,7 @@ pnpm test:webhook
 ```
 
 Ce script vérifie :
+
 - Variables d'environnement
 - Connexion à la base de données
 - Présence des rôles et permissions
@@ -47,16 +51,19 @@ clerk login
 ### Étape 3 : Testez le webhook
 
 **Terminal 1** :
+
 ```bash
 pnpm dev
 ```
 
 **Terminal 2** :
+
 ```bash
 clerk listen --forward-to http://localhost:3000/api/webhooks/clerk
 ```
 
 **Navigateur** :
+
 1. Allez sur http://localhost:3000/sign-up
 2. Créez un compte
 3. Observez les logs dans Terminal 2
@@ -68,6 +75,7 @@ pnpm prisma studio
 ```
 
 Vérifiez :
+
 - Table `users` : Nouvel utilisateur
 - Table `user_roles` : Rôle DEVELOPER assigné
 - Table `audit_logs` : Entrée "user.created"
@@ -76,6 +84,7 @@ Vérifiez :
 ## Fichiers créés/modifiés
 
 ### Nouveaux fichiers
+
 ```
 app/api/webhooks/clerk/route.ts          # Handler principal
 components/emails/user-welcome.tsx       # Template email
@@ -85,6 +94,7 @@ WEBHOOK_SETUP_COMPLETE.md                # Ce fichier
 ```
 
 ### Fichiers modifiés
+
 ```
 lib/resend.ts                            # Ajout sendUserWelcomeEmail()
 docs/SETUP_CLERK.md                      # Section webhooks étendue
@@ -92,6 +102,7 @@ package.json                             # Ajout script test:webhook
 ```
 
 ### Dépendances ajoutées
+
 ```
 svix@1.88.0                              # Vérification de signature
 ```
@@ -127,6 +138,7 @@ RESEND_API_KEY="re_..."
 ## Dépannage
 
 ### ❌ "Invalid signature"
+
 ```bash
 # Vérifiez le secret
 cat .env.local | grep CLERK_WEBHOOK_SECRET
@@ -135,11 +147,13 @@ cat .env.local | grep CLERK_WEBHOOK_SECRET
 ```
 
 ### ❌ "DEVELOPER role not found"
+
 ```bash
 pnpm prisma db seed
 ```
 
 ### ❌ L'utilisateur n'est pas créé
+
 ```bash
 # Vérifiez les migrations
 pnpm prisma migrate dev
@@ -152,9 +166,9 @@ pnpm prisma migrate dev
 Maintenant que les webhooks fonctionnent :
 
 1. ✅ Task 7 terminée
-2. ⏭️  Task 8 : Checkpoint - Vérifier l'intégration webhook
-3. ⏭️  Task 9 : API route pour vérification des permissions
-4. ⏭️  Task 10 : Template email React
+2. ⏭️ Task 8 : Checkpoint - Vérifier l'intégration webhook
+3. ⏭️ Task 9 : API route pour vérification des permissions
+4. ⏭️ Task 10 : Template email React
 
 ## Ressources
 

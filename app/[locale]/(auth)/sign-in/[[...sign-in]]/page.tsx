@@ -1,6 +1,6 @@
-import type { Metadata } from 'next';
-import { SignIn } from '@clerk/nextjs';
-import { getTranslations } from 'next-intl/server';
+import type { Metadata } from "next";
+import { SignIn } from "@clerk/nextjs";
+import { getTranslations } from "next-intl/server";
 
 export async function generateMetadata({
   params,
@@ -8,10 +8,13 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'auth.metadata.signIn' });
+  const t = await getTranslations({
+    locale,
+    namespace: "auth.metadata.signIn",
+  });
   return {
-    title: t('title'),
-    description: t('description'),
+    title: t("title"),
+    description: t("description"),
   };
 }
 
@@ -21,10 +24,5 @@ export async function generateMetadata({
  * Requirements: 1.1, 1.4, 1.8
  */
 export default function SignInPage() {
-  return (
-    <SignIn
-      fallbackRedirectUrl="/dashboard"
-      signUpUrl="/sign-up"
-    />
-  );
+  return <SignIn fallbackRedirectUrl="/dashboard" signUpUrl="/sign-up" />;
 }

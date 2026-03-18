@@ -1,12 +1,12 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { z } from 'zod';
-import { nanoid } from 'nanoid';
-import { prisma } from '@/lib/prisma';
-import { sendInviteEmail } from '@/lib/resend';
-import { isAdmin } from '@/lib/auth';
+import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
+import { nanoid } from "nanoid";
+import { prisma } from "@/lib/prisma";
+import { sendInviteEmail } from "@/lib/resend";
+import { isAdmin } from "@/lib/auth";
 
 const inviteSchema = z.object({
-  entryIds: z.array(z.string()).min(1, 'At least one entry must be selected'),
+  entryIds: z.array(z.string()).min(1, "At least one entry must be selected"),
   expiryDays: z.number().min(1).max(30).default(7),
 });
 
@@ -14,11 +14,11 @@ export async function POST(request: NextRequest) {
   try {
     // Check admin authentication
     const admin = await isAdmin();
-    
+
     if (!admin) {
       return NextResponse.json(
-        { error: 'Unauthorized: Admin access required' },
-        { status: 403 }
+        { error: "Unauthorized: Admin access required" },
+        { status: 403 },
       );
     }
 
@@ -38,11 +38,11 @@ export async function POST(request: NextRequest) {
         });
 
         if (!entry) {
-          results.failed.push({ id: entryId, error: 'Entry not found' });
+          results.failed.push({ id: entryId, error: "Entry not found" });
           continue;
         }
 
-        if (entry.status !== 'WAITING') {
+        if (entry.status !== "WAITING") {
           results.failed.push({
             id: entryId,
             error: `Already ${entry.status.toLowerCase()}`,
@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
         await prisma.waitlistEntry.update({
           where: { id: entryId },
           data: {
-            status: 'INVITED',
+            status: "INVITED",
             inviteCode,
             invitedAt: new Date(),
             inviteExpiresAt: expiresAt,
@@ -68,7 +68,8 @@ export async function POST(request: NextRequest) {
 
         // Send invite email (async, don't wait)
         sendInviteEmail(entry.email, entry.name, inviteCode, expiresAt).catch(
-          (err) => console.error(`Failed to send invite to ${entry.email}:`, err)
+          (err) =>
+            console.error(`Failed to send invite to ${entry.email}:`, err),
         );
 
         results.success.push(entryId);
@@ -76,7 +77,7 @@ export async function POST(request: NextRequest) {
         console.error(`Failed to invite entry ${entryId}:`, error);
         results.failed.push({
           id: entryId,
-          error: error instanceof Error ? error.message : 'Unknown error',
+          error: error instanceof Error ? error.message : "Unknown error",
         });
       }
     }
@@ -90,15 +91,15 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: 'Invalid data', details: error.issues },
-        { status: 400 }
+        { error: "Invalid data", details: error.issues },
+        { status: 400 },
       );
     }
 
-    console.error('Invite error:', error);
+    console.error("Invite error:", error);
     return NextResponse.json(
-      { error: 'Failed to send invites' },
-      { status: 500 }
+      { error: "Failed to send invites" },
+      { status: 500 },
     );
   }
 }

@@ -1,4 +1,4 @@
-import { Redis } from '@upstash/redis';
+import { Redis } from "@upstash/redis";
 
 // Redis client singleton for permission caching
 export const redis = new Redis({
@@ -8,7 +8,7 @@ export const redis = new Redis({
 
 // Cache configuration constants
 export const CACHE_TTL = 300; // 5 minutes in seconds
-export const PERMISSION_CACHE_PREFIX = 'permissions:';
+export const PERMISSION_CACHE_PREFIX = "permissions:";
 
 // Permission type (matches lib/permissions.ts)
 // Using string to avoid circular dependency, but will be cast to Permission type in lib/permissions.ts
@@ -27,7 +27,7 @@ const requestCache = new Map<string, Permission[]>();
  * @returns Array of permissions or null if cache miss
  */
 export async function getCachedPermissions(
-  userId: string
+  userId: string,
 ): Promise<Permission[] | null> {
   // 1. Request-level cache hit (fastest path)
   if (requestCache.has(userId)) {
@@ -42,7 +42,7 @@ export async function getCachedPermissions(
     }
     return cached;
   } catch (error) {
-    console.error('Redis getCachedPermissions error:', error);
+    console.error("Redis getCachedPermissions error:", error);
     return null; // Fallback to null on error (will trigger database query)
   }
 }
@@ -54,7 +54,7 @@ export async function getCachedPermissions(
  */
 export async function setCachedPermissions(
   userId: string,
-  permissions: Permission[]
+  permissions: Permission[],
 ): Promise<void> {
   // Populate request-level cache immediately
   requestCache.set(userId, permissions);
@@ -63,7 +63,7 @@ export async function setCachedPermissions(
     const cacheKey = `${PERMISSION_CACHE_PREFIX}${userId}`;
     await redis.setex(cacheKey, CACHE_TTL, JSON.stringify(permissions));
   } catch (error) {
-    console.error('Redis setCachedPermissions error:', error);
+    console.error("Redis setCachedPermissions error:", error);
     // Don't throw - caching failure shouldn't break the application
   }
 }
@@ -81,7 +81,7 @@ export async function invalidateCache(userId: string): Promise<void> {
     const cacheKey = `${PERMISSION_CACHE_PREFIX}${userId}`;
     await redis.del(cacheKey);
   } catch (error) {
-    console.error('Redis invalidateCache error:', error);
+    console.error("Redis invalidateCache error:", error);
     // Don't throw - cache invalidation failure shouldn't break the application
   }
 }
@@ -106,6 +106,6 @@ export async function bulkInvalidateCache(userIds: string[]): Promise<void> {
     }
     await pipeline.exec();
   } catch (error) {
-    console.error('Redis bulkInvalidateCache error:', error);
+    console.error("Redis bulkInvalidateCache error:", error);
   }
 }

@@ -1,19 +1,21 @@
-import { auth } from '@clerk/nextjs/server'
-import { prisma } from '@/lib/prisma'
-import { NextResponse } from 'next/server'
+import { auth } from "@clerk/nextjs/server";
+import { prisma } from "@/lib/prisma";
+import { NextResponse } from "next/server";
 
 export async function GET() {
-  const { userId } = await auth()
-  if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  const { userId } = await auth();
+  if (!userId)
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const dbUser = await prisma.user.findUnique({
     where: { clerkId: userId },
     select: { id: true, metadata: true, plan: true },
-  })
-  if (!dbUser) return NextResponse.json({ error: 'User not found' }, { status: 404 })
+  });
+  if (!dbUser)
+    return NextResponse.json({ error: "User not found" }, { status: 404 });
 
-  const meta = dbUser.metadata as Record<string, unknown> | null
-  const activeTeamId = meta?.activeTeamId as string | undefined
+  const meta = dbUser.metadata as Record<string, unknown> | null;
+  const activeTeamId = meta?.activeTeamId as string | undefined;
 
   // Find the active team — prefer stored activeTeamId, fallback to first owned team
   const membership = await prisma.teamMember.findFirst({
@@ -22,10 +24,10 @@ export async function GET() {
       ...(activeTeamId ? { teamId: activeTeamId } : {}),
     },
     include: { team: true },
-    orderBy: { createdAt: 'asc' },
-  })
+    orderBy: { createdAt: "asc" },
+  });
 
-  if (!membership) return NextResponse.json(null)
+  if (!membership) return NextResponse.json(null);
 
   return NextResponse.json({
     id: membership.team.id,
@@ -33,5 +35,5 @@ export async function GET() {
     slug: membership.team.slug,
     role: membership.role,
     plan: dbUser.plan,
-  })
+  });
 }

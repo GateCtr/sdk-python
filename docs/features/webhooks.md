@@ -4,12 +4,12 @@ Push events to Slack, Teams, or any URL.
 
 ## Events
 
-| Event | Trigger |
-|---|---|
-| `budget.threshold_reached` | Usage hits the configured alert percentage |
-| `budget.exceeded` | Hard cap reached — requests are now blocked |
-| `budget.reset` | Budget period reset (daily/monthly) |
-| `request.blocked` | A request was blocked by the firewall |
+| Event                      | Trigger                                     |
+| -------------------------- | ------------------------------------------- |
+| `budget.threshold_reached` | Usage hits the configured alert percentage  |
+| `budget.exceeded`          | Hard cap reached — requests are now blocked |
+| `budget.reset`             | Budget period reset (daily/monthly)         |
+| `request.blocked`          | A request was blocked by the firewall       |
 
 ## Configure
 
@@ -50,15 +50,19 @@ curl -X POST https://api.gatectr.com/v1/webhooks \
 Every request includes a `X-GateCtr-Signature` header. Verify it:
 
 ```typescript
-import { verifyWebhook } from '@gatectr/sdk';
+import { verifyWebhook } from "@gatectr/sdk";
 
 export async function POST(req: Request) {
   const body = await req.text();
-  const signature = req.headers.get('X-GateCtr-Signature') ?? '';
+  const signature = req.headers.get("X-GateCtr-Signature") ?? "";
 
-  const event = verifyWebhook(body, signature, process.env.GATECTR_WEBHOOK_SECRET);
+  const event = verifyWebhook(
+    body,
+    signature,
+    process.env.GATECTR_WEBHOOK_SECRET,
+  );
 
-  if (event.type === 'budget.threshold_reached') {
+  if (event.type === "budget.threshold_reached") {
     // handle event
   }
 

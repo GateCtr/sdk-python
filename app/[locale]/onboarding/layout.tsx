@@ -1,8 +1,8 @@
-import { auth } from '@clerk/nextjs/server'
-import { redirect } from 'next/navigation'
-import { getTranslations } from 'next-intl/server'
-import type { Metadata } from 'next'
-import { Header } from '@/components/shared/header'
+import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
+import type { Metadata } from "next";
+import { Header } from "@/components/shared/header";
 
 export async function generateMetadata({
   params,
@@ -10,23 +10,29 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'onboarding.metadata' });
+  const t = await getTranslations({ locale, namespace: "onboarding.metadata" });
   return {
-    title: t('title'),
-    description: t('description'),
+    title: t("title"),
+    description: t("description"),
   };
 }
 
 export default async function OnboardingLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
-  const { sessionClaims } = await auth()
+  const { sessionClaims } = await auth();
 
   // Already onboarded — send to dashboard
-  if ((sessionClaims?.publicMetadata as { onboardingComplete?: boolean } | undefined)?.onboardingComplete === true) {
-    redirect('/dashboard')
+  if (
+    (
+      sessionClaims?.publicMetadata as
+        | { onboardingComplete?: boolean }
+        | undefined
+    )?.onboardingComplete === true
+  ) {
+    redirect("/dashboard");
   }
 
   return (
@@ -36,5 +42,5 @@ export default async function OnboardingLayout({
         {children}
       </div>
     </div>
-  )
+  );
 }

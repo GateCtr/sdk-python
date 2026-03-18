@@ -100,6 +100,7 @@ pnpm prisma generate
 ### Erreur "User not found"
 
 L'utilisateur n'a pas encore été créé dans la DB. Assurez-vous de :
+
 1. Vous être connecté au moins une fois via Clerk
 2. Que le webhook Clerk est configuré (optionnel)
 3. Ou créer l'utilisateur manuellement dans Prisma Studio

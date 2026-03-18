@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 /**
  * RoleGate
@@ -10,8 +10,8 @@
  * Requirements: 6.2
  */
 
-import type { RoleName } from '@/lib/permissions';
-import { useRoles } from '@/hooks/use-roles';
+import type { RoleName } from "@/lib/permissions";
+import { useRoles } from "@/hooks/use-roles";
 
 interface RoleGateProps {
   roles: RoleName[];
@@ -22,7 +22,12 @@ interface RoleGateProps {
   children: React.ReactNode;
 }
 
-export function RoleGate({ roles, requireAll = false, fallback = null, children }: RoleGateProps) {
+export function RoleGate({
+  roles,
+  requireAll = false,
+  fallback = null,
+  children,
+}: RoleGateProps) {
   const { data: userRoles, isLoading } = useRoles();
 
   if (isLoading) return null;

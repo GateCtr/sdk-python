@@ -21,16 +21,16 @@ Les variables CSS sont définies dans `:root` pour les valeurs de base et shadcn
 ```css
 :root {
   /* Couleurs de base GateCtr */
-  --color-navy: #1B4F82;
-  --color-cyan: #00B4C8;
-  
+  --color-navy: #1b4f82;
+  --color-cyan: #00b4c8;
+
   /* Variables shadcn/ui */
   --background: #ffffff;
-  --foreground: #4A5568;
-  --primary: #1B4F82;
-  --secondary: #00B4C8;
-  --border: #E2E8F0;
-  --ring: #00B4C8;
+  --foreground: #4a5568;
+  --primary: #1b4f82;
+  --secondary: #00b4c8;
+  --border: #e2e8f0;
+  --ring: #00b4c8;
   --radius: 0.5rem;
   /* ... */
 }
@@ -47,22 +47,26 @@ La directive `@theme` enregistre les variables CSS avec Tailwind pour les rendre
   --color-foreground: var(--foreground);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
-  
+
   /* Échelles de couleurs personnalisées */
-  --color-primary-50: #E8EEF5;
-  --color-primary-500: #1B4F82;
-  --color-primary-900: #0A2340;
-  
+  --color-primary-50: #e8eef5;
+  --color-primary-500: #1b4f82;
+  --color-primary-900: #0a2340;
+
   /* Border radius */
   --radius-sm: calc(var(--radius) - 4px);
   --radius-lg: var(--radius);
-  
+
   /* Animations Radix UI */
   --animate-accordion-down: accordion-down 0.2s ease-out;
-  
+
   @keyframes accordion-down {
-    from { height: 0; }
-    to { height: var(--radix-accordion-content-height); }
+    from {
+      height: 0;
+    }
+    to {
+      height: var(--radix-accordion-content-height);
+    }
   }
 }
 ```
@@ -120,13 +124,13 @@ Le dark mode est géré via `@media (prefers-color-scheme: dark)`:
 ```css
 :root {
   --background: #ffffff;
-  --foreground: #4A5568;
+  --foreground: #4a5568;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #14406A;
-    --foreground: #EDF2F7;
+    --background: #14406a;
+    --foreground: #edf2f7;
   }
 }
 ```
@@ -137,23 +141,23 @@ Les variables dans `@theme` référencent automatiquement les bonnes valeurs sel
 
 ### Couleurs principales
 
-| Couleur | Variable | Hex | Usage |
-|---------|----------|-----|-------|
-| Navy | `--color-primary` | #1B4F82 | Boutons primaires, titres |
-| Navy Deep | `--color-primary-700` | #14406A | Sidebar, headers dark |
-| Cyan | `--color-secondary` | #00B4C8 | CTA, accents, icônes |
-| Cyan Light | `--color-accent` | #00D4E8 | Hover states, badges |
-| Grey Dark | `--color-grey-600` | #4A5568 | Texte principal |
-| Grey Light | `--color-grey-100` | #EDF2F7 | Backgrounds secondaires |
+| Couleur    | Variable              | Hex     | Usage                     |
+| ---------- | --------------------- | ------- | ------------------------- |
+| Navy       | `--color-primary`     | #1B4F82 | Boutons primaires, titres |
+| Navy Deep  | `--color-primary-700` | #14406A | Sidebar, headers dark     |
+| Cyan       | `--color-secondary`   | #00B4C8 | CTA, accents, icônes      |
+| Cyan Light | `--color-accent`      | #00D4E8 | Hover states, badges      |
+| Grey Dark  | `--color-grey-600`    | #4A5568 | Texte principal           |
+| Grey Light | `--color-grey-100`    | #EDF2F7 | Backgrounds secondaires   |
 
 ### Échelles complètes
 
 Chaque couleur dispose d'une échelle de 50 à 950:
 
 ```css
---color-primary-50: #E8EEF5;   /* Très clair */
---color-primary-500: #1B4F82;  /* Base */
---color-primary-900: #0A2340;  /* Très foncé */
+--color-primary-50: #e8eef5; /* Très clair */
+--color-primary-500: #1b4f82; /* Base */
+--color-primary-900: #0a2340; /* Très foncé */
 ```
 
 ## Composants shadcn/ui
@@ -198,15 +202,23 @@ Les animations pour les composants Radix UI (Accordion, Collapsible, etc.) sont 
 @theme {
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
-  
+
   @keyframes accordion-down {
-    from { height: 0; }
-    to { height: var(--radix-accordion-content-height); }
+    from {
+      height: 0;
+    }
+    to {
+      height: var(--radix-accordion-content-height);
+    }
   }
-  
+
   @keyframes accordion-up {
-    from { height: var(--radix-accordion-content-height); }
-    to { height: 0; }
+    from {
+      height: var(--radix-accordion-content-height);
+    }
+    to {
+      height: 0;
+    }
   }
 }
 ```
@@ -235,7 +247,10 @@ import { Syne, Inter, JetBrains_Mono } from "next/font/google";
 
 const syne = Syne({ subsets: ["latin"], variable: "--font-display" });
 const inter = Inter({ subsets: ["latin"], variable: "--font-body" });
-const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono" });
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+});
 ```
 
 ## Ressources
@@ -254,6 +269,7 @@ Ce warning est normal et peut être ignoré. C'est une directive Tailwind CSS 4 
 ### Les couleurs ne s'appliquent pas
 
 Vérifiez que:
+
 1. Les variables dans `@theme` ont le préfixe `--color-`
 2. Les variables référencent bien celles définies dans `:root`
 3. PostCSS est correctement configuré avec `@tailwindcss/postcss`
@@ -261,5 +277,6 @@ Vérifiez que:
 ### Dark mode ne fonctionne pas
 
 Assurez-vous que:
+
 1. Les variables sont redéfinies dans `@media (prefers-color-scheme: dark)`
 2. Les variables dans `@theme` utilisent `var()` pour référencer les valeurs de `:root`

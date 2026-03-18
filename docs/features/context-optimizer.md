@@ -21,18 +21,21 @@ To control it per request:
 
 {% tabs %}
 {% tab title="Node.js" %}
+
 ```typescript
 const response = await client.complete({
-  model: 'gpt-4o',
+  model: "gpt-4o",
   messages,
   gatectr: { optimize: true },
 });
 
 console.log(response.gatectr.tokens_saved); // e.g. 312
 ```
+
 {% endtab %}
 
 {% tab title="Python" %}
+
 ```python
 response = client.complete(
     model="gpt-4o",
@@ -42,9 +45,11 @@ response = client.complete(
 
 print(response.gatectr["tokens_saved"])  # e.g. 312
 ```
+
 {% endtab %}
 
 {% tab title="cURL" %}
+
 ```bash
 curl https://api.gatectr.com/v1/complete \
   -H "Authorization: Bearer $GATECTR_API_KEY" \
@@ -54,6 +59,7 @@ curl https://api.gatectr.com/v1/complete \
     "gatectr": { "optimize": true }
   }'
 ```
+
 {% endtab %}
 {% endtabs %}
 
@@ -71,7 +77,9 @@ curl https://api.gatectr.com/v1/complete \
 ## Disable for a specific request
 
 ```typescript
-gatectr: { optimize: false }
+gatectr: {
+  optimize: false;
+}
 ```
 
 Useful for requests where prompt precision is critical (e.g. structured output, code generation with exact formatting).

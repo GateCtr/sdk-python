@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils';
+import { cn } from "@/lib/utils";
 
 interface BrandNameProps {
   className?: string;
@@ -10,7 +10,7 @@ interface BrandNameProps {
  */
 export function BrandName({ className }: BrandNameProps) {
   return (
-    <span className={cn('font-display font-bold tracking-tight', className)}>
+    <span className={cn("font-display font-bold tracking-tight", className)}>
       Gate<span className="text-accent">C</span>tr
     </span>
   );

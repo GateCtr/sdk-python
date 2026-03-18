@@ -20,16 +20,16 @@ curl -X PATCH https://api.gatectr.com/v1/budget \
 
 ## Budget types
 
-| Type | Description |
-|---|---|
-| `tokens` | Cap on total tokens (prompt + completion) |
-| `cost_usd` | Cap on estimated USD cost |
+| Type       | Description                               |
+| ---------- | ----------------------------------------- |
+| `tokens`   | Cap on total tokens (prompt + completion) |
+| `cost_usd` | Cap on estimated USD cost                 |
 
 ## Periods
 
-| Period | Resets |
-|---|---|
-| `day` | Midnight UTC |
+| Period  | Resets               |
+| ------- | -------------------- |
+| `day`   | Midnight UTC         |
 | `month` | 1st of the month UTC |
 | `total` | Never — lifetime cap |
 

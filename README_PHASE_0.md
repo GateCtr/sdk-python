@@ -16,6 +16,7 @@ pnpm add zod resend @clerk/nextjs
 ### 2. Configurer les services externes
 
 #### Clerk (Authentification)
+
 Suivez le guide : [docs/SETUP_CLERK.md](docs/SETUP_CLERK.md)
 
 1. Créez un compte sur [clerk.com](https://clerk.com)
@@ -24,6 +25,7 @@ Suivez le guide : [docs/SETUP_CLERK.md](docs/SETUP_CLERK.md)
 4. Ajoutez-les à `.env.local`
 
 #### Resend (Emails)
+
 Suivez le guide : [docs/SETUP_RESEND.md](docs/SETUP_RESEND.md)
 
 1. Créez un compte sur [resend.com](https://resend.com)
@@ -55,6 +57,7 @@ cp .env.local.example .env.local
 ```
 
 Minimum requis pour Phase 0 :
+
 ```bash
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY="pk_test_..."
 CLERK_SECRET_KEY="sk_test_..."
@@ -75,17 +78,21 @@ Ouvrez [http://localhost:3000/waitlist](http://localhost:3000/waitlist)
 ## Fichiers créés
 
 ### Pages & Composants
+
 - ✅ `app/(marketing)/waitlist/page.tsx` - Page publique d'inscription
 - ✅ `app/(admin)/waitlist/page.tsx` - Interface admin de gestion
 
 ### API Routes
+
 - ✅ `app/api/waitlist/route.ts` - API POST/GET pour la waitlist
 
 ### Infrastructure
+
 - ✅ `proxy.ts` - Proxy Next.js 16 avec Clerk (remplace middleware.ts)
 - ✅ `lib/resend.ts` - Helpers pour l'envoi d'emails
 
 ### Documentation
+
 - ✅ `docs/PHASE_0_WAITLIST.md` - Documentation complète de la phase
 
 ## Configuration requise
@@ -126,6 +133,7 @@ La table `waitlist_entries` existe déjà dans le schéma Prisma et a été migr
 ## Fonctionnalités
 
 ### Page publique `/waitlist`
+
 - Formulaire d'inscription avec validation
 - Champs : email (requis), nom, entreprise, use case
 - Affichage de la position dans la file
@@ -133,23 +141,25 @@ La table `waitlist_entries` existe déjà dans le schéma Prisma et a été migr
 - Email de confirmation automatique
 
 ### Interface admin `/admin/waitlist`
+
 - Liste paginée des inscrits
 - Filtres par statut (WAITING, INVITED, JOINED)
 - Statistiques en temps réel
 - Bouton "Invite Batch" (à implémenter)
 
 ### API `/api/waitlist`
+
 - **POST** - Inscription à la waitlist
   - Validation avec Zod
   - Détection des doublons
   - Position automatique
   - Email de bienvenue
-  
 - **GET** - Liste des inscrits (admin)
   - Pagination
   - Filtrage par statut
 
 ### Proxy (Middleware)
+
 - Redirection `/sign-up` → `/waitlist` si waitlist activée
 - Protection des routes privées avec Clerk
 - Compatible Next.js 16
@@ -159,6 +169,7 @@ La table `waitlist_entries` existe déjà dans le schéma Prisma et a été migr
 ### Phase pré-lancement
 
 1. **Activer la waitlist**
+
    ```bash
    ENABLE_WAITLIST=true
    ENABLE_SIGNUPS=false
@@ -182,6 +193,7 @@ La table `waitlist_entries` existe déjà dans le schéma Prisma et a été migr
 ### Tester l'inscription
 
 1. Démarrer le serveur :
+
    ```bash
    pnpm dev
    ```
@@ -244,6 +256,7 @@ ENABLE_SIGNUPS=true
 ```
 
 Puis passer à la **Phase 1 - Onboarding** :
+
 - Configuration Clerk complète
 - Création du premier projet
 - Ajout des clés API LLM

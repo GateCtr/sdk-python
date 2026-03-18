@@ -128,10 +128,26 @@
     "label": "En chiffres",
     "headline": "Mesuré. Garanti.",
     "items": [
-      { "value": "{tokenReduction}", "label": "Réduction de tokens", "description": "Moyenne sur tous les clients" },
-      { "value": "{latency}", "label": "Latence ajoutée", "description": "Middleware transparent" },
-      { "value": "{setupTime}", "label": "Temps de setup", "description": "Changement d'endpoint, zéro code" },
-      { "value": "{providers} LLMs", "label": "Fournisseurs supportés", "description": "OpenAI, Anthropic, Mistral, Gemini" }
+      {
+        "value": "{tokenReduction}",
+        "label": "Réduction de tokens",
+        "description": "Moyenne sur tous les clients"
+      },
+      {
+        "value": "{latency}",
+        "label": "Latence ajoutée",
+        "description": "Middleware transparent"
+      },
+      {
+        "value": "{setupTime}",
+        "label": "Temps de setup",
+        "description": "Changement d'endpoint, zéro code"
+      },
+      {
+        "value": "{providers} LLMs",
+        "label": "Fournisseurs supportés",
+        "description": "OpenAI, Anthropic, Mistral, Gemini"
+      }
     ]
   },
   "pricing": {

@@ -1,9 +1,16 @@
-'use client';
+"use client";
 
-import { useTranslations } from 'next-intl';
-import { Shield, Zap, GitBranch, BarChart2, Webhook, Users } from 'lucide-react';
-import { PRODUCT } from '@/config/product';
-import { interpolate } from '@/lib/interpolate';
+import { useTranslations } from "next-intl";
+import {
+  Shield,
+  Zap,
+  GitBranch,
+  BarChart2,
+  Webhook,
+  Users,
+} from "lucide-react";
+import { PRODUCT } from "@/config/product";
+import { interpolate } from "@/lib/interpolate";
 
 const ICONS = [Shield, Zap, GitBranch, BarChart2, Webhook, Users];
 
@@ -12,11 +19,16 @@ const FEATURE_VARS = {
   auditDays: PRODUCT.metrics.auditRetentionDays,
 };
 
-type RawFeature = { title: string; description: string; metric: string; detail: string };
+type RawFeature = {
+  title: string;
+  description: string;
+  metric: string;
+  detail: string;
+};
 
 export function Features() {
-  const t = useTranslations('home.features');
-  const rawItems = t.raw('items') as RawFeature[];
+  const t = useTranslations("home.features");
+  const rawItems = t.raw("items") as RawFeature[];
   const items = rawItems.map((item) => ({
     ...item,
     description: interpolate(item.description, FEATURE_VARS),
@@ -27,12 +39,14 @@ export function Features() {
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-14">
           <p className="text-xs font-mono text-secondary-500 uppercase tracking-widest mb-3">
-            {t('label')}
+            {t("label")}
           </p>
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            {t('headline')}
+            {t("headline")}
           </h2>
-          <p className="text-muted-foreground max-w-xl mx-auto">{t('description')}</p>
+          <p className="text-muted-foreground max-w-xl mx-auto">
+            {t("description")}
+          </p>
         </div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -51,8 +65,12 @@ export function Features() {
                     {item.metric}
                   </span>
                 </div>
-                <h3 className="text-base font-semibold text-foreground mb-1">{item.title}</h3>
-                <p className="text-sm font-medium text-secondary-500 mb-2">{item.description}</p>
+                <h3 className="text-base font-semibold text-foreground mb-1">
+                  {item.title}
+                </h3>
+                <p className="text-sm font-medium text-secondary-500 mb-2">
+                  {item.description}
+                </p>
                 <p className="text-sm text-muted-foreground">{item.detail}</p>
               </div>
             );

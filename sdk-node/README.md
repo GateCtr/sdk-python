@@ -25,13 +25,13 @@ pnpm add @gatectr/sdk
 ## Quick start
 
 ```typescript
-import { GateCtr } from '@gatectr/sdk';
+import { GateCtr } from "@gatectr/sdk";
 
 const client = new GateCtr({ apiKey: process.env.GATECTR_API_KEY });
 
 const response = await client.complete({
-  model: 'gpt-4o',
-  messages: [{ role: 'user', content: 'Hello' }],
+  model: "gpt-4o",
+  messages: [{ role: "user", content: "Hello" }],
 });
 
 console.log(response.choices[0].message.content);
@@ -57,10 +57,10 @@ One endpoint swap. Your existing OpenAI-compatible code works as-is.
 
 ```typescript
 const response = await client.complete({
-  model: 'gpt-4o',
+  model: "gpt-4o",
   messages: [
-    { role: 'system', content: 'You are a helpful assistant.' },
-    { role: 'user', content: 'Summarize this document.' },
+    { role: "system", content: "You are a helpful assistant." },
+    { role: "user", content: "Summarize this document." },
   ],
 });
 ```
@@ -69,12 +69,12 @@ const response = await client.complete({
 
 ```typescript
 const stream = await client.stream({
-  model: 'gpt-4o',
-  messages: [{ role: 'user', content: 'Hello' }],
+  model: "gpt-4o",
+  messages: [{ role: "user", content: "Hello" }],
 });
 
 for await (const chunk of stream) {
-  process.stdout.write(chunk.delta ?? '');
+  process.stdout.write(chunk.delta ?? "");
 }
 ```
 
@@ -82,12 +82,12 @@ for await (const chunk of stream) {
 
 ```typescript
 const response = await client.complete({
-  model: 'gpt-4o',
+  model: "gpt-4o",
   messages,
   gatectr: {
-    budgetId: 'proj_123',   // enforce a specific budget
-    optimize: true,          // enable context optimizer
-    route: false,            // disable model router for this call
+    budgetId: "proj_123", // enforce a specific budget
+    optimize: true, // enable context optimizer
+    route: false, // disable model router for this call
   },
 });
 ```
@@ -96,11 +96,11 @@ const response = await client.complete({
 
 ```typescript
 const response = await client.complete({
-  model: 'auto',  // GateCtr picks the optimal model
+  model: "auto", // GateCtr picks the optimal model
   messages,
 });
 
-console.log(response.gatectr.modelUsed);  // e.g. "gpt-3.5-turbo"
+console.log(response.gatectr.modelUsed); // e.g. "gpt-3.5-turbo"
 console.log(response.gatectr.tokensSaved); // e.g. 312
 ```
 
@@ -110,21 +110,21 @@ console.log(response.gatectr.tokensSaved); // e.g. 312
 
 ```typescript
 const client = new GateCtr({
-  apiKey: 'your-api-key',       // required — get it at gatectr.com
-  baseUrl: 'https://api.gatectr.com/v1', // default
-  timeout: 30_000,              // ms, default 30s
-  optimize: true,               // enable context optimizer globally
-  route: false,                 // disable model router globally
+  apiKey: "your-api-key", // required — get it at gatectr.com
+  baseUrl: "https://api.gatectr.com/v1", // default
+  timeout: 30_000, // ms, default 30s
+  optimize: true, // enable context optimizer globally
+  route: false, // disable model router globally
 });
 ```
 
-| Option | Type | Default | Description |
-|---|---|---|---|
-| `apiKey` | `string` | — | Your GateCtr API key |
-| `baseUrl` | `string` | `https://api.gatectr.com/v1` | API base URL |
-| `timeout` | `number` | `30000` | Request timeout in ms |
-| `optimize` | `boolean` | `true` | Enable context optimizer |
-| `route` | `boolean` | `false` | Enable model router |
+| Option     | Type      | Default                      | Description              |
+| ---------- | --------- | ---------------------------- | ------------------------ |
+| `apiKey`   | `string`  | —                            | Your GateCtr API key     |
+| `baseUrl`  | `string`  | `https://api.gatectr.com/v1` | API base URL             |
+| `timeout`  | `number`  | `30000`                      | Request timeout in ms    |
+| `optimize` | `boolean` | `true`                       | Enable context optimizer |
+| `route`    | `boolean` | `false`                      | Enable model router      |
 
 ---
 
@@ -133,11 +133,11 @@ const client = new GateCtr({
 Already using the OpenAI SDK? Swap the base URL:
 
 ```typescript
-import OpenAI from 'openai';
+import OpenAI from "openai";
 
 const openai = new OpenAI({
   apiKey: process.env.GATECTR_API_KEY,
-  baseURL: 'https://api.gatectr.com/v1',
+  baseURL: "https://api.gatectr.com/v1",
 });
 
 // Everything else stays the same

@@ -20,6 +20,7 @@ Déclenché sur: Push et Pull Requests vers `main` et `develop`
 - **Prisma Validate**: Valide le schéma Prisma et vérifie les migrations
 
 **Services:**
+
 - PostgreSQL 18 (pour les tests)
 - Redis 7 (pour les tests)
 
@@ -30,16 +31,19 @@ Déclenché sur: Push vers `main` ou manuellement via workflow_dispatch
 **Environnements:**
 
 #### Staging
+
 - URL: https://staging.gatectr.com
 - Branche: `develop`
 - Déploiement automatique
 
 #### Production
+
 - URL: https://gatectr.com
 - Branche: `main`
 - Déploiement automatique avec protection
 
 **Étapes:**
+
 1. Installation des dépendances
 2. Génération du client Prisma
 3. Exécution des migrations de base de données
@@ -52,24 +56,28 @@ Déclenché sur: Push vers `main` ou manuellement via workflow_dispatch
 Déclenché sur: Push vers `main`/`develop` et tags `v*`
 
 **Actions:**
+
 - Build des images Docker multi-architecture (amd64, arm64)
 - Push vers GitHub Container Registry
 - Scan de sécurité avec Trivy
 - Cache optimisé avec GitHub Actions Cache
 
 **Images:**
+
 - `ghcr.io/[org]/gatectr:main` - Image de production
 - `ghcr.io/[org]/gatectr:develop` - Image de développement
 - `ghcr.io/[org]/gatectr:v*` - Images versionnées
 
 ### 4. CodeQL Security Analysis (`codeql.yml`)
 
-Déclenché sur: 
+Déclenché sur:
+
 - Push vers `main`/`develop`
 - Pull Requests
 - Tous les lundis à 6h UTC (scan programmé)
 
 **Analyse:**
+
 - Détection de vulnérabilités de sécurité
 - Analyse de qualité du code
 - Rapports dans GitHub Security
@@ -79,6 +87,7 @@ Déclenché sur:
 Déclenché sur: Ouverture/mise à jour de Pull Requests
 
 **Validations:**
+
 - Titre de PR suit Conventional Commits
 - Taille de PR (avec labels automatiques)
 - Description de PR complète
@@ -90,6 +99,7 @@ Déclenché sur: Ouverture/mise à jour de Pull Requests
 Déclenché sur: Push de tags `v*.*.*`
 
 **Actions:**
+
 - Génération automatique du changelog
 - Création de GitHub Release
 - Build et push de l'image Docker versionnée
@@ -139,6 +149,7 @@ Configuration automatique des mises à jour de dépendances:
 - **Docker images**: Vérification hebdomadaire
 
 Les PRs sont créées automatiquement avec:
+
 - Labels: `dependencies`, `automated`
 - Prefix de commit: `chore(deps)`
 - Limite: 10 PRs ouvertes maximum
@@ -156,6 +167,7 @@ Format requis pour les commits et PR:
 ```
 
 **Types autorisés:**
+
 - `feat`: Nouvelle fonctionnalité
 - `fix`: Correction de bug
 - `docs`: Documentation
@@ -169,6 +181,7 @@ Format requis pour les commits et PR:
 - `revert`: Annulation de commit
 
 **Exemples:**
+
 ```bash
 feat(auth): add OAuth2 support
 fix(api): resolve token expiration issue
@@ -194,6 +207,7 @@ git commit -m "feat(scope): description"
 ```
 
 Les hooks Husky vont automatiquement:
+
 - Linter le code
 - Vérifier les types
 - Formater avec Prettier
@@ -205,6 +219,7 @@ git push origin feat/my-feature
 ```
 
 Créer une PR sur GitHub avec:
+
 - Titre suivant Conventional Commits
 - Description complète (utiliser le template)
 - Labels appropriés
@@ -212,6 +227,7 @@ Créer une PR sur GitHub avec:
 ### 4. CI automatique
 
 Les workflows CI vont:
+
 - ✅ Linter et formater
 - ✅ Vérifier les types
 - ✅ Exécuter les tests
@@ -221,6 +237,7 @@ Les workflows CI vont:
 ### 5. Review et merge
 
 Après approbation:
+
 - Merge vers `develop` → Déploiement staging automatique
 - Merge vers `main` → Déploiement production automatique
 
@@ -256,6 +273,7 @@ vercel --prod --scope=your-org
 ### Via GitHub
 
 1. Créer un tag de rollback:
+
 ```bash
 git tag -a v1.2.3-rollback -m "Rollback to v1.2.3"
 git push origin v1.2.3-rollback

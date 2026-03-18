@@ -23,15 +23,19 @@ Or via the SDK:
 
 {% tabs %}
 {% tab title="Node.js" %}
+
 ```typescript
 const client = new GateCtr({ apiKey: process.env.GATECTR_API_KEY });
 ```
+
 {% endtab %}
 
 {% tab title="Python" %}
+
 ```python
 client = GateCtr(api_key=os.environ["GATECTR_API_KEY"])
 ```
+
 {% endtab %}
 {% endtabs %}
 
@@ -59,9 +63,9 @@ Your app
 
 ## Key format
 
-| Prefix | Environment |
-|---|---|
-| `gct_live_` | Production |
+| Prefix      | Environment              |
+| ----------- | ------------------------ |
+| `gct_live_` | Production               |
 | `gct_test_` | Test (no real LLM calls) |
 
 ## Security

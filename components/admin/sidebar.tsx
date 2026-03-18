@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 /**
  * Admin Sidebar
@@ -10,10 +10,10 @@
  * Requirements: 6.4, 6.5, 6.6, 6.7
  */
 
-import { useTranslations } from 'next-intl';
-import { Link } from '@/i18n/routing';
-import { usePermissions } from '@/hooks/use-permissions';
-import type { Permission } from '@/lib/permissions';
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/routing";
+import { usePermissions } from "@/hooks/use-permissions";
+import type { Permission } from "@/lib/permissions";
 
 interface MenuItem {
   labelKey: string;
@@ -22,28 +22,50 @@ interface MenuItem {
 }
 
 const MENU_ITEMS: MenuItem[] = [
-  { labelKey: 'sidebar.users',        href: '/admin/users',         permission: 'users:read'    },
-  { labelKey: 'sidebar.plans',        href: '/admin/plans',         permission: 'billing:read'  },
-  { labelKey: 'sidebar.featureFlags', href: '/admin/feature-flags', permission: 'system:read'   },
-  { labelKey: 'sidebar.auditLogs',    href: '/admin/audit-logs',    permission: 'audit:read'    },
-  { labelKey: 'sidebar.systemHealth', href: '/admin/system',        permission: 'system:read'   },
-  { labelKey: 'sidebar.waitlist',     href: '/admin/waitlist',      permission: 'users:read'    },
+  { labelKey: "sidebar.users", href: "/admin/users", permission: "users:read" },
+  {
+    labelKey: "sidebar.plans",
+    href: "/admin/plans",
+    permission: "billing:read",
+  },
+  {
+    labelKey: "sidebar.featureFlags",
+    href: "/admin/feature-flags",
+    permission: "system:read",
+  },
+  {
+    labelKey: "sidebar.auditLogs",
+    href: "/admin/audit-logs",
+    permission: "audit:read",
+  },
+  {
+    labelKey: "sidebar.systemHealth",
+    href: "/admin/system",
+    permission: "system:read",
+  },
+  {
+    labelKey: "sidebar.waitlist",
+    href: "/admin/waitlist",
+    permission: "users:read",
+  },
 ];
 
 export function AdminSidebar() {
-  const t = useTranslations('admin');
+  const t = useTranslations("admin");
   const { data: permissions = [], isLoading } = usePermissions();
 
-  const visibleItems = MENU_ITEMS.filter((item) => permissions.includes(item.permission));
+  const visibleItems = MENU_ITEMS.filter((item) =>
+    permissions.includes(item.permission),
+  );
 
   if (isLoading) return null;
 
   return (
-    <nav aria-label={t('sidebar.users')}>
-      <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
+    <nav aria-label={t("sidebar.users")}>
+      <ul style={{ listStyle: "none", margin: 0, padding: 0 }}>
         {visibleItems.map((item) => (
           <li key={item.href}>
-            <Link href={item.href as Parameters<typeof Link>[0]['href']}>
+            <Link href={item.href as Parameters<typeof Link>[0]["href"]}>
               {t(item.labelKey as Parameters<typeof t>[0])}
             </Link>
           </li>

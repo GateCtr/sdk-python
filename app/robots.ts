@@ -1,11 +1,15 @@
-import type { MetadataRoute } from 'next';
-import { getSeoContext, getSeoContextWithHost, type SeoContext } from '@/lib/seo';
+import type { MetadataRoute } from "next";
+import {
+  getSeoContext,
+  getSeoContextWithHost,
+  type SeoContext,
+} from "@/lib/seo";
 
 export function generateRobots(context: SeoContext): MetadataRoute.Robots {
   // App subdomain: disallow all, no sitemap
   if (context.isAppSubdomain) {
     return {
-      rules: [{ userAgent: '*', disallow: '/' }],
+      rules: [{ userAgent: "*", disallow: "/" }],
     };
   }
 
@@ -13,20 +17,20 @@ export function generateRobots(context: SeoContext): MetadataRoute.Robots {
   return {
     rules: [
       {
-        userAgent: '*',
-        allow: '/',
+        userAgent: "*",
+        allow: "/",
         disallow: [
-          '/dashboard',
-          '/fr/dashboard',
-          '/admin',
-          '/fr/admin',
-          '/api',
-          '/onboarding',
-          '/fr/onboarding',
-          '/sign-in',
-          '/fr/sign-in',
-          '/sign-up',
-          '/fr/sign-up',
+          "/dashboard",
+          "/fr/dashboard",
+          "/admin",
+          "/fr/admin",
+          "/api",
+          "/onboarding",
+          "/fr/onboarding",
+          "/sign-in",
+          "/fr/sign-in",
+          "/sign-up",
+          "/fr/sign-up",
         ],
       },
     ],

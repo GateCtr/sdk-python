@@ -57,13 +57,13 @@ graph TD
 
 ```typescript
 export interface SeoContext {
-  marketingUrl: string;   // e.g. "https://gatectr.com"
-  appUrl: string;         // e.g. "https://app.gatectr.com"
+  marketingUrl: string; // e.g. "https://gatectr.com"
+  appUrl: string; // e.g. "https://app.gatectr.com"
   isAppSubdomain: boolean;
 }
 
 // Reads host header via next/headers — call only in Server Components / Route Handlers
-export async function getSeoContext(): Promise<SeoContext>
+export async function getSeoContext(): Promise<SeoContext>;
 
 // Builds the canonical URL for a given path and locale
 // path: the route path without locale prefix, e.g. "/" or "/waitlist"
@@ -72,18 +72,19 @@ export async function getSeoContext(): Promise<SeoContext>
 export function buildCanonicalUrl(
   path: string,
   locale: string,
-  context: SeoContext
-): string
+  context: SeoContext,
+): string;
 
 // Returns { en: string, fr: string, xDefault: string } for hreflang
 // Only meaningful for marketing pages
 export function buildAlternateUrls(
   path: string,
-  context: SeoContext
-): { en: string; fr: string; xDefault: string }
+  context: SeoContext,
+): { en: string; fr: string; xDefault: string };
 ```
 
 **URL construction rules:**
+
 - Marketing EN: `{marketingUrl}{path}` (no locale prefix, path is `/` or `/waitlist`)
 - Marketing FR: `{marketingUrl}/fr{path}`
 - App pages: `{appUrl}/{locale-prefix}{path}` (locale prefix only for FR)
@@ -121,6 +122,7 @@ Next.js `MetadataRoute.Sitemap` export. Reads `SeoContext` to detect subdomain.
 Next.js `MetadataRoute.Robots` export. Two variants based on subdomain:
 
 **Marketing (`gatectr.com`):**
+
 ```
 User-Agent: *
 Allow: /
@@ -139,10 +141,12 @@ Sitemap: {marketingUrl}/sitemap.xml
 ```
 
 **App (`app.gatectr.com`):**
+
 ```
 User-Agent: *
 Disallow: /
 ```
+
 No `Sitemap:` directive.
 
 ---
@@ -150,6 +154,7 @@ No `Sitemap:` directive.
 ### `app/layout.tsx` (root layout updates)
 
 Add to the existing `metadata` export:
+
 - `themeColor`: `#0a0a0a` (dark) / `#ffffff` (light) — use array form for media queries
 - `appleWebApp`: `{ capable: true, statusBarStyle: 'default', title: 'GateCtr' }`
 - `manifest`: `/manifest.json`
@@ -169,23 +174,23 @@ export async function generateMetadata({ params }): Promise<Metadata> {
   // canonical = buildCanonicalUrl('/', locale, context)
   // alternates = buildAlternateUrls('/', context)
   return {
-    title: { default: t('defaultTitle'), template: '%s | GateCtr' },
-    description: t('defaultDescription'),
+    title: { default: t("defaultTitle"), template: "%s | GateCtr" },
+    description: t("defaultDescription"),
     robots: { index: true, follow: true },
     alternates: {
       canonical,
       languages: { en: alternates.en, fr: alternates.fr },
     },
     openGraph: {
-      type: 'website',
-      siteName: 'GateCtr',
-      locale: locale === 'fr' ? 'fr_FR' : 'en_US',
-      alternateLocale: locale === 'fr' ? 'en_US' : 'fr_FR',
-      images: [{ url: '/og/default.png', width: 1200, height: 630 }],
+      type: "website",
+      siteName: "GateCtr",
+      locale: locale === "fr" ? "fr_FR" : "en_US",
+      alternateLocale: locale === "fr" ? "en_US" : "fr_FR",
+      images: [{ url: "/og/default.png", width: 1200, height: 630 }],
     },
     twitter: {
-      card: 'summary_large_image',
-      images: ['/og/default.png'],
+      card: "summary_large_image",
+      images: ["/og/default.png"],
     },
   };
 }
@@ -218,21 +223,22 @@ Individual sign-in / sign-up pages override `title` and `description` using `aut
 ### Per-page `generateMetadata`
 
 **`app/[locale]/page.tsx` (home):**
+
 ```typescript
 export async function generateMetadata({ params }): Promise<Metadata> {
-  const t = await getTranslations({ locale, namespace: 'home.metadata' });
+  const t = await getTranslations({ locale, namespace: "home.metadata" });
   const context = await getSeoContext();
-  const canonical = buildCanonicalUrl('/', locale, context);
+  const canonical = buildCanonicalUrl("/", locale, context);
   return {
-    title: t('title'),
-    description: t('description'),
+    title: t("title"),
+    description: t("description"),
     alternates: { canonical },
     openGraph: {
-      title: t('ogTitle'),
-      description: t('ogDescription'),
+      title: t("ogTitle"),
+      description: t("ogDescription"),
       url: canonical,
     },
-    twitter: { title: t('ogTitle'), description: t('ogDescription') },
+    twitter: { title: t("ogTitle"), description: t("ogDescription") },
   };
 }
 ```
@@ -246,7 +252,7 @@ Same pattern using `waitlist.metadata` namespace. The page is currently a `'use 
 
 ```typescript
 // GET /api/og?title=...&description=...
-export async function GET(request: Request): Promise<Response>
+export async function GET(request: Request): Promise<Response>;
 ```
 
 - Uses `ImageResponse` from `next/og`
@@ -262,12 +268,29 @@ export async function GET(request: Request): Promise<Response>
 
 ```typescript
 // Generic component — renders any schema as <script type="application/ld+json">
-export function JsonLd({ schema }: { schema: Record<string, unknown> }): JSX.Element
+export function JsonLd({
+  schema,
+}: {
+  schema: Record<string, unknown>;
+}): JSX.Element;
 
 // Convenience wrappers
-export function WebSiteJsonLd({ url, name, description }: WebSiteProps): JSX.Element
-export function OrganizationJsonLd({ url, name, logo, sameAs }: OrgProps): JSX.Element
-export function WebPageJsonLd({ url, name, description }: WebPageProps): JSX.Element
+export function WebSiteJsonLd({
+  url,
+  name,
+  description,
+}: WebSiteProps): JSX.Element;
+export function OrganizationJsonLd({
+  url,
+  name,
+  logo,
+  sameAs,
+}: OrgProps): JSX.Element;
+export function WebPageJsonLd({
+  url,
+  name,
+  description,
+}: WebPageProps): JSX.Element;
 ```
 
 All are Server Components (no `'use client'`). They are placed directly in page JSX inside `<head>` via Next.js metadata or as children of the page body — Next.js App Router allows `<script>` tags in Server Components.
@@ -275,6 +298,7 @@ All are Server Components (no `'use client'`). They are placed directly in page 
 **Schema shapes:**
 
 WebSite:
+
 ```json
 {
   "@context": "https://schema.org",
@@ -286,6 +310,7 @@ WebSite:
 ```
 
 Organization:
+
 ```json
 {
   "@context": "https://schema.org",
@@ -298,6 +323,7 @@ Organization:
 ```
 
 WebPage:
+
 ```json
 {
   "@context": "https://schema.org",
@@ -313,6 +339,7 @@ WebPage:
 ### `app/manifest.json`
 
 Updated fields:
+
 ```json
 {
   "name": "GateCtr",
@@ -325,8 +352,18 @@ Updated fields:
   "background_color": "#0a0a0a",
   "categories": ["productivity", "developer tools"],
   "icons": [
-    { "src": "/web-app-manifest-192x192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
-    { "src": "/web-app-manifest-512x512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    {
+      "src": "/web-app-manifest-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/web-app-manifest-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ]
 }
 ```
@@ -342,6 +379,7 @@ Note: the existing manifest has a typo (`"GateCtrl"` for `name`) — this is cor
 New `metadata` namespace added to each page's translation file:
 
 **`messages/en/home.json`** (new file):
+
 ```json
 {
   "metadata": {
@@ -354,6 +392,7 @@ New `metadata` namespace added to each page's translation file:
 ```
 
 **`messages/fr/home.json`** (new file):
+
 ```json
 {
   "metadata": {
@@ -366,6 +405,7 @@ New `metadata` namespace added to each page's translation file:
 ```
 
 **`messages/en/waitlist.json`** — add `metadata.ogTitle` and `metadata.ogDescription` to existing `metadata` block:
+
 ```json
 {
   "metadata": {
@@ -384,6 +424,7 @@ New `metadata` namespace added to each page's translation file:
 ### Environment variables
 
 Two new variables added to `.env.example`:
+
 ```dotenv
 # SEO / Subdomain routing
 NEXT_PUBLIC_MARKETING_URL="https://gatectr.com"
@@ -396,11 +437,11 @@ NEXT_PUBLIC_APP_URL="https://app.gatectr.com"
 
 ## Correctness Properties
 
-*A property is a characteristic or behavior that should hold true across all valid executions of a system — essentially, a formal statement about what the system should do. Properties serve as the bridge between human-readable specifications and machine-verifiable correctness guarantees.*
+_A property is a characteristic or behavior that should hold true across all valid executions of a system — essentially, a formal statement about what the system should do. Properties serve as the bridge between human-readable specifications and machine-verifiable correctness guarantees._
 
 ### Property 1: Canonical URL locale prefix invariant
 
-*For any* marketing page path and locale, `buildCanonicalUrl` must produce a URL that starts with `marketingUrl`, contains `/fr/` if and only if the locale is `fr`, and never contains a double slash.
+_For any_ marketing page path and locale, `buildCanonicalUrl` must produce a URL that starts with `marketingUrl`, contains `/fr/` if and only if the locale is `fr`, and never contains a double slash.
 
 **Validates: Requirements 3.2, 3.3**
 
@@ -408,7 +449,7 @@ NEXT_PUBLIC_APP_URL="https://app.gatectr.com"
 
 ### Property 2: Alternate URL round-trip
 
-*For any* marketing page path, the `en` alternate URL produced by `buildAlternateUrls` must equal `buildCanonicalUrl(path, 'en', context)`, and the `fr` alternate must equal `buildCanonicalUrl(path, 'fr', context)`.
+_For any_ marketing page path, the `en` alternate URL produced by `buildAlternateUrls` must equal `buildCanonicalUrl(path, 'en', context)`, and the `fr` alternate must equal `buildCanonicalUrl(path, 'fr', context)`.
 
 **Validates: Requirements 4.1, 4.2, 4.3**
 
@@ -416,7 +457,7 @@ NEXT_PUBLIC_APP_URL="https://app.gatectr.com"
 
 ### Property 3: App subdomain forces noindex
 
-*For any* page rendered when `isAppSubdomain` is `true`, the resolved robots metadata must contain `noindex`.
+_For any_ page rendered when `isAppSubdomain` is `true`, the resolved robots metadata must contain `noindex`.
 
 **Validates: Requirements 1.6, 1.8, 11.7**
 
@@ -424,7 +465,7 @@ NEXT_PUBLIC_APP_URL="https://app.gatectr.com"
 
 ### Property 4: Sitemap excludes app subdomain
 
-*For any* call to the sitemap handler when `isAppSubdomain` is `true`, the returned array must be empty.
+_For any_ call to the sitemap handler when `isAppSubdomain` is `true`, the returned array must be empty.
 
 **Validates: Requirements 6.8**
 
@@ -432,7 +473,7 @@ NEXT_PUBLIC_APP_URL="https://app.gatectr.com"
 
 ### Property 5: Sitemap contains both locales for every marketing page
 
-*For any* marketing page path included in the sitemap, the entry must contain both an `en` and a `fr` alternate URL in its `alternates.languages` map.
+_For any_ marketing page path included in the sitemap, the entry must contain both an `en` and a `fr` alternate URL in its `alternates.languages` map.
 
 **Validates: Requirements 6.2, 6.7**
 
@@ -440,7 +481,7 @@ NEXT_PUBLIC_APP_URL="https://app.gatectr.com"
 
 ### Property 6: OG image dimensions invariant
 
-*For any* combination of `title` and `description` query parameters (including empty strings), the OG image endpoint must return an image with width 1200 and height 630.
+_For any_ combination of `title` and `description` query parameters (including empty strings), the OG image endpoint must return an image with width 1200 and height 630.
 
 **Validates: Requirements 10.5**
 
@@ -448,7 +489,7 @@ NEXT_PUBLIC_APP_URL="https://app.gatectr.com"
 
 ### Property 7: JSON-LD serialization round-trip
 
-*For any* valid schema object passed to `JsonLd`, parsing the text content of the rendered `<script>` tag must produce an object deeply equal to the input schema.
+_For any_ valid schema object passed to `JsonLd`, parsing the text content of the rendered `<script>` tag must produce an object deeply equal to the input schema.
 
 **Validates: Requirements 5.5**
 
@@ -456,7 +497,7 @@ NEXT_PUBLIC_APP_URL="https://app.gatectr.com"
 
 ### Property 8: getSeoContext fallback invariant
 
-*For any* environment where `NEXT_PUBLIC_MARKETING_URL` or `NEXT_PUBLIC_APP_URL` is absent, `getSeoContext()` must return non-empty strings for both `marketingUrl` and `appUrl` (the hardcoded fallbacks).
+_For any_ environment where `NEXT_PUBLIC_MARKETING_URL` or `NEXT_PUBLIC_APP_URL` is absent, `getSeoContext()` must return non-empty strings for both `marketingUrl` and `appUrl` (the hardcoded fallbacks).
 
 **Validates: Requirements 3.7, 3.8, 11.5, 11.6**
 
@@ -464,7 +505,7 @@ NEXT_PUBLIC_APP_URL="https://app.gatectr.com"
 
 ### Property 9: og:locale complement invariant
 
-*For any* marketing page and locale in `{en, fr}`, the `og:locale` value must be the BCP47 tag for that locale (`en_US` or `fr_FR`), and `og:locale:alternate` must be the tag for the other locale — they must never be equal.
+_For any_ marketing page and locale in `{en, fr}`, the `og:locale` value must be the BCP47 tag for that locale (`en_US` or `fr_FR`), and `og:locale:alternate` must be the tag for the other locale — they must never be equal.
 
 **Validates: Requirements 2.7, 2.8**
 
@@ -472,7 +513,7 @@ NEXT_PUBLIC_APP_URL="https://app.gatectr.com"
 
 ### Property 10: Robots subdomain dispatch
 
-*For any* host header value, if the host starts with `app.` then the robots handler must include `Disallow: /` and must not include a `Sitemap:` directive; if the host does not start with `app.` then the robots handler must include a `Sitemap:` directive and must include `Allow: /`.
+_For any_ host header value, if the host starts with `app.` then the robots handler must include `Disallow: /` and must not include a `Sitemap:` directive; if the host does not start with `app.` then the robots handler must include a `Sitemap:` directive and must include `Allow: /`.
 
 **Validates: Requirements 7.4, 7.5, 7.6, 7.7**
 
@@ -480,16 +521,16 @@ NEXT_PUBLIC_APP_URL="https://app.gatectr.com"
 
 ## Error Handling
 
-| Scenario | Handling |
-|---|---|
-| `NEXT_PUBLIC_MARKETING_URL` not set | Fall back to `"https://gatectr.com"` in `getSeoContext()` |
-| `NEXT_PUBLIC_APP_URL` not set | Fall back to `"https://app.gatectr.com"` in `getSeoContext()` |
-| `host` header absent (e.g. static export) | Treat as marketing subdomain (safe default) |
-| Missing translation key in `generateMetadata` | next-intl falls back to EN; TypeScript types catch missing keys at build time |
-| OG endpoint called without `title` param | Render default title `"GateCtr — One gateway. Every LLM."` |
-| OG endpoint called without `description` param | Render default description |
-| Sitemap called on app subdomain | Return `[]` — Next.js serves a 404 for empty sitemaps |
-| JSON-LD schema serialization error | `JSON.stringify` is safe for plain objects; no external serializer needed |
+| Scenario                                       | Handling                                                                      |
+| ---------------------------------------------- | ----------------------------------------------------------------------------- |
+| `NEXT_PUBLIC_MARKETING_URL` not set            | Fall back to `"https://gatectr.com"` in `getSeoContext()`                     |
+| `NEXT_PUBLIC_APP_URL` not set                  | Fall back to `"https://app.gatectr.com"` in `getSeoContext()`                 |
+| `host` header absent (e.g. static export)      | Treat as marketing subdomain (safe default)                                   |
+| Missing translation key in `generateMetadata`  | next-intl falls back to EN; TypeScript types catch missing keys at build time |
+| OG endpoint called without `title` param       | Render default title `"GateCtr — One gateway. Every LLM."`                    |
+| OG endpoint called without `description` param | Render default description                                                    |
+| Sitemap called on app subdomain                | Return `[]` — Next.js serves a 404 for empty sitemaps                         |
+| JSON-LD schema serialization error             | `JSON.stringify` is safe for plain objects; no external serializer needed     |
 
 ---
 
@@ -513,6 +554,7 @@ Each property test runs a minimum of 100 iterations. The property-based testing 
 Tag format in test comments: `Feature: seo-complete, Property {N}: {property_text}`
 
 **Property 1 — Canonical URL locale prefix invariant**
+
 ```
 // Feature: seo-complete, Property 1: canonical URL locale prefix invariant
 fc.assert(fc.property(
@@ -528,6 +570,7 @@ fc.assert(fc.property(
 ```
 
 **Property 2 — Alternate URL round-trip**
+
 ```
 // Feature: seo-complete, Property 2: alternate URL round-trip
 fc.assert(fc.property(
@@ -548,6 +591,7 @@ Tested via unit test (mocking `getSeoContext` to return `isAppSubdomain: true`) 
 Tested as a unit example (mock `isAppSubdomain: true`, assert empty array).
 
 **Property 5 — Sitemap contains both locales**
+
 ```
 // Feature: seo-complete, Property 5: sitemap contains both locales for every marketing page
 // For each entry in the sitemap result, assert alternates.languages has 'en' and 'fr'
@@ -564,6 +608,7 @@ fc.assert(fc.property(
 ```
 
 **Property 6 — OG image dimensions invariant**
+
 ```
 // Feature: seo-complete, Property 6: OG image dimensions invariant
 fc.assert(fc.property(
@@ -577,6 +622,7 @@ fc.assert(fc.property(
 ```
 
 **Property 7 — JSON-LD serialization round-trip**
+
 ```
 // Feature: seo-complete, Property 7: JSON-LD serialization round-trip
 fc.assert(fc.property(
@@ -590,6 +636,7 @@ fc.assert(fc.property(
 ```
 
 **Property 8 — getSeoContext fallback invariant**
+
 ```
 // Feature: seo-complete, Property 8: getSeoContext fallback invariant
 // Tested by deleting env vars and asserting non-empty strings are returned
@@ -604,6 +651,7 @@ fc.assert(fc.property(
 ```
 
 **Property 9 — og:locale complement invariant**
+
 ```
 // Feature: seo-complete, Property 9: og:locale complement invariant
 fc.assert(fc.property(
@@ -620,6 +668,7 @@ fc.assert(fc.property(
 ```
 
 **Property 10 — Robots subdomain dispatch**
+
 ```
 // Feature: seo-complete, Property 10: robots subdomain dispatch
 fc.assert(fc.property(

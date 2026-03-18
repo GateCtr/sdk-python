@@ -3,7 +3,7 @@
  * Used by both the home Pricing component and the /pricing page.
  * Single source of truth — always reads from config/product.ts.
  */
-import { PRODUCT } from '@/config/product';
+import { PRODUCT } from "@/config/product";
 
 export const PLAN_VARS = [
   // Free

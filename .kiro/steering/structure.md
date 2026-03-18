@@ -179,7 +179,7 @@ public/                   # Static assets (images, icons)
 ## Internationalization (i18n)
 
 - Supported locales: `en` (English - default), `fr` (French)
-- URL structure: 
+- URL structure:
   - English (default): `/waitlist` (no prefix)
   - French: `/fr/waitlist` (with prefix)
 - Strategy: `localePrefix: 'as-needed'` - cleaner URLs for default locale
@@ -191,6 +191,7 @@ public/                   # Static assets (images, icons)
 ### Creating Localized Pages
 
 All pages with user-facing content MUST:
+
 1. Be placed in `app/[locale]/` directory
 2. Use `useTranslations()` hook from `next-intl`
 3. Have translation files in both `messages/en/` and `messages/fr/`
@@ -227,19 +228,19 @@ TypeScript path alias `@/*` maps to project root, enabling clean imports:
 
 ```typescript
 // Components
-import { Button } from '@/components/ui/button'
-import { LanguageSwitcher } from '@/components/language-switcher'
+import { Button } from "@/components/ui/button";
+import { LanguageSwitcher } from "@/components/language-switcher";
 
 // Libraries
-import { prisma } from '@/lib/prisma'
-import { resend } from '@/lib/resend'
+import { prisma } from "@/lib/prisma";
+import { resend } from "@/lib/resend";
 
 // i18n
-import { Link, useRouter } from '@/i18n/routing'
-import { useTranslations } from 'next-intl'
+import { Link, useRouter } from "@/i18n/routing";
+import { useTranslations } from "next-intl";
 
 // Types
-import type { User } from '@/types/user'
+import type { User } from "@/types/user";
 ```
 
 ### Import Rules

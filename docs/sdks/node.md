@@ -13,7 +13,7 @@ npm install @gatectr/sdk
 Your LLM provider keys (OpenAI, Anthropic, etc.) are connected once in **Settings → Providers** in the dashboard. Your code only needs `GATECTR_API_KEY`.
 
 ```typescript
-import { GateCtr } from '@gatectr/sdk';
+import { GateCtr } from "@gatectr/sdk";
 
 // Minimal
 const client = new GateCtr({
@@ -23,9 +23,9 @@ const client = new GateCtr({
 // With options
 const client = new GateCtr({
   apiKey: process.env.GATECTR_API_KEY,
-  budget: { maxTokensPerDay: 500_000 },   // override project budget
-  optimizer: { enabled: true },            // default: true on Pro+
-  router: { prefer: 'cost' },             // 'cost' | 'performance' | 'balanced'
+  budget: { maxTokensPerDay: 500_000 }, // override project budget
+  optimizer: { enabled: true }, // default: true on Pro+
+  router: { prefer: "cost" }, // 'cost' | 'performance' | 'balanced'
 });
 ```
 
@@ -54,12 +54,12 @@ console.log(response.gatectr);
 
 ```typescript
 const stream = await client.stream({
-  model: 'gpt-4o',
+  model: "gpt-4o",
   messages,
 });
 
 for await (const chunk of stream) {
-  process.stdout.write(chunk.delta ?? '');
+  process.stdout.write(chunk.delta ?? "");
 }
 ```
 
@@ -67,9 +67,9 @@ for await (const chunk of stream) {
 
 ```typescript
 const usage = await client.usage({
-  projectId: 'proj_123',
-  from: '2025-01-01',
-  to: '2025-01-31',
+  projectId: "proj_123",
+  from: "2025-01-01",
+  to: "2025-01-31",
 });
 ```
 
@@ -78,11 +78,11 @@ const usage = await client.usage({
 > Your LLM provider keys (OpenAI, Anthropic, etc.) are stored once in the GateCtr dashboard — AES-encrypted. In your code, you only use your `GATECTR_API_KEY`. GateCtr proxies every request to the right provider transparently.
 
 ```typescript
-import OpenAI from 'openai';
+import OpenAI from "openai";
 
 const openai = new OpenAI({
-  apiKey: process.env.GATECTR_API_KEY,   // your GateCtr key — not your OpenAI key
-  baseURL: 'https://api.gatectr.com/v1', // GateCtr proxies to OpenAI / Anthropic / Mistral / Gemini
+  apiKey: process.env.GATECTR_API_KEY, // your GateCtr key — not your OpenAI key
+  baseURL: "https://api.gatectr.com/v1", // GateCtr proxies to OpenAI / Anthropic / Mistral / Gemini
 });
 ```
 

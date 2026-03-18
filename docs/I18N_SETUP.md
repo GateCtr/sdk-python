@@ -28,12 +28,15 @@ messages/
 ## Configuration Files
 
 ### `i18n/routing.ts`
+
 Defines available locales, default locale, and routing configuration.
 
 ### `i18n/request.ts`
+
 Loads message files for the requested locale. Automatically imports all JSON files from the locale folder.
 
 ### `next.config.ts`
+
 Configured with `next-intl` plugin for proper routing and locale detection.
 
 ## Usage
@@ -45,7 +48,7 @@ import { useTranslations } from 'next-intl';
 
 export default function WaitlistPage() {
   const t = useTranslations('waitlist.page');
-  
+
   return (
     <div>
       <h1>{t('title')}</h1>
@@ -64,7 +67,7 @@ import { useTranslations } from 'next-intl';
 
 export default function WaitlistForm() {
   const t = useTranslations('waitlist.form');
-  
+
   return (
     <form>
       <label>{t('email.label')}</label>
@@ -98,6 +101,7 @@ const t = useTranslations('common.footer');
 ### Automatic Locale Detection
 
 The middleware automatically detects the user's preferred language from:
+
 1. URL path (`/fr/waitlist`)
 2. Cookie (`NEXT_LOCALE`)
 3. `Accept-Language` header
@@ -129,10 +133,10 @@ import { Link } from '@/i18n/routing';
 ### Programmatic Navigation
 
 ```typescript
-import { useRouter } from '@/i18n/routing';
+import { useRouter } from "@/i18n/routing";
 
 const router = useRouter();
-router.push('/waitlist'); // Automatically adds locale prefix
+router.push("/waitlist"); // Automatically adds locale prefix
 ```
 
 ### Language Switcher
@@ -223,6 +227,7 @@ const t = useTranslations('dashboard');
 ```
 
 Usage:
+
 ```typescript
 const t = useTranslations('waitlist.form.email');
 <label>{t('label')}</label>
@@ -298,6 +303,7 @@ Add the missing key to the appropriate message file.
 ### Locale Not Detected
 
 Check:
+
 1. Middleware is properly configured
 2. Browser language settings
 3. Cookie `NEXT_LOCALE` value

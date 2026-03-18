@@ -3,6 +3,7 @@
 ## Prérequis
 
 Avant de commencer, assurez-vous d'avoir :
+
 - ✅ Node.js 20+ installé
 - ✅ PostgreSQL qui tourne (Docker ou local)
 - ✅ Un compte Clerk (gratuit sur clerk.com)
@@ -31,6 +32,7 @@ Cela ouvrira votre navigateur pour vous connecter à Clerk.
 ## Étape 3 : Démarrez votre serveur (30 secondes)
 
 **Terminal 1** :
+
 ```bash
 pnpm dev
 ```
@@ -40,11 +42,13 @@ Attendez que le serveur démarre sur http://localhost:3000
 ## Étape 4 : Démarrez le tunnel Clerk (30 secondes)
 
 **Terminal 2** :
+
 ```bash
 clerk listen --forward-to http://localhost:3000/api/webhooks/clerk
 ```
 
 Vous devriez voir :
+
 ```
 ✓ Listening for webhooks...
 ✓ Forwarding to http://localhost:3000/api/webhooks/clerk
@@ -59,6 +63,7 @@ Vous devriez voir :
 ## Étape 6 : Observez la magie ✨
 
 **Dans Terminal 2 (Clerk CLI)**, vous verrez :
+
 ```
 → user.created event received
 → Forwarding to http://localhost:3000/api/webhooks/clerk
@@ -66,6 +71,7 @@ Vous devriez voir :
 ```
 
 **Dans Terminal 1 (Next.js)**, vous verrez :
+
 ```
 User created: votre-email@example.com (cuid_abc123)
 ```
@@ -77,6 +83,7 @@ pnpm prisma studio
 ```
 
 Vérifiez ces tables :
+
 - **users** : Votre nouvel utilisateur
 - **user_roles** : Rôle DEVELOPER assigné
 - **audit_logs** : Entrée "user.created"
@@ -115,6 +122,7 @@ pnpm prisma migrate dev
 ### L'email n'est pas envoyé
 
 C'est normal ! L'email est envoyé de manière asynchrone et n'empêche pas la création de l'utilisateur. Vérifiez :
+
 - Les logs du serveur pour voir l'erreur
 - La table `email_logs` pour le statut
 - Que `RESEND_API_KEY` est configuré
@@ -128,6 +136,7 @@ C'est normal ! L'email est envoyé de manière asynchrone et n'empêche pas la c
 ## 🎯 Prochaines étapes
 
 Une fois les webhooks testés :
+
 1. ✅ Task 7 terminée
-2. ⏭️  Task 8 : Checkpoint
-3. ⏭️  Task 9 : API de vérification des permissions
+2. ⏭️ Task 8 : Checkpoint
+3. ⏭️ Task 9 : API de vérification des permissions

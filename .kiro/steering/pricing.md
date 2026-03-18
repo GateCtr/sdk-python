@@ -9,6 +9,7 @@ GateCtr adopte un modèle SaaS hybride. L'utilisateur paye directement son provi
 ## Plans
 
 ### Free — €0/mois
+
 - Jusqu'à 50K tokens/mois
 - 1 projet
 - Analytics de base
@@ -17,6 +18,7 @@ GateCtr adopte un modèle SaaS hybride. L'utilisateur paye directement son provi
 - Docs & support communauté
 
 ### Pro — €29/mois
+
 - Jusqu'à 2M tokens/mois
 - 5 projets
 - Analytics avancées
@@ -26,6 +28,7 @@ GateCtr adopte un modèle SaaS hybride. L'utilisateur paye directement son provi
 - Support email
 
 ### Team — €99/mois
+
 - Jusqu'à 10M tokens/mois
 - Projets illimités
 - RBAC multi-utilisateurs
@@ -35,6 +38,7 @@ GateCtr adopte un modèle SaaS hybride. L'utilisateur paye directement son provi
 - Support prioritaire
 
 ### Enterprise — Custom (sur devis)
+
 - Tokens illimités
 - SLA garanti 99.9%
 - Déploiement dédié / on-prem
@@ -54,13 +58,13 @@ GateCtr adopte un modèle SaaS hybride. L'utilisateur paye directement son provi
 
 ## Modèles de facturation complémentaires
 
-| Modèle | Description | Segment cible |
-|---|---|---|
-| Abonnement mensuel | Accès plateforme selon plan choisi | Tous segments |
-| Usage-based add-on | Facturation par tranche de 10M tokens routés au-delà du plan | Pro & Team |
-| Savings sharing | Option premium : % des économies tokens réalisées via l'optimizer | Enterprise |
-| Seats supplémentaires | €15/user/mois pour les membres additionnels | Team |
-| Onboarding premium | Session de setup et intégration par notre équipe technique | Enterprise |
+| Modèle                | Description                                                       | Segment cible |
+| --------------------- | ----------------------------------------------------------------- | ------------- |
+| Abonnement mensuel    | Accès plateforme selon plan choisi                                | Tous segments |
+| Usage-based add-on    | Facturation par tranche de 10M tokens routés au-delà du plan      | Pro & Team    |
+| Savings sharing       | Option premium : % des économies tokens réalisées via l'optimizer | Enterprise    |
+| Seats supplémentaires | €15/user/mois pour les membres additionnels                       | Team          |
+| Onboarding premium    | Session de setup et intégration par notre équipe technique        | Enterprise    |
 
 ## Règles pour le copy lié au pricing
 
@@ -74,22 +78,22 @@ GateCtr adopte un modèle SaaS hybride. L'utilisateur paye directement son provi
 
 ## Messaging pricing par contexte
 
-| Contexte | EN | FR |
-|---|---|---|
-| Hero / CTA | "Start free — No card needed" | "Démarrer — Sans carte requise" |
-| Pricing page headline | "Pay for control. Not for tokens." | "Payez pour le contrôle. Pas pour les tokens." |
-| Free plan | "Everything you need to start. $0." | "Tout ce qu'il faut pour démarrer. 0 €." |
-| Pro upsell | "Upgrade to Pro — save 40% on tokens" | "Passer à Pro — économisez 40% sur les tokens" |
-| Enterprise | "Book a demo" | "Réserver une démo" |
-| Billing philosophy | "You pay OpenAI. We charge for the control layer." | "Vous payez OpenAI. Nous facturons la couche de contrôle." |
+| Contexte              | EN                                                 | FR                                                         |
+| --------------------- | -------------------------------------------------- | ---------------------------------------------------------- |
+| Hero / CTA            | "Start free — No card needed"                      | "Démarrer — Sans carte requise"                            |
+| Pricing page headline | "Pay for control. Not for tokens."                 | "Payez pour le contrôle. Pas pour les tokens."             |
+| Free plan             | "Everything you need to start. $0."                | "Tout ce qu'il faut pour démarrer. 0 €."                   |
+| Pro upsell            | "Upgrade to Pro — save 40% on tokens"              | "Passer à Pro — économisez 40% sur les tokens"             |
+| Enterprise            | "Book a demo"                                      | "Réserver une démo"                                        |
+| Billing philosophy    | "You pay OpenAI. We charge for the control layer." | "Vous payez OpenAI. Nous facturons la couche de contrôle." |
 
 ## Données de référence (source: config/product.ts)
 
-| Plan | Prix | Token limit | Projets | Webhooks |
-|---|---|---|---|---|
-| Free | €0 | 50K/mois | 1 | 1 |
-| Pro | €29/mois | 2M/mois | 5 | Illimités |
-| Team | €99/mois | 10M/mois | Illimités | Illimités |
-| Enterprise | Sur devis | Illimités | Illimités | Illimités |
+| Plan       | Prix      | Token limit | Projets   | Webhooks  |
+| ---------- | --------- | ----------- | --------- | --------- |
+| Free       | €0        | 50K/mois    | 1         | 1         |
+| Pro        | €29/mois  | 2M/mois     | 5         | Illimités |
+| Team       | €99/mois  | 10M/mois    | Illimités | Illimités |
+| Enterprise | Sur devis | Illimités   | Illimités | Illimités |
 
 Ces valeurs sont la source de vérité — toujours les lire depuis `config/product.ts` dans le code.

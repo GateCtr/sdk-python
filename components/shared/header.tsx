@@ -1,17 +1,23 @@
-'use client';
+"use client";
 
-import { cn } from '@/lib/utils';
-import { Logo } from '@/components/shared/logo';
-import { LanguageSwitcher } from '@/components/language-switcher';
-import { ThemeToggle } from '@/components/ui/theme-toggle';
-import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetClose } from '@/components/ui/sheet';
-import { Link } from '@/i18n/routing';
-import { useTranslations } from 'next-intl';
-import { Menu } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { cn } from "@/lib/utils";
+import { Logo } from "@/components/shared/logo";
+import { LanguageSwitcher } from "@/components/language-switcher";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { Button } from "@/components/ui/button";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetClose,
+} from "@/components/ui/sheet";
+import { Link } from "@/i18n/routing";
+import { useTranslations } from "next-intl";
+import { Menu } from "lucide-react";
+import { useState, useEffect } from "react";
 
-export type HeaderVariant = 'marketing' | 'auth' | 'dashboard' | 'minimal';
+export type HeaderVariant = "marketing" | "auth" | "dashboard" | "minimal";
 
 export interface HeaderProps {
   variant?: HeaderVariant;
@@ -20,14 +26,14 @@ export interface HeaderProps {
 }
 
 const NAV_LINKS = [
-  { key: 'features',  href: '/features' },
-  { key: 'pricing',   href: '/pricing' },
-  { key: 'docs',      href: '/docs' },
-  { key: 'changelog', href: '/changelog' },
+  { key: "features", href: "/features" },
+  { key: "pricing", href: "/pricing" },
+  { key: "docs", href: "/docs" },
+  { key: "changelog", href: "/changelog" },
 ] as const;
 
 function DesktopNav() {
-  const t = useTranslations('common.nav');
+  const t = useTranslations("common.nav");
   return (
     <nav className="hidden md:flex items-center gap-1">
       {NAV_LINKS.map(({ key, href }) => (
@@ -44,25 +50,24 @@ function DesktopNav() {
 }
 
 function DesktopActions() {
-  const t = useTranslations('common.nav');
+  const t = useTranslations("common.nav");
   return (
     <div className="hidden md:flex items-center gap-1">
       <LanguageSwitcher />
       <ThemeToggle />
       <div className="w-px h-4 bg-border mx-1" aria-hidden />
       <Button variant="cta-ghost" size="sm" asChild>
-        <Link href="/sign-in">{t('signIn')}</Link>
+        <Link href="/sign-in">{t("signIn")}</Link>
       </Button>
       <Button variant="cta-primary" size="sm" asChild>
-        <Link href="/sign-up">{t('signUp')}</Link>
+        <Link href="/sign-up">{t("signUp")}</Link>
       </Button>
     </div>
   );
 }
 
-
 function MobileSheet() {
-  const t = useTranslations('common.nav');
+  const t = useTranslations("common.nav");
   const [open, setOpen] = useState(false);
 
   return (
@@ -105,12 +110,12 @@ function MobileSheet() {
           </div>
           <Button variant="cta-secondary" size="sm" asChild className="w-full">
             <SheetClose asChild>
-              <Link href="/sign-in">{t('signIn')}</Link>
+              <Link href="/sign-in">{t("signIn")}</Link>
             </SheetClose>
           </Button>
           <Button variant="cta-primary" size="sm" asChild className="w-full">
             <SheetClose asChild>
-              <Link href="/sign-up">{t('signUp')}</Link>
+              <Link href="/sign-up">{t("signUp")}</Link>
             </SheetClose>
           </Button>
         </div>
@@ -119,44 +124,51 @@ function MobileSheet() {
   );
 }
 
-
-export function Header({ variant = 'marketing', rightSlot, className }: HeaderProps) {
+export function Header({
+  variant = "marketing",
+  rightSlot,
+  className,
+}: HeaderProps) {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   return (
     <header
       className={cn(
-        'w-full bg-background/80 backdrop-blur-sm sticky top-0 z-50 transition-[border-color,box-shadow] duration-200',
-        scrolled ? 'border-b border-border shadow-sm' : 'border-b border-transparent',
-        className
+        "w-full bg-background/80 backdrop-blur-sm sticky top-0 z-50 transition-[border-color,box-shadow] duration-200",
+        scrolled
+          ? "border-b border-border shadow-sm"
+          : "border-b border-transparent",
+        className,
       )}
     >
       <div
         className={cn(
-          'flex items-center h-16 px-4 md:px-6',
-          variant === 'auth' ? 'justify-center' : 'justify-between max-w-7xl mx-auto'
+          "flex items-center h-16 px-4 md:px-6",
+          variant === "auth"
+            ? "justify-center"
+            : "justify-between max-w-7xl mx-auto",
         )}
       >
         <Link href="/" aria-label="GateCtr home">
           <Logo variant="full" />
         </Link>
 
-        {variant === 'marketing' && <DesktopNav />}
+        {variant === "marketing" && <DesktopNav />}
 
-        {variant === 'marketing' && (
+        {variant === "marketing" && (
           <>
             <DesktopActions />
             <MobileSheet />
           </>
         )}
 
-        {(variant === 'dashboard' || variant === 'minimal') && (
+        {(variant === "dashboard" || variant === "minimal") && (
           <div className="flex items-center gap-2">
             <LanguageSwitcher />
             <ThemeToggle />

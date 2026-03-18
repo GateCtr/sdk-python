@@ -64,12 +64,14 @@ NEXT_PUBLIC_APP_URL=https://gatectr.io
 ### 1. Inscription à la waitlist
 
 Les utilisateurs peuvent s'inscrire avec :
+
 - Email (obligatoire)
 - Nom
 - Entreprise
 - Use case (saas, agent, enterprise, dev)
 
 Chaque inscription :
+
 - Reçoit un numéro de position automatique
 - Déclenche un email de bienvenue
 - Enregistre l'IP et User-Agent pour tracking
@@ -77,6 +79,7 @@ Chaque inscription :
 ### 2. Gestion admin
 
 Interface admin pour :
+
 - Visualiser tous les inscrits
 - Filtrer par statut
 - Inviter individuellement ou par batch
@@ -85,6 +88,7 @@ Interface admin pour :
 ### 3. Protection des inscriptions
 
 Quand `ENABLE_WAITLIST=true` et `ENABLE_SIGNUPS=false` :
+
 - Les tentatives d'accès à `/sign-up` redirigent vers `/waitlist`
 - Les inscriptions directes via Clerk sont bloquées
 - Seuls les utilisateurs invités peuvent créer un compte
@@ -94,6 +98,7 @@ Quand `ENABLE_WAITLIST=true` et `ENABLE_SIGNUPS=false` :
 ### Phase pré-lancement
 
 1. Activer la waitlist :
+
    ```bash
    ENABLE_WAITLIST=true
    ENABLE_SIGNUPS=false
@@ -149,6 +154,7 @@ enum WaitlistStatus {
 ### Email de bienvenue
 
 Envoyé automatiquement après inscription :
+
 - Confirmation de l'inscription
 - Position dans la file
 - Présentation des fonctionnalités
@@ -157,6 +163,7 @@ Envoyé automatiquement après inscription :
 ### Email d'invitation
 
 Envoyé par l'admin :
+
 - Lien d'inscription avec code
 - Instructions de démarrage
 - Expiration dans 7 jours
@@ -170,6 +177,7 @@ Une fois la waitlist remplie :
 2. Collecter les retours
 
 3. Quand prêt pour le lancement public :
+
    ```bash
    ENABLE_WAITLIST=false
    ENABLE_SIGNUPS=true

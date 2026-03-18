@@ -1,33 +1,32 @@
-import { cn } from '@/lib/utils';
+import { cn } from "@/lib/utils";
 
 interface LogoProps {
-  variant?: 'icon' | 'full' | 'stacked';
+  variant?: "icon" | "full" | "stacked";
   className?: string;
   iconClassName?: string;
   textClassName?: string;
 }
 
-export function Logo({ 
-  variant = 'full', 
+export function Logo({
+  variant = "full",
   className,
   iconClassName,
-  textClassName 
+  textClassName,
 }: LogoProps) {
-  const isStacked = variant === 'stacked';
-  
+  const isStacked = variant === "stacked";
+
   return (
-    <div className={cn(
-      'flex items-center',
-      isStacked ? 'flex-col gap-2' : 'gap-3',
-      className
-    )}>
+    <div
+      className={cn(
+        "flex items-center",
+        isStacked ? "flex-col gap-2" : "gap-3",
+        className,
+      )}
+    >
       {/* Icon SVG */}
       <svg
         viewBox="0 0 363.13 361.9"
-        className={cn(
-          'w-8 h-8',
-          iconClassName
-        )}
+        className={cn("w-8 h-8", iconClassName)}
         aria-label="GateCtr Logo"
       >
         {/* Main circle part - primary color */}
@@ -43,12 +42,12 @@ export function Logo({
       </svg>
 
       {/* Text - shown in 'full' and 'stacked' variants */}
-      {(variant === 'full' || variant === 'stacked') && (
+      {(variant === "full" || variant === "stacked") && (
         <span
           className={cn(
-            'font-display text-2xl font-bold tracking-tight',
-            'text-foreground transition-colors',
-            textClassName
+            "font-display text-2xl font-bold tracking-tight",
+            "text-foreground transition-colors",
+            textClassName,
           )}
         >
           Gate<span className="text-accent">C</span>tr

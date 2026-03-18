@@ -1,4 +1,4 @@
-import { Skeleton } from '@/components/ui/skeleton';
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function AuditLogsLoading() {
   return (
@@ -20,7 +20,10 @@ export default function AuditLogsLoading() {
         </div>
         {/* Table rows */}
         {Array.from({ length: 10 }).map((_, i) => (
-          <div key={i} className="px-4 py-3 grid grid-cols-5 gap-4 border-t border-border">
+          <div
+            key={i}
+            className="px-4 py-3 grid grid-cols-5 gap-4 border-t border-border"
+          >
             <Skeleton className="h-4 w-32" />
             <Skeleton className="h-4 w-24" />
             <Skeleton className="h-4 w-20" />

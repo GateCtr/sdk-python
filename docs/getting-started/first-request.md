@@ -46,13 +46,13 @@ GateCtr returns an OpenAI-compatible response with an extra `gatectr` field:
 
 ## The `gatectr` field
 
-| Field | Description |
-|---|---|
-| `tokens_saved` | Tokens removed by the Context Optimizer |
-| `original_tokens` | Token count before optimization |
-| `model_used` | Actual model used (relevant when routing is enabled) |
-| `optimized` | Whether the Context Optimizer ran |
-| `cost_usd` | Estimated cost of this request |
+| Field             | Description                                          |
+| ----------------- | ---------------------------------------------------- |
+| `tokens_saved`    | Tokens removed by the Context Optimizer              |
+| `original_tokens` | Token count before optimization                      |
+| `model_used`      | Actual model used (relevant when routing is enabled) |
+| `optimized`       | Whether the Context Optimizer ran                    |
+| `cost_usd`        | Estimated cost of this request                       |
 
 ## Supported models
 

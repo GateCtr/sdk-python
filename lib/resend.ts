@@ -1,12 +1,12 @@
-import { Resend } from 'resend';
-import { render } from '@react-email/render';
-import WaitlistWelcomeEmail from '@/components/emails/waitlist-welcome';
-import WaitlistInviteEmail from '@/components/emails/waitlist-invite';
-import UserWelcomeEmail from '@/components/emails/user-welcome';
+import { Resend } from "resend";
+import { render } from "@react-email/render";
+import WaitlistWelcomeEmail from "@/components/emails/waitlist-welcome";
+import WaitlistInviteEmail from "@/components/emails/waitlist-invite";
+import UserWelcomeEmail from "@/components/emails/user-welcome";
 
 function getResend(): Resend {
   if (!process.env.RESEND_API_KEY) {
-    throw new Error('RESEND_API_KEY is not defined');
+    throw new Error("RESEND_API_KEY is not defined");
   }
   return new Resend(process.env.RESEND_API_KEY);
 }
@@ -20,15 +20,15 @@ export const resend = new Proxy({} as Resend, {
 export async function sendWelcomeWaitlistEmail(
   email: string,
   name: string | null,
-  position: number
+  position: number,
 ) {
   try {
     const emailHtml = await render(
-      WaitlistWelcomeEmail({ email, name: name || undefined, position })
+      WaitlistWelcomeEmail({ email, name: name || undefined, position }),
     );
 
     await resend.emails.send({
-      from: process.env.EMAIL_FROM || 'GateCtr <noreply@gatectr.io>',
+      from: process.env.EMAIL_FROM || "GateCtr <noreply@gatectr.io>",
       to: email,
       subject: `You're #${position} on the GateCtr waitlist!`,
       html: emailHtml,
@@ -36,7 +36,7 @@ export async function sendWelcomeWaitlistEmail(
 
     return { success: true };
   } catch (error) {
-    console.error('Failed to send waitlist email:', error);
+    console.error("Failed to send waitlist email:", error);
     return { success: false, error };
   }
 }
@@ -45,7 +45,7 @@ export async function sendInviteEmail(
   email: string,
   name: string | null,
   inviteCode: string,
-  expiresAt: Date
+  expiresAt: Date,
 ) {
   try {
     const emailHtml = await render(
@@ -54,19 +54,19 @@ export async function sendInviteEmail(
         name: name || undefined,
         inviteCode,
         expiresAt,
-      })
+      }),
     );
 
     await resend.emails.send({
-      from: process.env.EMAIL_FROM || 'GateCtr <noreply@gatectr.io>',
+      from: process.env.EMAIL_FROM || "GateCtr <noreply@gatectr.io>",
       to: email,
-      subject: 'Your GateCtr invite is ready!',
+      subject: "Your GateCtr invite is ready!",
       html: emailHtml,
     });
 
     return { success: true };
   } catch (error) {
-    console.error('Failed to send invite email:', error);
+    console.error("Failed to send invite email:", error);
     return { success: false, error };
   }
 }
@@ -81,7 +81,7 @@ export async function sendInviteEmail(
 export async function sendUserWelcomeEmail(
   email: string,
   name: string | null,
-  locale: 'en' | 'fr' = 'en'
+  locale: "en" | "fr" = "en",
 ) {
   try {
     const emailHtml = await render(
@@ -89,15 +89,14 @@ export async function sendUserWelcomeEmail(
         email,
         name: name || undefined,
         locale,
-      })
+      }),
     );
 
-    const subject = locale === 'fr' 
-      ? 'Bienvenue sur GateCtr' 
-      : 'Welcome to GateCtr';
+    const subject =
+      locale === "fr" ? "Bienvenue sur GateCtr" : "Welcome to GateCtr";
 
     const result = await resend.emails.send({
-      from: process.env.EMAIL_FROM || 'GateCtr <noreply@gatectr.io>',
+      from: process.env.EMAIL_FROM || "GateCtr <noreply@gatectr.io>",
       to: email,
       subject,
       html: emailHtml,
@@ -105,8 +104,7 @@ export async function sendUserWelcomeEmail(
 
     return { success: true, resendId: result.data?.id };
   } catch (error) {
-    console.error('Failed to send user welcome email:', error);
+    console.error("Failed to send user welcome email:", error);
     return { success: false, error };
   }
 }
-

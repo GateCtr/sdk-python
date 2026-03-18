@@ -69,32 +69,33 @@ Les variables CSS sont définies pour les deux modes dans `app/globals.css`:
 /* Mode Light (défaut) */
 :root {
   --background: #ffffff;
-  --foreground: #4A5568;
-  --primary: #1B4F82;
-  --secondary: #00B4C8;
+  --foreground: #4a5568;
+  --primary: #1b4f82;
+  --secondary: #00b4c8;
   /* ... */
 }
 
 /* Mode Dark (via @media) */
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #14406A;
-    --foreground: #EDF2F7;
+    --background: #14406a;
+    --foreground: #edf2f7;
     /* ... */
   }
 }
 
 /* Mode Dark (via classe) */
 .dark {
-  --background: #14406A;
-  --foreground: #EDF2F7;
-  --card: #1A202C;
-  --card-foreground: #EDF2F7;
+  --background: #14406a;
+  --foreground: #edf2f7;
+  --card: #1a202c;
+  --card-foreground: #edf2f7;
   /* ... */
 }
 ```
 
 **Note**: Les deux approches (`@media` et `.dark`) sont présentes pour supporter:
+
 - Le mode system (via `@media`)
 - Le mode manuel (via classe `.dark`)
 
@@ -186,7 +187,7 @@ export function MyComponent() {
     <div>
       <p>Thème actuel: {theme}</p>
       <p>Thème système: {systemTheme}</p>
-      
+
       <button onClick={() => setTheme("light")}>Light</button>
       <button onClick={() => setTheme("dark")}>Dark</button>
       <button onClick={() => setTheme("system")}>System</button>
@@ -206,13 +207,7 @@ export function ConditionalComponent() {
   const { theme } = useTheme();
 
   return (
-    <div>
-      {theme === "dark" ? (
-        <DarkModeContent />
-      ) : (
-        <LightModeContent />
-      )}
-    </div>
+    <div>{theme === "dark" ? <DarkModeContent /> : <LightModeContent />}</div>
   );
 }
 ```
@@ -246,15 +241,15 @@ Tailwind CSS détecte automatiquement la classe `.dark` et applique les styles c
 
 ### Couleurs principales
 
-| Variable | Light | Dark |
-|----------|-------|------|
-| `--background` | #ffffff | #14406A (Navy Deep) |
+| Variable       | Light          | Dark                 |
+| -------------- | -------------- | -------------------- |
+| `--background` | #ffffff        | #14406A (Navy Deep)  |
 | `--foreground` | #4A5568 (Grey) | #EDF2F7 (Grey Light) |
-| `--card` | #ffffff | #1A202C (Grey 800) |
-| `--primary` | #1B4F82 (Navy) | #1B4F82 (Navy) |
-| `--secondary` | #00B4C8 (Cyan) | #00B4C8 (Cyan) |
-| `--muted` | #EDF2F7 | #2D3748 (Grey 700) |
-| `--border` | #E2E8F0 | #2D3748 |
+| `--card`       | #ffffff        | #1A202C (Grey 800)   |
+| `--primary`    | #1B4F82 (Navy) | #1B4F82 (Navy)       |
+| `--secondary`  | #00B4C8 (Cyan) | #00B4C8 (Cyan)       |
+| `--muted`      | #EDF2F7        | #2D3748 (Grey 700)   |
+| `--border`     | #E2E8F0        | #2D3748              |
 
 ### Principes de design
 
@@ -295,7 +290,10 @@ Puis ajouter des transitions CSS:
 
 ```css
 * {
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease;
 }
 ```
 
@@ -340,10 +338,10 @@ import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 test("toggle theme", () => {
   render(<ThemeToggle />);
-  
+
   const button = screen.getByRole("button");
   fireEvent.click(button);
-  
+
   // Vérifier que le thème a changé
 });
 ```
@@ -357,9 +355,9 @@ test("component in dark mode", () => {
   render(
     <ThemeProvider attribute="class" defaultTheme="dark">
       <MyComponent />
-    </ThemeProvider>
+    </ThemeProvider>,
   );
-  
+
   // Assertions
 });
 ```
@@ -369,6 +367,7 @@ test("component in dark mode", () => {
 ### Le thème ne change pas
 
 Vérifiez que:
+
 1. `ThemeProvider` enveloppe votre application
 2. `suppressHydrationWarning` est sur `<html>`
 3. Les variables CSS sont définies dans `:root` et `.dark`
@@ -377,6 +376,7 @@ Vérifiez que:
 ### Flash de contenu incorrect (FOUC)
 
 Si vous voyez un flash lors du chargement:
+
 1. Vérifiez que `next-themes` est correctement installé
 2. Le script de blocage doit être injecté automatiquement
 3. Utilisez `disableTransitionOnChange` pour éviter les animations
@@ -384,6 +384,7 @@ Si vous voyez un flash lors du chargement:
 ### Les composants ne s'adaptent pas
 
 Assurez-vous que:
+
 1. Les composants utilisent les variables CSS (`bg-background`, `text-foreground`, etc.)
 2. Les variables sont enregistrées dans `@theme` (Tailwind CSS 4)
 3. Les classes `dark:` sont utilisées pour les styles conditionnels

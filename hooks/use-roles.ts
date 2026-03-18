@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 /**
  * Role checking hooks
@@ -9,13 +9,13 @@
  * Requirements: 4.1, 6.2
  */
 
-import { useQuery } from '@tanstack/react-query';
-import type { RoleName } from '@/lib/permissions';
+import { useQuery } from "@tanstack/react-query";
+import type { RoleName } from "@/lib/permissions";
 
 // ─── Core fetcher ─────────────────────────────────────────────────────────────
 
 async function fetchRoles(): Promise<RoleName[]> {
-  const res = await fetch('/api/auth/roles');
+  const res = await fetch("/api/auth/roles");
   if (!res.ok) return [];
   const data = await res.json();
   return data.roles ?? [];
@@ -29,7 +29,7 @@ async function fetchRoles(): Promise<RoleName[]> {
  */
 export function useRoles() {
   return useQuery<RoleName[]>({
-    queryKey: ['roles'],
+    queryKey: ["roles"],
     queryFn: fetchRoles,
     staleTime: 5 * 60 * 1000,
   });
@@ -48,5 +48,5 @@ export function useHasRole(role: RoleName): boolean {
  */
 export function useIsAdmin(): boolean {
   const { data: roles } = useRoles();
-  return roles?.some((r) => r === 'SUPER_ADMIN' || r === 'ADMIN') ?? false;
+  return roles?.some((r) => r === "SUPER_ADMIN" || r === "ADMIN") ?? false;
 }

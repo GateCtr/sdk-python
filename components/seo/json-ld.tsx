@@ -7,7 +7,7 @@
  * Requirements: 5.1, 5.2, 5.3, 5.5, 5.6
  */
 
-import React from 'react';
+import React from "react";
 
 export interface WebSiteProps {
   url: string;
@@ -32,7 +32,11 @@ export interface WebPageProps {
  * Generic JSON-LD component — renders any schema as a
  * <script type="application/ld+json"> tag.
  */
-export function JsonLd({ schema }: { schema: Record<string, unknown> }): React.JSX.Element {
+export function JsonLd({
+  schema,
+}: {
+  schema: Record<string, unknown>;
+}): React.JSX.Element {
   return (
     <script
       type="application/ld+json"
@@ -42,10 +46,14 @@ export function JsonLd({ schema }: { schema: Record<string, unknown> }): React.J
 }
 
 /** WebSite structured data schema. */
-export function WebSiteJsonLd({ url, name, description }: WebSiteProps): React.JSX.Element {
+export function WebSiteJsonLd({
+  url,
+  name,
+  description,
+}: WebSiteProps): React.JSX.Element {
   const schema: Record<string, unknown> = {
-    '@context': 'https://schema.org',
-    '@type': 'WebSite',
+    "@context": "https://schema.org",
+    "@type": "WebSite",
     name,
     url,
     ...(description !== undefined && { description }),
@@ -54,10 +62,15 @@ export function WebSiteJsonLd({ url, name, description }: WebSiteProps): React.J
 }
 
 /** Organization structured data schema. */
-export function OrganizationJsonLd({ url, name, logo, sameAs }: OrgProps): React.JSX.Element {
+export function OrganizationJsonLd({
+  url,
+  name,
+  logo,
+  sameAs,
+}: OrgProps): React.JSX.Element {
   const schema: Record<string, unknown> = {
-    '@context': 'https://schema.org',
-    '@type': 'Organization',
+    "@context": "https://schema.org",
+    "@type": "Organization",
     name,
     url,
     ...(logo !== undefined && { logo }),
@@ -67,10 +80,14 @@ export function OrganizationJsonLd({ url, name, logo, sameAs }: OrgProps): React
 }
 
 /** WebPage structured data schema. */
-export function WebPageJsonLd({ url, name, description }: WebPageProps): React.JSX.Element {
+export function WebPageJsonLd({
+  url,
+  name,
+  description,
+}: WebPageProps): React.JSX.Element {
   const schema: Record<string, unknown> = {
-    '@context': 'https://schema.org',
-    '@type': 'WebPage',
+    "@context": "https://schema.org",
+    "@type": "WebPage",
     name,
     ...(description !== undefined && { description }),
     url,

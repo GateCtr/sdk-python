@@ -1,8 +1,8 @@
-import type { Metadata } from 'next';
-import { getTranslations } from 'next-intl/server';
-import { getSeoContext, buildCanonicalUrl } from '@/lib/seo';
-import { WaitlistForm } from '@/components/marketing/waitlist-form';
-import { WebPageJsonLd } from '@/components/seo/json-ld';
+import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
+import { getSeoContext, buildCanonicalUrl } from "@/lib/seo";
+import { WaitlistForm } from "@/components/marketing/waitlist-form";
+import { WebPageJsonLd } from "@/components/seo/json-ld";
 
 export async function generateMetadata({
   params,
@@ -10,22 +10,22 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'waitlist.metadata' });
+  const t = await getTranslations({ locale, namespace: "waitlist.metadata" });
   const context = await getSeoContext();
-  const canonical = buildCanonicalUrl('/waitlist', locale, context);
+  const canonical = buildCanonicalUrl("/waitlist", locale, context);
 
   return {
-    title: t('title'),
-    description: t('description'),
+    title: t("title"),
+    description: t("description"),
     alternates: { canonical },
     openGraph: {
-      title: t('ogTitle'),
-      description: t('ogDescription'),
+      title: t("ogTitle"),
+      description: t("ogDescription"),
       url: canonical,
     },
     twitter: {
-      title: t('ogTitle'),
-      description: t('ogDescription'),
+      title: t("ogTitle"),
+      description: t("ogDescription"),
     },
   };
 }
@@ -36,16 +36,16 @@ export default async function WaitlistPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'waitlist.metadata' });
+  const t = await getTranslations({ locale, namespace: "waitlist.metadata" });
   const context = await getSeoContext();
-  const url = buildCanonicalUrl('/waitlist', locale, context);
+  const url = buildCanonicalUrl("/waitlist", locale, context);
 
   return (
     <>
       <WebPageJsonLd
         url={url}
-        name={t('title')}
-        description={t('description')}
+        name={t("title")}
+        description={t("description")}
       />
       <WaitlistForm />
     </>

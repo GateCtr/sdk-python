@@ -22,16 +22,19 @@ clerk login
 ### Test en 3 étapes
 
 **Terminal 1** - Démarrez votre app :
+
 ```bash
 pnpm dev
 ```
 
 **Terminal 2** - Démarrez le tunnel Clerk :
+
 ```bash
 clerk listen --forward-to http://localhost:3000/api/webhooks/clerk
 ```
 
 **Navigateur** - Créez un utilisateur :
+
 1. Allez sur `http://localhost:3000/sign-up`
 2. Créez un compte avec votre email
 3. Observez les logs dans Terminal 2
@@ -39,6 +42,7 @@ clerk listen --forward-to http://localhost:3000/api/webhooks/clerk
 ### Ce que vous devriez voir
 
 **Dans Terminal 2 (Clerk CLI)** :
+
 ```
 ✓ Listening for webhooks...
 → user.created event received
@@ -47,16 +51,17 @@ clerk listen --forward-to http://localhost:3000/api/webhooks/clerk
 ```
 
 **Dans Terminal 1 (Next.js)** :
+
 ```
 User created: votre-email@example.com (cuid_abc123)
 ```
 
 **Dans Prisma Studio** (`pnpm prisma studio`) :
+
 - Table `users` : Nouvel utilisateur créé
 - Table `user_roles` : Rôle DEVELOPER assigné
 - Table `audit_logs` : Entrée avec action "user.created"
 - Table `email_logs` : Email de bienvenue envoyé
-
 
 ## Méthode 2 : ngrok (Alternative)
 
@@ -106,9 +111,9 @@ pnpm prisma studio
 
 ```sql
 -- Vérifiez que l'utilisateur existe avec le bon rôle
-SELECT 
-  u.email, 
-  u.name, 
+SELECT
+  u.email,
+  u.name,
   r.name as role
 FROM users u
 JOIN user_roles ur ON u.id = ur.user_id
@@ -140,6 +145,7 @@ clerk listen --forward-to http://localhost:3000/api/webhooks/clerk --verbose
 ### ❌ Erreur "Invalid signature"
 
 **Solution** :
+
 ```bash
 # 1. Vérifiez votre .env.local
 cat .env.local | grep CLERK_WEBHOOK_SECRET
@@ -151,6 +157,7 @@ cat .env.local | grep CLERK_WEBHOOK_SECRET
 ### ❌ Erreur "DEVELOPER role not found"
 
 **Solution** :
+
 ```bash
 # Seedez la base de données
 pnpm prisma db seed
@@ -159,6 +166,7 @@ pnpm prisma db seed
 ### ❌ L'utilisateur n'apparaît pas dans la DB
 
 **Solution** :
+
 ```bash
 # 1. Vérifiez que la DB est accessible
 pnpm prisma studio
@@ -174,6 +182,7 @@ pnpm prisma migrate dev
 **C'est normal !** L'email est envoyé de manière asynchrone et n'empêche pas la création de l'utilisateur.
 
 **Vérification** :
+
 1. Consultez les logs du serveur pour voir si l'email a échoué
 2. Vérifiez la table `email_logs` dans Prisma Studio
 3. Vérifiez que `RESEND_API_KEY` est configuré dans `.env.local`

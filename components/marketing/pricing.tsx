@@ -1,28 +1,35 @@
-'use client';
+"use client";
 
-import { useTranslations } from 'next-intl';
-import { useLocale } from 'next-intl';
-import { Button } from '@/components/ui/button';
-import { Link } from '@/i18n/routing';
-import { Check } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { interpolate } from '@/lib/interpolate';
-import { PLAN_VARS, PLAN_PRICES } from '@/lib/plan-vars';
+import { useTranslations } from "next-intl";
+import { useLocale } from "next-intl";
+import { Button } from "@/components/ui/button";
+import { Link } from "@/i18n/routing";
+import { Check } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { interpolate } from "@/lib/interpolate";
+import { PLAN_VARS, PLAN_PRICES } from "@/lib/plan-vars";
 
-type Plan = { name: string; price: string; description: string; features: string[] };
+type Plan = {
+  name: string;
+  price: string;
+  description: string;
+  features: string[];
+};
 
-const CTA_KEYS = ['ctaFree', 'ctaPro', 'ctaTeam', 'ctaEnterprise'] as const;
+const CTA_KEYS = ["ctaFree", "ctaPro", "ctaTeam", "ctaEnterprise"] as const;
 const POPULAR_INDEX = 1; // Pro
 
 export function Pricing() {
-  const t = useTranslations('home.pricing');
-  const locale = useLocale() as 'en' | 'fr';
-  const rawPlans = t.raw('plans') as Plan[];
+  const t = useTranslations("home.pricing");
+  const locale = useLocale() as "en" | "fr";
+  const rawPlans = t.raw("plans") as Plan[];
 
   const plans = rawPlans.map((plan, i) => ({
     ...plan,
     price: PLAN_PRICES[plan.name]?.[locale] ?? plan.price,
-    features: plan.features.map((f) => interpolate(f, PLAN_VARS[i] as Record<string, string | number>)),
+    features: plan.features.map((f) =>
+      interpolate(f, PLAN_VARS[i] as Record<string, string | number>),
+    ),
   }));
 
   return (
@@ -30,12 +37,14 @@ export function Pricing() {
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-14">
           <p className="text-xs font-mono text-secondary-500 uppercase tracking-widest mb-3">
-            {t('label')}
+            {t("label")}
           </p>
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            {t('headline')}
+            {t("headline")}
           </h2>
-          <p className="text-muted-foreground max-w-xl mx-auto">{t('description')}</p>
+          <p className="text-muted-foreground max-w-xl mx-auto">
+            {t("description")}
+          </p>
         </div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 items-start">
@@ -48,36 +57,47 @@ export function Pricing() {
               <div
                 key={plan.name}
                 className={cn(
-                  'relative rounded-xl border bg-card p-6 flex flex-col gap-5',
+                  "relative rounded-xl border bg-card p-6 flex flex-col gap-5",
                   isPopular
-                    ? 'border-primary shadow-md shadow-primary/10 ring-1 ring-primary/20'
-                    : 'border-border'
+                    ? "border-primary shadow-md shadow-primary/10 ring-1 ring-primary/20"
+                    : "border-border",
                 )}
               >
                 {isPopular && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2">
                     <span className="bg-primary text-white text-xs font-semibold px-3 py-1 rounded-full">
-                      {t('popular')}
+                      {t("popular")}
                     </span>
                   </div>
                 )}
 
                 {/* Header */}
                 <div>
-                  <p className="text-sm font-semibold text-muted-foreground mb-1">{plan.name}</p>
+                  <p className="text-sm font-semibold text-muted-foreground mb-1">
+                    {plan.name}
+                  </p>
                   <div className="flex items-baseline gap-1 mb-2">
-                    <span className="text-3xl font-extrabold text-foreground">{plan.price}</span>
+                    <span className="text-3xl font-extrabold text-foreground">
+                      {plan.price}
+                    </span>
                     {!isEnterprise && (
-                      <span className="text-sm text-muted-foreground">{t('perMonth')}</span>
+                      <span className="text-sm text-muted-foreground">
+                        {t("perMonth")}
+                      </span>
                     )}
                   </div>
-                  <p className="text-sm text-muted-foreground">{plan.description}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {plan.description}
+                  </p>
                 </div>
 
                 {/* Features */}
                 <ul className="flex flex-col gap-2.5 flex-1">
                   {plan.features.map((feature) => (
-                    <li key={feature} className="flex items-start gap-2 text-sm">
+                    <li
+                      key={feature}
+                      className="flex items-start gap-2 text-sm"
+                    >
                       <Check className="size-4 text-secondary-500 mt-0.5 shrink-0" />
                       <span className="text-foreground">{feature}</span>
                     </li>
@@ -86,12 +106,18 @@ export function Pricing() {
 
                 {/* CTA */}
                 <Button
-                  variant={isPopular ? 'cta-primary' : isEnterprise ? 'cta-secondary' : 'cta-secondary'}
+                  variant={
+                    isPopular
+                      ? "cta-primary"
+                      : isEnterprise
+                        ? "cta-secondary"
+                        : "cta-secondary"
+                  }
                   size="default"
                   className="w-full"
                   asChild
                 >
-                  <Link href={isEnterprise ? '/contact' : '/sign-up'}>
+                  <Link href={isEnterprise ? "/contact" : "/sign-up"}>
                     {t(ctaKey)}
                   </Link>
                 </Button>

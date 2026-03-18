@@ -10,10 +10,10 @@ POST https://api.gatectr.com/v1/complete
 
 ## Headers
 
-| Header | Value |
-|---|---|
+| Header          | Value                   |
+| --------------- | ----------------------- |
 | `Authorization` | `Bearer <your-api-key>` |
-| `Content-Type` | `application/json` |
+| `Content-Type`  | `application/json`      |
 
 ## Request body
 
@@ -37,16 +37,16 @@ POST https://api.gatectr.com/v1/complete
 
 ### Parameters
 
-| Field | Type | Required | Description |
-|---|---|---|---|
-| `model` | `string` | Yes | Model name or `"auto"` for Model Router |
-| `messages` | `array` | Yes | OpenAI-compatible messages array |
-| `temperature` | `number` | No | Sampling temperature (0–2) |
-| `max_tokens` | `number` | No | Max completion tokens |
-| `stream` | `boolean` | No | Enable streaming (default: `false`) |
-| `gatectr.optimize` | `boolean` | No | Enable Context Optimizer (default: `true`) |
-| `gatectr.route` | `boolean` | No | Enable Model Router (default: `false`) |
-| `gatectr.budget_id` | `string` | No | Override project budget |
+| Field               | Type      | Required | Description                                |
+| ------------------- | --------- | -------- | ------------------------------------------ |
+| `model`             | `string`  | Yes      | Model name or `"auto"` for Model Router    |
+| `messages`          | `array`   | Yes      | OpenAI-compatible messages array           |
+| `temperature`       | `number`  | No       | Sampling temperature (0–2)                 |
+| `max_tokens`        | `number`  | No       | Max completion tokens                      |
+| `stream`            | `boolean` | No       | Enable streaming (default: `false`)        |
+| `gatectr.optimize`  | `boolean` | No       | Enable Context Optimizer (default: `true`) |
+| `gatectr.route`     | `boolean` | No       | Enable Model Router (default: `false`)     |
+| `gatectr.budget_id` | `string`  | No       | Override project budget                    |
 
 ## Response
 
@@ -82,9 +82,9 @@ POST https://api.gatectr.com/v1/complete
 
 ## Error responses
 
-| Status | Type | Description |
-|---|---|---|
-| `401` | `unauthorized` | Invalid or missing API key |
-| `429` | `budget_exceeded` | Project budget limit reached |
-| `422` | `validation_error` | Invalid request body |
-| `502` | `provider_error` | LLM provider returned an error |
+| Status | Type               | Description                    |
+| ------ | ------------------ | ------------------------------ |
+| `401`  | `unauthorized`     | Invalid or missing API key     |
+| `429`  | `budget_exceeded`  | Project budget limit reached   |
+| `422`  | `validation_error` | Invalid request body           |
+| `502`  | `provider_error`   | LLM provider returned an error |

@@ -1,25 +1,33 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Users, Mail, CheckCircle, Clock, Filter, Send, AlertCircle } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import {
+  Users,
+  Mail,
+  CheckCircle,
+  Clock,
+  Filter,
+  Send,
+  AlertCircle,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
+} from "@/components/ui/card";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Alert } from '@/components/ui/alert';
+} from "@/components/ui/select";
+import { Alert } from "@/components/ui/alert";
 
 interface WaitlistEntry {
   id: string;
@@ -28,7 +36,7 @@ interface WaitlistEntry {
   company: string | null;
   useCase: string | null;
   position: number;
-  status: 'WAITING' | 'INVITED' | 'JOINED';
+  status: "WAITING" | "INVITED" | "JOINED";
   createdAt: string;
 }
 
@@ -36,12 +44,17 @@ export default function AdminWaitlistPage() {
   const router = useRouter();
   const [entries, setEntries] = useState<WaitlistEntry[]>([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState<'all' | 'WAITING' | 'INVITED' | 'JOINED'>('all');
+  const [filter, setFilter] = useState<
+    "all" | "WAITING" | "INVITED" | "JOINED"
+  >("all");
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [inviting, setInviting] = useState(false);
-  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [message, setMessage] = useState<{
+    type: "success" | "error";
+    text: string;
+  } | null>(null);
   const [unauthorized, setUnauthorized] = useState(false);
 
   const fetchEntries = async () => {
@@ -49,15 +62,15 @@ export default function AdminWaitlistPage() {
     try {
       const params = new URLSearchParams({
         page: page.toString(),
-        limit: '50',
+        limit: "50",
       });
-      
-      if (filter !== 'all') {
-        params.append('status', filter);
+
+      if (filter !== "all") {
+        params.append("status", filter);
       }
 
       const response = await fetch(`/api/waitlist?${params}`);
-      
+
       if (response.status === 403) {
         setUnauthorized(true);
         setLoading(false);
@@ -70,8 +83,8 @@ export default function AdminWaitlistPage() {
       setTotal(data.pagination.total);
       setSelectedIds(new Set());
     } catch (error) {
-      console.error('Failed to fetch waitlist:', error);
-      setMessage({ type: 'error', text: 'Failed to load waitlist entries' });
+      console.error("Failed to fetch waitlist:", error);
+      setMessage({ type: "error", text: "Failed to load waitlist entries" });
     } finally {
       setLoading(false);
     }
@@ -96,7 +109,7 @@ export default function AdminWaitlistPage() {
     if (selectedIds.size === waitingEntries.length) {
       setSelectedIds(new Set());
     } else {
-      setSelectedIds(new Set(waitingEntries.map(e => e.id)));
+      setSelectedIds(new Set(waitingEntries.map((e) => e.id)));
     }
   };
 
@@ -107,9 +120,9 @@ export default function AdminWaitlistPage() {
     setMessage(null);
 
     try {
-      const response = await fetch('/api/waitlist/invite', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/waitlist/invite", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           entryIds: Array.from(selectedIds),
           expiryDays: 7,
@@ -120,16 +133,19 @@ export default function AdminWaitlistPage() {
 
       if (response.ok) {
         setMessage({
-          type: 'success',
-          text: `Successfully invited ${data.invited} user${data.invited !== 1 ? 's' : ''}${data.failed > 0 ? `, ${data.failed} failed` : ''}`,
+          type: "success",
+          text: `Successfully invited ${data.invited} user${data.invited !== 1 ? "s" : ""}${data.failed > 0 ? `, ${data.failed} failed` : ""}`,
         });
         fetchEntries();
       } else {
-        setMessage({ type: 'error', text: data.error || 'Failed to send invites' });
+        setMessage({
+          type: "error",
+          text: data.error || "Failed to send invites",
+        });
       }
     } catch (error) {
-      console.error('Invite error:', error);
-      setMessage({ type: 'error', text: 'Failed to send invites' });
+      console.error("Invite error:", error);
+      setMessage({ type: "error", text: "Failed to send invites" });
     } finally {
       setInviting(false);
     }
@@ -140,9 +156,9 @@ export default function AdminWaitlistPage() {
     setMessage(null);
 
     try {
-      const response = await fetch('/api/waitlist/invite', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/waitlist/invite", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           entryIds: [entryId],
           expiryDays: 7,
@@ -152,26 +168,29 @@ export default function AdminWaitlistPage() {
       const data = await response.json();
 
       if (response.ok) {
-        setMessage({ type: 'success', text: 'Invite sent successfully' });
+        setMessage({ type: "success", text: "Invite sent successfully" });
         fetchEntries();
       } else {
-        setMessage({ type: 'error', text: data.error || 'Failed to send invite' });
+        setMessage({
+          type: "error",
+          text: data.error || "Failed to send invite",
+        });
       }
     } catch (error) {
-      console.error('Invite error:', error);
-      setMessage({ type: 'error', text: 'Failed to send invite' });
+      console.error("Invite error:", error);
+      setMessage({ type: "error", text: "Failed to send invite" });
     } finally {
       setInviting(false);
     }
   };
 
-  const waitingEntries = entries.filter(e => e.status === 'WAITING');
+  const waitingEntries = entries.filter((e) => e.status === "WAITING");
 
   const getStatusBadge = (status: string) => {
     const variants = {
-      WAITING: 'outline' as const,
-      INVITED: 'secondary' as const,
-      JOINED: 'default' as const,
+      WAITING: "outline" as const,
+      INVITED: "secondary" as const,
+      JOINED: "default" as const,
     };
 
     const icons = {
@@ -181,7 +200,10 @@ export default function AdminWaitlistPage() {
     };
 
     return (
-      <Badge variant={variants[status as keyof typeof variants]} className="flex items-center w-fit">
+      <Badge
+        variant={variants[status as keyof typeof variants]}
+        className="flex items-center w-fit"
+      >
         {icons[status as keyof typeof icons]}
         {status}
       </Badge>
@@ -190,32 +212,32 @@ export default function AdminWaitlistPage() {
 
   const stats = [
     {
-      title: 'Total Entries',
+      title: "Total Entries",
       value: total,
       icon: Users,
-      color: 'text-primary',
-      bgColor: 'bg-primary/10',
+      color: "text-primary",
+      bgColor: "bg-primary/10",
     },
     {
-      title: 'Waiting',
-      value: entries.filter(e => e.status === 'WAITING').length,
+      title: "Waiting",
+      value: entries.filter((e) => e.status === "WAITING").length,
       icon: Clock,
-      color: 'text-secondary',
-      bgColor: 'bg-secondary/10',
+      color: "text-secondary",
+      bgColor: "bg-secondary/10",
     },
     {
-      title: 'Invited',
-      value: entries.filter(e => e.status === 'INVITED').length,
+      title: "Invited",
+      value: entries.filter((e) => e.status === "INVITED").length,
       icon: Mail,
-      color: 'text-accent',
-      bgColor: 'bg-accent/10',
+      color: "text-accent",
+      bgColor: "bg-accent/10",
     },
     {
-      title: 'Joined',
-      value: entries.filter(e => e.status === 'JOINED').length,
+      title: "Joined",
+      value: entries.filter((e) => e.status === "JOINED").length,
       icon: CheckCircle,
-      color: 'text-green-600',
-      bgColor: 'bg-green-100 dark:bg-green-900/20',
+      color: "text-green-600",
+      bgColor: "bg-green-100 dark:bg-green-900/20",
     },
   ];
 
@@ -235,12 +257,10 @@ export default function AdminWaitlistPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <p className="text-sm text-muted-foreground text-center">
-              This page is restricted to administrators only. Please contact your system administrator if you believe you should have access.
+              This page is restricted to administrators only. Please contact
+              your system administrator if you believe you should have access.
             </p>
-            <Button
-              onClick={() => router.push('/')}
-              className="w-full"
-            >
+            <Button onClick={() => router.push("/")} className="w-full">
               Back to Home
             </Button>
           </CardContent>
@@ -276,7 +296,9 @@ export default function AdminWaitlistPage() {
                       {stat.value}
                     </p>
                   </div>
-                  <div className={`w-12 h-12 rounded-lg ${stat.bgColor} flex items-center justify-center`}>
+                  <div
+                    className={`w-12 h-12 rounded-lg ${stat.bgColor} flex items-center justify-center`}
+                  >
                     <stat.icon className={`w-6 h-6 ${stat.color}`} />
                   </div>
                 </div>
@@ -287,7 +309,7 @@ export default function AdminWaitlistPage() {
 
         {/* Alert Messages */}
         {message && (
-          <Alert variant={message.type === 'error' ? 'destructive' : 'default'}>
+          <Alert variant={message.type === "error" ? "destructive" : "default"}>
             <p>{message.text}</p>
           </Alert>
         )}
@@ -343,11 +365,14 @@ export default function AdminWaitlistPage() {
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-border">
-                    {filter === 'WAITING' || filter === 'all' ? (
+                    {filter === "WAITING" || filter === "all" ? (
                       <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                         <input
                           type="checkbox"
-                          checked={waitingEntries.length > 0 && selectedIds.size === waitingEntries.length}
+                          checked={
+                            waitingEntries.length > 0 &&
+                            selectedIds.size === waitingEntries.length
+                          }
                           onChange={toggleSelectAll}
                           className="w-4 h-4 rounded border-border"
                           disabled={waitingEntries.length === 0}
@@ -383,7 +408,10 @@ export default function AdminWaitlistPage() {
                 <tbody className="divide-y divide-border">
                   {loading ? (
                     <tr>
-                      <td colSpan={8} className="px-4 py-8 text-center text-muted-foreground">
+                      <td
+                        colSpan={8}
+                        className="px-4 py-8 text-center text-muted-foreground"
+                      >
                         <div className="flex items-center justify-center gap-2">
                           <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
                           Loading...
@@ -392,16 +420,22 @@ export default function AdminWaitlistPage() {
                     </tr>
                   ) : entries.length === 0 ? (
                     <tr>
-                      <td colSpan={8} className="px-4 py-8 text-center text-muted-foreground">
+                      <td
+                        colSpan={8}
+                        className="px-4 py-8 text-center text-muted-foreground"
+                      >
                         No entries found
                       </td>
                     </tr>
                   ) : (
                     entries.map((entry) => (
-                      <tr key={entry.id} className="hover:bg-muted/50 transition-colors">
-                        {filter === 'WAITING' || filter === 'all' ? (
+                      <tr
+                        key={entry.id}
+                        className="hover:bg-muted/50 transition-colors"
+                      >
+                        {filter === "WAITING" || filter === "all" ? (
                           <td className="px-4 py-4 whitespace-nowrap">
-                            {entry.status === 'WAITING' && (
+                            {entry.status === "WAITING" && (
                               <input
                                 type="checkbox"
                                 checked={selectedIds.has(entry.id)}
@@ -420,13 +454,13 @@ export default function AdminWaitlistPage() {
                           {entry.email}
                         </td>
                         <td className="px-4 py-4 whitespace-nowrap text-sm text-muted-foreground hidden md:table-cell">
-                          {entry.name || '-'}
+                          {entry.name || "-"}
                         </td>
                         <td className="px-4 py-4 whitespace-nowrap text-sm text-muted-foreground hidden lg:table-cell">
-                          {entry.company || '-'}
+                          {entry.company || "-"}
                         </td>
                         <td className="px-4 py-4 whitespace-nowrap text-sm text-muted-foreground hidden lg:table-cell">
-                          {entry.useCase || '-'}
+                          {entry.useCase || "-"}
                         </td>
                         <td className="px-4 py-4 whitespace-nowrap">
                           {getStatusBadge(entry.status)}
@@ -435,7 +469,7 @@ export default function AdminWaitlistPage() {
                           {new Date(entry.createdAt).toLocaleDateString()}
                         </td>
                         <td className="px-4 py-4 whitespace-nowrap text-sm">
-                          {entry.status === 'WAITING' && (
+                          {entry.status === "WAITING" && (
                             <Button
                               variant="ghost"
                               size="sm"

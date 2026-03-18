@@ -7,11 +7,13 @@
 **Usage** : Titres H1, hero sections, logo wordmark
 
 **Téléchargement** :
+
 1. Allez sur [Google Fonts - Syne](https://fonts.google.com/specimen/Syne)
 2. Sélectionnez les poids : Bold (700), Extra Bold (800)
 3. Téléchargez et convertissez en WOFF2
 
 **Fichiers nécessaires** :
+
 - `Syne-Bold.woff2` (700)
 - `Syne-ExtraBold.woff2` (800)
 
@@ -20,6 +22,7 @@
 **Usage** : Code, dashboards, données techniques
 
 **Téléchargement** :
+
 - Déjà inclus via Google Fonts dans `app/layout.tsx`
 - Aucun fichier local nécessaire
 
@@ -28,6 +31,7 @@
 **Usage** : Paragraphes, descriptions, labels UI
 
 **Téléchargement** :
+
 - Déjà inclus via Google Fonts dans `app/layout.tsx`
 - Aucun fichier local nécessaire
 
@@ -66,6 +70,7 @@ Si vous avez des fichiers TTF ou OTF, convertissez-les en WOFF2 :
 ## Fallback
 
 Si les polices ne se chargent pas, le système utilisera automatiquement :
+
 - Helvetica Neue
 - system-ui
 - Sans-serif par défaut du navigateur

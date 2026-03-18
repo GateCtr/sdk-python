@@ -1,19 +1,19 @@
-'use client';
+"use client";
 
-import { useLocale } from 'next-intl';
-import { useRouter, usePathname } from '@/i18n/routing';
-import { Languages } from 'lucide-react';
+import { useLocale } from "next-intl";
+import { useRouter, usePathname } from "@/i18n/routing";
+import { Languages } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Button } from '@/components/ui/button';
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
 
 const languages = {
-  en: { name: 'English', flag: '🇬🇧' },
-  fr: { name: 'Français', flag: '🇫🇷' },
+  en: { name: "English", flag: "🇬🇧" },
+  fr: { name: "Français", flag: "🇫🇷" },
 };
 
 export function LanguageSwitcher() {
@@ -21,7 +21,7 @@ export function LanguageSwitcher() {
   const router = useRouter();
   const pathname = usePathname();
 
-  const switchLocale = (newLocale: 'en' | 'fr') => {
+  const switchLocale = (newLocale: "en" | "fr") => {
     router.replace(pathname, { locale: newLocale });
   };
 
@@ -40,7 +40,7 @@ export function LanguageSwitcher() {
         {Object.entries(languages).map(([code, { name, flag }]) => (
           <DropdownMenuItem
             key={code}
-            onClick={() => switchLocale(code as 'en' | 'fr')}
+            onClick={() => switchLocale(code as "en" | "fr")}
             className="gap-2"
           >
             <span>{flag}</span>

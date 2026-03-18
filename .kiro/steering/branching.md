@@ -2,10 +2,10 @@
 
 ## Branches principales
 
-| Branche | Rôle |
-|---|---|
-| `main` | Production stable — jamais de push direct |
-| `develop` | Intégration continue des features |
+| Branche   | Rôle                                      |
+| --------- | ----------------------------------------- |
+| `main`    | Production stable — jamais de push direct |
+| `develop` | Intégration continue des features         |
 
 ## Créer une feature branch
 
@@ -35,6 +35,7 @@ git push origin feat/context-optimizer
 ```
 
 Puis :
+
 1. Ouvrir une Pull Request vers `develop`
 2. Code review
 3. Merge avec squash
@@ -42,14 +43,14 @@ Puis :
 
 ## Conventions de nommage
 
-| Préfixe | Usage | Exemple |
-|---|---|---|
-| `feat/` | Nouvelle fonctionnalité | `feat/context-optimizer` |
-| `fix/` | Correction de bug | `fix/token-overflow` |
-| `hotfix/` | Correctif urgent depuis `main` | `hotfix/fix-token-overflow` |
-| `chore/` | Maintenance, config | `chore/update-dependencies` |
-| `docs/` | Documentation | `docs/docker-setup` |
-| `refactor/` | Refactoring | `refactor/router-scoring` |
+| Préfixe     | Usage                          | Exemple                     |
+| ----------- | ------------------------------ | --------------------------- |
+| `feat/`     | Nouvelle fonctionnalité        | `feat/context-optimizer`    |
+| `fix/`      | Correction de bug              | `fix/token-overflow`        |
+| `hotfix/`   | Correctif urgent depuis `main` | `hotfix/fix-token-overflow` |
+| `chore/`    | Maintenance, config            | `chore/update-dependencies` |
+| `docs/`     | Documentation                  | `docs/docker-setup`         |
+| `refactor/` | Refactoring                    | `refactor/router-scoring`   |
 
 ## Règles
 

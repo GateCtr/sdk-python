@@ -3,6 +3,7 @@
 ## ✅ Completed Features
 
 ### 1. Système d'invitation par batch
+
 - ✅ Endpoint API `/api/waitlist/invite` (POST)
 - ✅ Génération de codes d'invitation uniques avec `nanoid(16)`
 - ✅ Envoi d'emails d'invitation en masse (async)
@@ -14,6 +15,7 @@
 - ⚠️ **Requires**: Database migration (see below)
 
 ### 2. Templates d'emails Resend
+
 - ✅ Email de bienvenue (`waitlist-welcome.tsx`)
   - Design professionnel avec gradient GateCtr
   - Position dans la file d'attente
@@ -28,6 +30,7 @@
 - ✅ React Email components
 
 ### 3. Protection RBAC de l'admin
+
 - ✅ Bibliothèque `lib/auth.ts` créée
   - `getCurrentUser()` - Récupère l'utilisateur avec ses rôles
   - `hasRole(role)` - Vérifie un rôle spécifique
@@ -42,6 +45,7 @@
 - ✅ Status HTTP 403 pour unauthorized
 
 ### 4. Internationalisation (i18n)
+
 - ✅ Configuration `next-intl` avec `localePrefix: 'as-needed'`
 - ✅ Structure modulaire (`messages/en/`, `messages/fr/`)
 - ✅ Page waitlist traduite
@@ -53,11 +57,13 @@
 ## ✅ Actions Complétées
 
 ### Database Migration
+
 - ✅ Migration `20260315220118_add_invite_code_to_waitlist` appliquée
 - ✅ Champs `inviteCode` et `inviteExpiresAt` ajoutés à `WaitlistEntry`
 - ✅ Contrainte unique sur `inviteCode`
 
 ### Database Seeding
+
 - ✅ Rôles créés (SUPER_ADMIN, ADMIN, MANAGER, DEVELOPER, VIEWER, SUPPORT)
 - ✅ Permissions créées et assignées aux rôles
 - ✅ Plans créés (FREE, PRO) avec leurs limites
@@ -73,11 +79,12 @@ Pour tester la protection RBAC, il faut :
    - L'utilisateur sera créé dans la DB via Clerk
 
 2. **Assigner un rôle admin à votre utilisateur**
+
    ```bash
    # Option 1: Via Prisma Studio
    pnpm prisma studio
    # Aller dans user_roles, créer une entrée avec votre userId et le roleId de ADMIN
-   
+
    # Option 2: Via SQL direct
    # Trouver votre userId dans la table users
    # Trouver le roleId de ADMIN dans la table roles
@@ -93,24 +100,28 @@ Pour tester la protection RBAC, il faut :
 ## ❌ Fonctionnalités Optionnelles (Non Implémentées)
 
 ### Analytics Waitlist
+
 - ❌ Taux de conversion (waitlist → invited → joined)
 - ❌ Graphiques avec Recharts
 - ❌ Statistiques temporelles
 - ❌ Dashboard analytics dédié
 
 ### Système de Parrainage
+
 - ❌ Codes de parrainage uniques
 - ❌ Tracking des parrainages
 - ❌ Récompenses pour parrains
 - ❌ Avancement dans la file pour parrainés
 
 ### Export CSV
+
 - ❌ Bouton "Export CSV" dans l'admin
 - ❌ Export filtré par statut
 - ❌ Colonnes personnalisables
 - ❌ Format compatible Excel
 
 ### Recherche dans la Liste
+
 - ❌ Barre de recherche (email, nom, company)
 - ❌ Filtres avancés (date, use case)
 - ❌ Tri par colonne
@@ -119,6 +130,7 @@ Pour tester la protection RBAC, il faut :
 ## 📁 Fichiers Créés/Modifiés
 
 ### Créés
+
 - `lib/auth.ts` - Bibliothèque RBAC
 - `components/emails/waitlist-welcome.tsx` - Email bienvenue
 - `components/emails/waitlist-invite.tsx` - Email invitation
@@ -132,6 +144,7 @@ Pour tester la protection RBAC, il faut :
 - `IMPLEMENTATION_STATUS.md` - Ce fichier
 
 ### Modifiés
+
 - `prisma/schema.prisma` - Ajout `inviteCode`, `inviteExpiresAt`
 - `lib/resend.ts` - Intégration React Email
 - `app/[locale]/(admin)/admin/waitlist/page.tsx` - UI batch invite + RBAC
@@ -166,15 +179,17 @@ pnpm prisma studio
 ```
 
 ### 2. Test Invitation Individuelle
-   ```
-   1. Accéder à /admin/waitlist (avec compte admin)
-   2. Cliquer "Invite" sur une entrée WAITING
-   3. Vérifier status → INVITED
-   4. Vérifier email reçu avec code
-   5. Vérifier inviteCode dans DB
-   ```
+
+```
+1. Accéder à /admin/waitlist (avec compte admin)
+2. Cliquer "Invite" sur une entrée WAITING
+3. Vérifier status → INVITED
+4. Vérifier email reçu avec code
+5. Vérifier inviteCode dans DB
+```
 
 2. **Test Invitation Batch**
+
    ```
    1. Sélectionner plusieurs entrées WAITING
    2. Cliquer "Invite Selected (X)"
@@ -184,6 +199,7 @@ pnpm prisma studio
    ```
 
 3. **Test Protection RBAC**
+
    ```
    1. Se connecter sans rôle admin
    2. Accéder à /admin/waitlist

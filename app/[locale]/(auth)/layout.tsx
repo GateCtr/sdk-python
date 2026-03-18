@@ -1,12 +1,12 @@
-import type { Metadata } from 'next';
-import { getSeoContext, buildCanonicalUrl } from '@/lib/seo';
-import { Logo } from '@/components/shared/logo';
-import { LanguageSwitcher } from '@/components/language-switcher';
-import { ThemeToggle } from '@/components/ui/theme-toggle';
-import { Link } from '@/i18n/routing';
-import { getTranslations } from 'next-intl/server';
-import { Footer } from '@/components/shared/footer';
-import { ShieldCheck, Zap, BarChart3 } from 'lucide-react';
+import type { Metadata } from "next";
+import { getSeoContext, buildCanonicalUrl } from "@/lib/seo";
+import { Logo } from "@/components/shared/logo";
+import { LanguageSwitcher } from "@/components/language-switcher";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { Link } from "@/i18n/routing";
+import { getTranslations } from "next-intl/server";
+import { Footer } from "@/components/shared/footer";
+import { ShieldCheck, Zap, BarChart3 } from "lucide-react";
 
 export async function generateMetadata({
   params,
@@ -15,7 +15,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const context = await getSeoContext();
-  const canonical = buildCanonicalUrl('/sign-in', locale, context);
+  const canonical = buildCanonicalUrl("/sign-in", locale, context);
 
   return {
     robots: { index: false, follow: false },
@@ -31,7 +31,7 @@ export default async function AuthLayout({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'auth.layout' });
+  const t = await getTranslations({ locale, namespace: "auth.layout" });
 
   return (
     <div className="min-h-screen flex">
@@ -42,7 +42,7 @@ export default async function AuthLayout({
           className="absolute inset-0 opacity-[0.04]"
           style={{
             backgroundImage: `radial-gradient(circle at 1px 1px, white 1px, transparent 0)`,
-            backgroundSize: '32px 32px',
+            backgroundSize: "32px 32px",
           }}
         />
         {/* Cyan glow */}
@@ -63,28 +63,28 @@ export default async function AuthLayout({
         {/* Main content */}
         <div className="relative z-10 flex-1 flex flex-col justify-center px-10 xl:px-16">
           <p className="text-secondary-400 text-sm font-mono font-medium tracking-widest uppercase mb-4">
-            {t('eyebrow')}
+            {t("eyebrow")}
           </p>
           <h1 className="text-white text-4xl xl:text-5xl font-bold leading-tight tracking-tight mb-4">
-            {t('headline')}
+            {t("headline")}
           </h1>
           <p className="text-primary-200 text-lg leading-relaxed mb-12 max-w-md">
-            {t('subheadline')}
+            {t("subheadline")}
           </p>
 
           {/* Feature pills */}
           <div className="flex flex-col gap-4">
             <FeaturePill
               icon={<Zap className="size-4 text-secondary-400" />}
-              label={t('feature1')}
+              label={t("feature1")}
             />
             <FeaturePill
               icon={<BarChart3 className="size-4 text-secondary-400" />}
-              label={t('feature2')}
+              label={t("feature2")}
             />
             <FeaturePill
               icon={<ShieldCheck className="size-4 text-secondary-400" />}
-              label={t('feature3')}
+              label={t("feature3")}
             />
           </div>
         </div>
@@ -92,7 +92,7 @@ export default async function AuthLayout({
         {/* Bottom quote */}
         <div className="relative z-10 px-10 xl:px-16 pb-10">
           <p className="text-primary-300 text-sm italic">
-            &ldquo;{t('quote')}&rdquo;
+            &ldquo;{t("quote")}&rdquo;
           </p>
         </div>
       </div>

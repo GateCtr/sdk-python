@@ -10,18 +10,18 @@ GET https://api.gatectr.com/v1/usage
 
 ## Headers
 
-| Header | Value |
-|---|---|
+| Header          | Value                   |
+| --------------- | ----------------------- |
 | `Authorization` | `Bearer <your-api-key>` |
 
 ## Query parameters
 
-| Parameter | Type | Required | Description |
-|---|---|---|---|
-| `project_id` | `string` | No | Filter by project |
-| `from` | `string` | No | Start date (ISO 8601: `2025-01-01`) |
-| `to` | `string` | No | End date (ISO 8601: `2025-01-31`) |
-| `group_by` | `string` | No | `model` \| `day` \| `project` |
+| Parameter    | Type     | Required | Description                         |
+| ------------ | -------- | -------- | ----------------------------------- |
+| `project_id` | `string` | No       | Filter by project                   |
+| `from`       | `string` | No       | Start date (ISO 8601: `2025-01-01`) |
+| `to`         | `string` | No       | End date (ISO 8601: `2025-01-31`)   |
+| `group_by`   | `string` | No       | `model` \| `day` \| `project`       |
 
 ## Example
 
@@ -48,7 +48,7 @@ curl https://api.gatectr.com/v1/usage \
   "by_model": {
     "gpt-4o": {
       "tokens": 2100000,
-      "cost_usd": 10.50,
+      "cost_usd": 10.5,
       "requests": 4200
     },
     "gpt-3.5-turbo": {

@@ -1,17 +1,17 @@
-import { prisma } from '@/lib/prisma';
-import type { Prisma } from '@prisma/client';
+import { prisma } from "@/lib/prisma";
+import type { Prisma } from "@prisma/client";
 
 /**
  * Audit action types for security-relevant events
  */
 export type AuditAction =
-  | 'user.created'
-  | 'user.updated'
-  | 'user.deleted'
-  | 'role.granted'
-  | 'role.revoked'
-  | 'access.denied'
-  | 'webhook.signature_failed';
+  | "user.created"
+  | "user.updated"
+  | "user.deleted"
+  | "role.granted"
+  | "role.revoked"
+  | "access.denied"
+  | "webhook.signature_failed";
 
 /**
  * Audit log entry interface for creating audit records
@@ -81,10 +81,10 @@ export interface AuditLogResult {
 
 /**
  * Create an audit log entry in the database
- * 
+ *
  * @param entry - Audit log entry data
  * @returns Promise resolving to the created audit log record
- * 
+ *
  * @example
  * await logAudit({
  *   userId: 'user_123',
@@ -106,8 +106,12 @@ export async function logAudit(entry: AuditLogEntry): Promise<void> {
         resource: entry.resource,
         action: entry.action,
         resourceId: entry.resourceId,
-        oldValue: entry.oldValue ? JSON.parse(JSON.stringify(entry.oldValue)) : undefined,
-        newValue: entry.newValue ? JSON.parse(JSON.stringify(entry.newValue)) : undefined,
+        oldValue: entry.oldValue
+          ? JSON.parse(JSON.stringify(entry.oldValue))
+          : undefined,
+        newValue: entry.newValue
+          ? JSON.parse(JSON.stringify(entry.newValue))
+          : undefined,
         ipAddress: entry.ipAddress,
         userAgent: entry.userAgent,
         success: entry.success,
@@ -116,17 +120,17 @@ export async function logAudit(entry: AuditLogEntry): Promise<void> {
     });
   } catch (error) {
     // Log error but don't throw - audit logging should not break application flow
-    console.error('Failed to create audit log:', error);
+    console.error("Failed to create audit log:", error);
   }
 }
 
 /**
  * Query audit logs with filtering and pagination
- * 
+ *
  * @param filters - Optional filters for querying audit logs
  * @param pagination - Pagination parameters (page number and page size)
  * @returns Promise resolving to paginated audit log results
- * 
+ *
  * @example
  * const result = await getAuditLogs(
  *   { userId: 'user_123', action: 'user.created' },
@@ -135,7 +139,7 @@ export async function logAudit(entry: AuditLogEntry): Promise<void> {
  */
 export async function getAuditLogs(
   filters: AuditLogFilters = {},
-  pagination: AuditLogPagination = { page: 1, pageSize: 50 }
+  pagination: AuditLogPagination = { page: 1, pageSize: 50 },
 ): Promise<AuditLogResult> {
   const { page, pageSize } = pagination;
   const skip = (page - 1) * pageSize;
@@ -173,7 +177,7 @@ export async function getAuditLogs(
         skip,
         take: pageSize,
         orderBy: {
-          createdAt: 'desc',
+          createdAt: "desc",
         },
         include: {
           user: {
@@ -198,7 +202,7 @@ export async function getAuditLogs(
       totalPages,
     };
   } catch (error) {
-    console.error('Failed to query audit logs:', error);
-    throw new Error('Failed to retrieve audit logs');
+    console.error("Failed to query audit logs:", error);
+    throw new Error("Failed to retrieve audit logs");
   }
 }

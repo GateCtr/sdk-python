@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata } from "next";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -6,6 +6,10 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default function AdminRouteLayout({ children }: { children: React.ReactNode }) {
+export default function AdminRouteLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return <>{children}</>;
 }

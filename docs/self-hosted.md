@@ -27,13 +27,13 @@ docker compose up -d
 
 ## Environment variables
 
-| Variable | Description |
-|---|---|
-| `DATABASE_URL` | PostgreSQL connection string |
-| `REDIS_URL` | Redis connection string |
-| `GATECTR_LICENSE_KEY` | Your Enterprise license key |
-| `ENCRYPTION_KEY` | AES-256 key for API key encryption |
-| `CLERK_SECRET_KEY` | Clerk auth secret |
+| Variable              | Description                        |
+| --------------------- | ---------------------------------- |
+| `DATABASE_URL`        | PostgreSQL connection string       |
+| `REDIS_URL`           | Redis connection string            |
+| `GATECTR_LICENSE_KEY` | Your Enterprise license key        |
+| `ENCRYPTION_KEY`      | AES-256 key for API key encryption |
+| `CLERK_SECRET_KEY`    | Clerk auth secret                  |
 
 ## Architecture
 

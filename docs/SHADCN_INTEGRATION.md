@@ -33,6 +33,7 @@ Les composants shadcn/ui héritent automatiquement du branding GateCtr grâce au
 ## Classes Tailwind disponibles
 
 ### Couleurs de base
+
 ```tsx
 // Background
 <div className="bg-background text-foreground">...</div>
@@ -54,6 +55,7 @@ Les composants shadcn/ui héritent automatiquement du branding GateCtr grâce au
 ```
 
 ### Bordures et focus
+
 ```tsx
 // Bordure
 <div className="border border-border">...</div>
@@ -91,17 +93,21 @@ import { Button } from "@/components/ui/button";
 ### Card
 
 ```tsx
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
 
 <Card>
   <CardHeader>
     <CardTitle>Card Title</CardTitle>
     <CardDescription>Card description</CardDescription>
   </CardHeader>
-  <CardContent>
-    Card content
-  </CardContent>
-</Card>
+  <CardContent>Card content</CardContent>
+</Card>;
 ```
 
 ### Input
@@ -112,13 +118,13 @@ import { Label } from "@/components/ui/label";
 
 <div>
   <Label htmlFor="email">Email</Label>
-  <Input 
-    id="email" 
-    type="email" 
+  <Input
+    id="email"
+    type="email"
     placeholder="you@example.com"
     className="focus:ring-secondary"
   />
-</div>
+</div>;
 ```
 
 ### Badge
@@ -179,14 +185,14 @@ Les composants seront automatiquement créés dans `components/ui/` et utilisero
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-<Button 
+<Button
   className={cn(
     "bg-secondary-500 hover:bg-secondary-400",
-    "text-white font-semibold"
+    "text-white font-semibold",
   )}
 >
   Custom Button
-</Button>
+</Button>;
 ```
 
 ### Créer une variante personnalisée
@@ -199,12 +205,13 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default: "bg-primary text-primary-foreground hover:bg-primary/90",
-        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/90",
+        secondary:
+          "bg-secondary text-secondary-foreground hover:bg-secondary/90",
         // Ajouter une variante custom
         cyan: "bg-secondary-500 text-white hover:bg-secondary-400",
       },
     },
-  }
+  },
 );
 ```
 
@@ -215,9 +222,7 @@ Les composants shadcn/ui s'adaptent automatiquement au dark mode grâce aux vari
 ```tsx
 // Fonctionne automatiquement
 <Card>
-  <CardContent>
-    Ce contenu s'adapte au dark mode
-  </CardContent>
+  <CardContent>Ce contenu s'adapte au dark mode</CardContent>
 </Card>
 ```
 

@@ -5,6 +5,7 @@
 ### Hiérarchie des polices
 
 #### Display / Titres - Syne Bold (700-800)
+
 Utilisé pour les titres H1, hero sections, et logo wordmark.
 
 ```tsx
@@ -14,6 +15,7 @@ Utilisé pour les titres H1, hero sections, et logo wordmark.
 ```
 
 #### Corps de texte - Inter
+
 Utilisé pour les paragraphes, descriptions, et labels UI.
 
 ```tsx
@@ -23,6 +25,7 @@ Utilisé pour les paragraphes, descriptions, et labels UI.
 ```
 
 #### Interface / Code - JetBrains Mono
+
 Utilisé pour le code, dashboards, et données techniques.
 
 ```tsx
@@ -33,18 +36,18 @@ Utilisé pour le code, dashboards, et données techniques.
 
 ### Échelle typographique
 
-| Classe | Taille | Usage |
-|--------|--------|-------|
-| `text-xs` | 12px | Labels, badges, metadata |
-| `text-sm` | 14px | Corps secondaire, captions |
-| `text-base` | 16px | Corps principal |
-| `text-lg` | 18px | Lead paragraphs |
-| `text-xl` | 20px | H6, sous-titres |
-| `text-2xl` | 24px | H5 |
-| `text-3xl` | 30px | H4 |
-| `text-4xl` | 36px | H3 |
-| `text-5xl` | 48px | H2 |
-| `text-6xl` | 60px | H1, Hero |
+| Classe      | Taille | Usage                      |
+| ----------- | ------ | -------------------------- |
+| `text-xs`   | 12px   | Labels, badges, metadata   |
+| `text-sm`   | 14px   | Corps secondaire, captions |
+| `text-base` | 16px   | Corps principal            |
+| `text-lg`   | 18px   | Lead paragraphs            |
+| `text-xl`   | 20px   | H6, sous-titres            |
+| `text-2xl`  | 24px   | H5                         |
+| `text-3xl`  | 30px   | H4                         |
+| `text-4xl`  | 36px   | H3                         |
+| `text-5xl`  | 48px   | H2                         |
+| `text-6xl`  | 60px   | H1, Hero                   |
 
 ### Poids de police
 
@@ -63,6 +66,7 @@ Utilisé pour le code, dashboards, et données techniques.
 ### Exemples de combinaisons
 
 #### Hero Section
+
 ```tsx
 <div>
   <h1 className="font-display text-6xl font-extrabold text-primary-700 leading-tight">
@@ -75,23 +79,21 @@ Utilisé pour le code, dashboards, et données techniques.
 ```
 
 #### Dashboard Card
+
 ```tsx
 <div className="bg-white p-6 rounded-lg">
   <h3 className="font-display text-2xl font-bold text-primary-700 mb-2">
     Token Usage
   </h3>
-  <code className="font-mono text-4xl text-secondary-500">
-    1,234,567
-  </code>
-  <p className="font-body text-sm text-grey-500 mt-2">
-    tokens this month
-  </p>
+  <code className="font-mono text-4xl text-secondary-500">1,234,567</code>
+  <p className="font-body text-sm text-grey-500 mt-2">tokens this month</p>
 </div>
 ```
 
 ## Palette de couleurs
 
 ### Primary - Navy Blue
+
 Utilisé pour les backgrounds principaux, titres, et boutons primaires.
 
 - `primary-500` : `#1B4F82` - Couleur principale
@@ -99,6 +101,7 @@ Utilisé pour les backgrounds principaux, titres, et boutons primaires.
 - Classes Tailwind : `bg-primary-500`, `text-primary-500`, `border-primary-500`
 
 ### Secondary - Cyan
+
 Utilisé pour les accents de marque, CTA, icônes actives, et highlights.
 
 - `secondary-500` : `#00B4C8` - Cyan principal
@@ -106,12 +109,14 @@ Utilisé pour les accents de marque, CTA, icônes actives, et highlights.
 - Classes Tailwind : `bg-secondary-500`, `text-secondary-500`, `hover:bg-secondary-400`
 
 ### Accent - Cyan Light
+
 Utilisé pour les états hover, badges, et liens actifs.
 
 - `accent-500` : `#00D4E8`
 - Classes Tailwind : `bg-accent-500`, `text-accent-500`
 
 ### Grey - Neutral
+
 Utilisé pour le corps de texte et backgrounds secondaires.
 
 - `grey-600` : `#4A5568` - Corps de texte principal
@@ -119,6 +124,7 @@ Utilisé pour le corps de texte et backgrounds secondaires.
 - Classes Tailwind : `text-grey-600`, `bg-grey-100`
 
 ### Base
+
 - `background` : `#FFFFFF` (light) / `#14406A` (dark)
 - `foreground` : `#4A5568` (light) / `#EDF2F7` (dark)
 
@@ -185,18 +191,22 @@ Utilisé pour le corps de texte et backgrounds secondaires.
 ## Couleurs sémantiques
 
 ### Success
+
 - `success-500` : `#48BB78`
 - Usage : Messages de succès, validations
 
 ### Warning
+
 - `warning-500` : `#ED8936`
 - Usage : Avertissements, alertes
 
 ### Error
+
 - `error-500` : `#F56565`
 - Usage : Erreurs, messages d'échec
 
 ### Info
+
 - `info-500` : `#00B4C8` (même que secondary)
 - Usage : Messages informatifs
 
@@ -209,9 +219,7 @@ Utilisé pour le corps de texte et backgrounds secondaires.
   <h3 className="text-primary-700 dark:text-primary-300 font-semibold mb-2">
     Card Title
   </h3>
-  <p className="text-grey-600 dark:text-grey-300">
-    Card content goes here
-  </p>
+  <p className="text-grey-600 dark:text-grey-300">Card content goes here</p>
 </div>
 ```
 

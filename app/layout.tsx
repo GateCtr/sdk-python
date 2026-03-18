@@ -8,7 +8,7 @@ import { ReactQueryProvider } from "@/components/query-provider";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
+const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
 const syne = Syne({
   subsets: ["latin"],
@@ -30,30 +30,34 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_MARKETING_URL ?? 'https://gatectr.com'),
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_MARKETING_URL ?? "https://gatectr.com",
+  ),
   title: "GateCtr - Control Your LLM Costs",
-  description: "Universal middleware hub for controlling, optimizing, and securing API calls to LLMs",
+  description:
+    "Universal middleware hub for controlling, optimizing, and securing API calls to LLMs",
   keywords: ["LLM", "AI", "cost control", "token optimization", "API gateway"],
   authors: [{ name: "GateCtr" }],
-  manifest: '/manifest.json',
+  manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
-    statusBarStyle: 'default',
-    title: 'GateCtr',
+    statusBarStyle: "default",
+    title: "GateCtr",
   },
   openGraph: {
     title: "GateCtr - Control Your LLM Costs",
-    description: "Universal middleware hub for controlling, optimizing, and securing API calls to LLMs",
+    description:
+      "Universal middleware hub for controlling, optimizing, and securing API calls to LLMs",
     type: "website",
   },
 };
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: '(prefers-color-scheme: dark)', color: '#0a0a0a' },
-    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
   ],
-  width: 'device-width',
+  width: "device-width",
   initialScale: 1,
 };
 
@@ -64,12 +68,18 @@ export default async function RootLayout({
 }>) {
   // Read locale from next-intl cookie for Clerk localization
   const cookieStore = await cookies();
-  const locale = cookieStore.get('NEXT_LOCALE')?.value ?? 'en';
+  const locale = cookieStore.get("NEXT_LOCALE")?.value ?? "en";
 
   return (
-    <html 
+    <html
       lang={locale}
-      className={cn(inter.variable, jetbrainsMono.variable, syne.variable, "font-sans", geist.variable)} 
+      className={cn(
+        inter.variable,
+        jetbrainsMono.variable,
+        syne.variable,
+        "font-sans",
+        geist.variable,
+      )}
       suppressHydrationWarning
     >
       <body className="antialiased">
@@ -81,9 +91,7 @@ export default async function RootLayout({
         >
           <ClerkProvider locale={locale}>
             <ReactQueryProvider>
-              <TooltipProvider>
-                {children}
-              </TooltipProvider>
+              <TooltipProvider>{children}</TooltipProvider>
             </ReactQueryProvider>
           </ClerkProvider>
         </ThemeProvider>

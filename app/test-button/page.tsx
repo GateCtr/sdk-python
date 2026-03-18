@@ -28,21 +28,34 @@ export default function TestButtonPage() {
               Dark Mode Test Card
             </h2>
             <p className="text-muted-foreground mb-4">
-              Cette carte change automatiquement de couleur selon le thème sélectionné.
-              Utilisez les boutons en haut à droite pour basculer entre light, dark et system mode.
+              Cette carte change automatiquement de couleur selon le thème
+              sélectionné. Utilisez les boutons en haut à droite pour basculer
+              entre light, dark et system mode.
             </p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="bg-muted p-4 rounded-md">
-                <p className="text-muted-foreground text-sm font-medium mb-2">Muted</p>
-                <p className="text-xs text-muted-foreground">Background secondaire</p>
+                <p className="text-muted-foreground text-sm font-medium mb-2">
+                  Muted
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Background secondaire
+                </p>
               </div>
               <div className="bg-accent p-4 rounded-md">
-                <p className="text-accent-foreground text-sm font-medium mb-2">Accent</p>
-                <p className="text-xs text-accent-foreground/80">Hover states, badges</p>
+                <p className="text-accent-foreground text-sm font-medium mb-2">
+                  Accent
+                </p>
+                <p className="text-xs text-accent-foreground/80">
+                  Hover states, badges
+                </p>
               </div>
               <div className="bg-primary p-4 rounded-md">
-                <p className="text-primary-foreground text-sm font-medium mb-2">Primary</p>
-                <p className="text-xs text-primary-foreground/80">Navy - Couleur principale</p>
+                <p className="text-primary-foreground text-sm font-medium mb-2">
+                  Primary
+                </p>
+                <p className="text-xs text-primary-foreground/80">
+                  Navy - Couleur principale
+                </p>
               </div>
             </div>
           </div>

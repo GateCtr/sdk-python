@@ -6,14 +6,14 @@ inclusion: always
 
 ## Target Segments
 
-| Segment | Profile | Primary pain point | What they gain |
-|---|---|---|---|
-| Solo developers | Freelance, indie hacker, AI dev | Unpredictable LLM costs | Budget control, clear analytics, simple SDK |
-| SaaS startups | Product with embedded LLM | Scaling = scaling bill | Token optimization, cost-efficient routing |
-| AI/ML teams | ML engineers, prompt engineers | No visibility on prompts | Dashboard, audit trail, A/B prompts |
-| No-code builders | Bolt.new, Lovable, Replit users | Uncontrolled LLM calls | Centralization and instant monitoring |
-| Enterprises | IT, digital teams, CIOs | AI governance and security | RBAC, audit, SLA, ERP/BI integration |
-| AI agents | LangChain, AutoGPT, CrewAI devs | Budgetless loops = infinite costs | Budget caps, fallback, rate limiting |
+| Segment          | Profile                         | Primary pain point                | What they gain                              |
+| ---------------- | ------------------------------- | --------------------------------- | ------------------------------------------- |
+| Solo developers  | Freelance, indie hacker, AI dev | Unpredictable LLM costs           | Budget control, clear analytics, simple SDK |
+| SaaS startups    | Product with embedded LLM       | Scaling = scaling bill            | Token optimization, cost-efficient routing  |
+| AI/ML teams      | ML engineers, prompt engineers  | No visibility on prompts          | Dashboard, audit trail, A/B prompts         |
+| No-code builders | Bolt.new, Lovable, Replit users | Uncontrolled LLM calls            | Centralization and instant monitoring       |
+| Enterprises      | IT, digital teams, CIOs         | AI governance and security        | RBAC, audit, SLA, ERP/BI integration        |
+| AI agents        | LangChain, AutoGPT, CrewAI devs | Budgetless loops = infinite costs | Budget caps, fallback, rate limiting        |
 
 ## Messaging by Segment
 
@@ -27,21 +27,25 @@ inclusion: always
 ## Use Cases
 
 ### Dev integrating GPT-4 in a Next.js app
+
 - Situation: Verbose prompts causing cost spikes.
 - With GateCtr: Context Optimizer compresses prompts automatically. Budget Firewall caps at 100K tokens/day.
 - Result: -45% token cost. Real-time dashboard. Slack alert on overage.
 
 ### LangChain agent in production
+
 - Situation: Agent loops generating 2M tokens/hour uncontrolled.
 - With GateCtr: Token cap per agent run. Auto-fallback to Mistral when OpenAI exceeds budget.
 - Result: Full cost control. Complete audit log. Daily report on Teams.
 
 ### Enterprise with 50+ users across departments
+
 - Situation: IT wants to know which department spends what on internal AI.
 - With GateCtr: RBAC per department. Segmented dashboard. Monthly export for internal billing.
 - Result: Centralized AI governance. Compliance. 30% cost reduction via optimizer.
 
 ### AI SaaS generating content at scale
+
 - Situation: 10K articles/day. LLM cost = 40% of operating expenses.
 - With GateCtr: Model Router selects GPT-3.5 for simple cases, GPT-4o for complex ones.
 - Result: -60% average cost per article. Performance maintained. BI webhooks for monitoring.

@@ -22,15 +22,19 @@ Go to **Settings → API Keys** and create a key. This is the only key you'll us
 
 {% tabs %}
 {% tab title="Node.js" %}
+
 ```bash
 npm install @gatectr/sdk
 ```
+
 {% endtab %}
 
 {% tab title="Python" %}
+
 ```bash
 pip install gatectr-sdk
 ```
+
 {% endtab %}
 
 {% tab title="cURL" %}
@@ -42,21 +46,24 @@ No install needed.
 
 {% tabs %}
 {% tab title="Node.js" %}
+
 ```typescript
-import { GateCtr } from '@gatectr/sdk';
+import { GateCtr } from "@gatectr/sdk";
 
 const client = new GateCtr({ apiKey: process.env.GATECTR_API_KEY });
 
 const response = await client.complete({
-  model: 'gpt-4o',
-  messages: [{ role: 'user', content: 'Hello' }],
+  model: "gpt-4o",
+  messages: [{ role: "user", content: "Hello" }],
 });
 
 console.log(response.choices[0].message.content);
 ```
+
 {% endtab %}
 
 {% tab title="Python" %}
+
 ```python
 from gatectr import GateCtr
 
@@ -69,9 +76,11 @@ response = client.complete(
 
 print(response.choices[0].message.content)
 ```
+
 {% endtab %}
 
 {% tab title="cURL" %}
+
 ```bash
 curl https://api.gatectr.com/v1/complete \
   -H "Authorization: Bearer $GATECTR_API_KEY" \
@@ -81,6 +90,7 @@ curl https://api.gatectr.com/v1/complete \
     "messages": [{ "role": "user", "content": "Hello" }]
   }'
 ```
+
 {% endtab %}
 {% endtabs %}
 

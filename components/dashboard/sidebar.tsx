@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   Sidebar,
@@ -13,7 +13,7 @@ import {
   SidebarMenuItem,
   SidebarSeparator,
   SidebarTrigger,
-} from '@/components/ui/sidebar';
+} from "@/components/ui/sidebar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,14 +21,14 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Logo } from '@/components/shared/logo';
-import { Link } from '@/i18n/routing';
-import { useTranslations } from 'next-intl';
-import { usePathname } from 'next/navigation';
-import { useUser, useClerk } from '@clerk/nextjs';
-import { useActiveTeam } from '@/hooks/use-active-team';
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Logo } from "@/components/shared/logo";
+import { Link } from "@/i18n/routing";
+import { useTranslations } from "next-intl";
+import { usePathname } from "next/navigation";
+import { useUser, useClerk } from "@clerk/nextjs";
+import { useActiveTeam } from "@/hooks/use-active-team";
 import {
   LayoutDashboard,
   LineChart,
@@ -43,33 +43,33 @@ import {
   UserRound,
   Plus,
   Check,
-} from 'lucide-react';
+} from "lucide-react";
 
 // ─── Nav items ────────────────────────────────────────────────────────────────
 
 const MAIN_NAV = [
-  { key: 'dashboard', href: '/dashboard', icon: LayoutDashboard },
-  { key: 'analytics', href: '/analytics', icon: LineChart },
-  { key: 'projects',  href: '/projects',  icon: Boxes },
-  { key: 'apiKeys',   href: '/api-keys',  icon: KeySquare },
-  { key: 'budget',    href: '/budget',    icon: ShieldCheck },
-  { key: 'webhooks',  href: '/webhooks',  icon: Zap },
+  { key: "dashboard", href: "/dashboard", icon: LayoutDashboard },
+  { key: "analytics", href: "/analytics", icon: LineChart },
+  { key: "projects", href: "/projects", icon: Boxes },
+  { key: "apiKeys", href: "/api-keys", icon: KeySquare },
+  { key: "budget", href: "/budget", icon: ShieldCheck },
+  { key: "webhooks", href: "/webhooks", icon: Zap },
 ] as const;
 
 const SECONDARY_NAV = [
-  { key: 'billing',  href: '/billing',  icon: Receipt },
-  { key: 'settings', href: '/settings', icon: SlidersHorizontal },
+  { key: "billing", href: "/billing", icon: Receipt },
+  { key: "settings", href: "/settings", icon: SlidersHorizontal },
 ] as const;
 
 // ─── Team Switcher ────────────────────────────────────────────────────────────
 
 function TeamSwitcher() {
-  const t = useTranslations('dashboard.sidebar');
+  const t = useTranslations("dashboard.sidebar");
   const { activeTeam, isLoading, teams, switchTeam } = useActiveTeam();
 
-  const orgName = activeTeam?.name ?? '…';
-  const planLabel = activeTeam?.plan?.toLowerCase() ?? 'free';
-  const initials = orgName === '…' ? '…' : orgName.slice(0, 2).toUpperCase();
+  const orgName = activeTeam?.name ?? "…";
+  const planLabel = activeTeam?.plan?.toLowerCase() ?? "free";
+  const initials = orgName === "…" ? "…" : orgName.slice(0, 2).toUpperCase();
 
   return (
     <DropdownMenu>
@@ -80,23 +80,28 @@ function TeamSwitcher() {
         >
           {/* Avatar workspace */}
           <div className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground text-xs font-bold shrink-0 select-none">
-            {isLoading ? '…' : initials}
+            {isLoading ? "…" : initials}
           </div>
           <div className="flex flex-col gap-0.5 leading-none min-w-0">
             <span className="font-semibold text-sm truncate">
-              {isLoading ? t('loading') : orgName}
+              {isLoading ? t("loading") : orgName}
             </span>
             <span className="text-[11px] text-muted-foreground truncate capitalize">
-              {planLabel} {t('plan')}
+              {planLabel} {t("plan")}
             </span>
           </div>
           <ChevronsUpDown className="ml-auto size-3.5 shrink-0 text-muted-foreground" />
         </SidebarMenuButton>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent className="w-60" align="start" side="bottom" sideOffset={6}>
+      <DropdownMenuContent
+        className="w-60"
+        align="start"
+        side="bottom"
+        sideOffset={6}
+      >
         <DropdownMenuLabel className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider px-2 py-1.5">
-          {t('workspaces')}
+          {t("workspaces")}
         </DropdownMenuLabel>
         {teams.map((team) => (
           <DropdownMenuItem
@@ -118,7 +123,7 @@ function TeamSwitcher() {
           <div className="flex size-6 items-center justify-center rounded-md border border-dashed border-muted-foreground/40 shrink-0">
             <Plus className="size-3" />
           </div>
-          {t('newWorkspace')}
+          {t("newWorkspace")}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -128,14 +133,19 @@ function TeamSwitcher() {
 // ─── User Menu ────────────────────────────────────────────────────────────────
 
 function UserMenu() {
-  const t = useTranslations('dashboard.sidebar');
+  const t = useTranslations("dashboard.sidebar");
   const { user } = useUser();
   const { signOut } = useClerk();
 
-  const name = user?.fullName ?? user?.firstName ?? 'User';
-  const email = user?.primaryEmailAddress?.emailAddress ?? '';
+  const name = user?.fullName ?? user?.firstName ?? "User";
+  const email = user?.primaryEmailAddress?.emailAddress ?? "";
   const avatar = user?.imageUrl;
-  const initials = name.split(' ').map((n) => n[0]).join('').slice(0, 2).toUpperCase();
+  const initials = name
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
 
   return (
     <DropdownMenu>
@@ -146,42 +156,55 @@ function UserMenu() {
         >
           <Avatar className="size-7 shrink-0">
             <AvatarImage src={avatar} alt={name} />
-            <AvatarFallback className="text-[11px] font-semibold">{initials}</AvatarFallback>
+            <AvatarFallback className="text-[11px] font-semibold">
+              {initials}
+            </AvatarFallback>
           </Avatar>
           <div className="flex flex-col gap-0.5 leading-none min-w-0">
             <span className="font-medium text-sm truncate">{name}</span>
-            <span className="text-[11px] text-muted-foreground truncate">{email}</span>
+            <span className="text-[11px] text-muted-foreground truncate">
+              {email}
+            </span>
           </div>
           <ChevronsUpDown className="ml-auto size-3.5 shrink-0 text-muted-foreground" />
         </SidebarMenuButton>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent className="w-60" align="start" side="top" sideOffset={6}>
+      <DropdownMenuContent
+        className="w-60"
+        align="start"
+        side="top"
+        sideOffset={6}
+      >
         <div className="flex items-center gap-2.5 px-2 py-2">
           <Avatar className="size-8 shrink-0">
             <AvatarImage src={avatar} alt={name} />
-            <AvatarFallback className="text-xs font-semibold">{initials}</AvatarFallback>
+            <AvatarFallback className="text-xs font-semibold">
+              {initials}
+            </AvatarFallback>
           </Avatar>
           <div className="flex flex-col gap-0.5 min-w-0">
             <span className="text-sm font-medium truncate">{name}</span>
-            <span className="text-[11px] text-muted-foreground truncate">{email}</span>
+            <span className="text-[11px] text-muted-foreground truncate">
+              {email}
+            </span>
           </div>
         </div>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild className="gap-2.5">
           <Link href="/settings">
             <UserRound className="size-4 text-muted-foreground" />
-            {t('profile')}
+            {t("profile")}
           </Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
           variant="destructive"
           className="gap-2.5"
-          onClick={() => signOut({ redirectUrl: '/' })}
+          onClick={() => signOut({ redirectUrl: "/" })}
         >
           <LogOut className="size-4" />
-          {t('signOut')}
+          {t("signOut")}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -191,10 +214,10 @@ function UserMenu() {
 // ─── Main Sidebar ─────────────────────────────────────────────────────────────
 
 export function DashboardSidebar() {
-  const t = useTranslations('dashboard.sidebar');
+  const t = useTranslations("dashboard.sidebar");
   const pathname = usePathname();
 
-  const cleanPath = pathname.replace(/^\/fr/, '') || '/';
+  const cleanPath = pathname.replace(/^\/fr/, "") || "/";
 
   return (
     <Sidebar collapsible="icon">
@@ -203,7 +226,11 @@ export function DashboardSidebar() {
         {/* Logo — full in expanded, icon-only when collapsed */}
         <div className="flex h-14 items-center px-3">
           <div className="group-data-[collapsible=icon]:hidden">
-            <Logo variant="full" iconClassName="w-6 h-6" textClassName="text-xl" />
+            <Logo
+              variant="full"
+              iconClassName="w-6 h-6"
+              textClassName="text-xl"
+            />
           </div>
           <div className="hidden group-data-[collapsible=icon]:flex items-center justify-center w-full">
             <Logo variant="icon" iconClassName="w-6 h-6" />
@@ -223,14 +250,14 @@ export function DashboardSidebar() {
         {/* Main nav */}
         <SidebarGroup className="pt-3">
           <SidebarGroupLabel className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/60 px-3 mb-1">
-            {t('main')}
+            {t("main")}
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {MAIN_NAV.map(({ key, href, icon: Icon }) => {
                 const isActive =
                   cleanPath === href ||
-                  (href !== '/dashboard' && cleanPath.startsWith(href));
+                  (href !== "/dashboard" && cleanPath.startsWith(href));
                 return (
                   <SidebarMenuItem key={key}>
                     <SidebarMenuButton
@@ -256,7 +283,7 @@ export function DashboardSidebar() {
         {/* Account nav */}
         <SidebarGroup className="pb-3">
           <SidebarGroupLabel className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/60 px-3 mb-1">
-            {t('account')}
+            {t("account")}
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>

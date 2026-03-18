@@ -226,3 +226,33 @@ jobs:
 
       - name: Validate Prisma schema
         run: pnpm prisma validate
+
+  migrate:
+    name: Run Migrations
+    runs-on: ubuntu-latest
+    # Only run on direct pushes to main/develop — not on PRs (handled by neon-branch.yml)
+    if: github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma Client
+        run: pnpm prisma generate
+
+      - name: Run migrations on Neon branch
+        run: pnpm prisma migrate deploy
+        env:
+          # NEON_DATABASE_URL_DEVELOP and NEON_DATABASE_URL_MAIN must be set
+          # in GitHub repo secrets (Settings → Secrets → Actions)
+          DATABASE_URL: ${{ github.ref == 'refs/heads/main' && secrets.NEON_DATABASE_URL_MAIN || secrets.NEON_DATABASE_URL_DEVELOP }}

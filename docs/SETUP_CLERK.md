@@ -42,6 +42,7 @@ NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL="/dashboard"
 ## Étape 5 : Tester
 
 1. Redémarrez votre serveur de développement :
+
    ```bash
    pnpm dev
    ```
@@ -53,6 +54,7 @@ NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL="/dashboard"
 ### Personnaliser l'apparence
 
 Dans Clerk Dashboard > **Customization** :
+
 - Logo
 - Couleurs
 - Thème (light/dark)
@@ -99,9 +101,11 @@ yarn global add @clerk/clerk-cli
 #### Configuration
 
 1. **Authentifiez-vous avec Clerk** :
+
    ```bash
    clerk login
    ```
+
    Cela ouvrira votre navigateur pour vous connecter.
 
 2. **Vérifiez votre installation** :
@@ -112,12 +116,15 @@ yarn global add @clerk/clerk-cli
 #### Utilisation pour tester les webhooks
 
 1. **Démarrez votre serveur Next.js** (dans un terminal) :
+
    ```bash
    pnpm dev
    ```
+
    Votre app tourne sur `http://localhost:3000`
 
 2. **Démarrez le tunnel Clerk** (dans un autre terminal) :
+
    ```bash
    clerk listen --forward-to http://localhost:3000/api/webhooks/clerk
    ```
@@ -158,6 +165,7 @@ clerk --help
 Si vous préférez ngrok :
 
 1. **Installez ngrok** :
+
    ```bash
    # Avec Chocolatey (Windows)
    choco install ngrok
@@ -168,11 +176,13 @@ Si vous préférez ngrok :
 2. **Créez un compte sur ngrok.com** et récupérez votre authtoken
 
 3. **Configurez ngrok** :
+
    ```bash
    ngrok config add-authtoken VOTRE_TOKEN
    ```
 
 4. **Démarrez le tunnel** :
+
    ```bash
    ngrok http 3000
    ```
@@ -218,10 +228,12 @@ curl -X POST http://localhost:3000/api/webhooks/clerk \
 Après avoir testé, vérifiez que tout fonctionne :
 
 1. **Base de données** :
+
    ```bash
    # Ouvrez Prisma Studio
    pnpm prisma studio
    ```
+
    - Vérifiez qu'un nouvel utilisateur existe dans la table `users`
    - Vérifiez qu'il a le rôle `DEVELOPER` dans `user_roles`
    - Vérifiez l'entrée dans `audit_logs` avec action `user.created`

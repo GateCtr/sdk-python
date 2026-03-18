@@ -15,9 +15,9 @@ npm install @gatectr/sdk
 ```
 
 ```typescript
-import { GateCtr } from '@gatectr/sdk';
-const client = new GateCtr({ apiKey: 'your-key' });
-const res = await client.complete({ model: 'gpt-4o', messages });
+import { GateCtr } from "@gatectr/sdk";
+const client = new GateCtr({ apiKey: "your-key" });
+const res = await client.complete({ model: "gpt-4o", messages });
 ```
 
 [Docs](https://docs.gatectr.com) · [Dashboard](https://gatectr.com) · [Status](https://status.gatectr.com) · [X](https://x.com/gatectrl)

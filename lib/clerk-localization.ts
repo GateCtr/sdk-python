@@ -1,4 +1,4 @@
-import { enUS, frFR } from '@clerk/localizations';
+import { enUS, frFR } from "@clerk/localizations";
 
 type ClerkLocalization = typeof enUS;
 
@@ -12,16 +12,16 @@ export const clerkLocalizationEn: ClerkLocalization = {
     ...enUS.signIn,
     start: {
       ...enUS.signIn?.start,
-      title: 'Sign in to GateCtr',
-      subtitle: 'Welcome back — control your LLM costs',
+      title: "Sign in to GateCtr",
+      subtitle: "Welcome back — control your LLM costs",
     },
   },
   signUp: {
     ...enUS.signUp,
     start: {
       ...enUS.signUp?.start,
-      title: 'Create your GateCtr account',
-      subtitle: 'Start controlling your LLM costs today',
+      title: "Create your GateCtr account",
+      subtitle: "Start controlling your LLM costs today",
     },
   },
 };
@@ -36,20 +36,20 @@ export const clerkLocalizationFr: ClerkLocalization = {
     ...frFR.signIn,
     start: {
       ...frFR.signIn?.start,
-      title: 'Connexion à GateCtr',
-      subtitle: 'Bon retour — maîtrisez vos coûts LLM',
+      title: "Connexion à GateCtr",
+      subtitle: "Bon retour — maîtrisez vos coûts LLM",
     },
   },
   signUp: {
     ...frFR.signUp,
     start: {
       ...frFR.signUp?.start,
-      title: 'Créer votre compte GateCtr',
+      title: "Créer votre compte GateCtr",
       subtitle: "Commencez à contrôler vos coûts LLM dès aujourd'hui",
     },
   },
 };
 
 export function getClerkLocalization(locale: string): ClerkLocalization {
-  return locale === 'fr' ? clerkLocalizationFr : clerkLocalizationEn;
+  return locale === "fr" ? clerkLocalizationFr : clerkLocalizationEn;
 }

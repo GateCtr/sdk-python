@@ -15,17 +15,17 @@ Same request body and response shape as [POST /v1/complete](complete.md).
 Use `/v1/chat/completions` when pointing an existing OpenAI SDK integration at GateCtr without changing any code:
 
 ```typescript
-import OpenAI from 'openai';
+import OpenAI from "openai";
 
 const client = new OpenAI({
   apiKey: process.env.GATECTR_API_KEY,
-  baseURL: 'https://api.gatectr.com/v1',
+  baseURL: "https://api.gatectr.com/v1",
 });
 
 // This hits /v1/chat/completions — no changes needed
 const response = await client.chat.completions.create({
-  model: 'gpt-4o',
-  messages: [{ role: 'user', content: 'Hello' }],
+  model: "gpt-4o",
+  messages: [{ role: "user", content: "Hello" }],
 });
 ```
 

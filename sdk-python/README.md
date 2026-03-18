@@ -134,13 +134,13 @@ client = GateCtr(
 )
 ```
 
-| Option | Type | Default | Description |
-|---|---|---|---|
-| `api_key` | `str` | — | Your GateCtr API key |
-| `base_url` | `str` | `https://api.gatectr.com/v1` | API base URL |
-| `timeout` | `float` | `30.0` | Request timeout in seconds |
-| `optimize` | `bool` | `True` | Enable context optimizer |
-| `route` | `bool` | `False` | Enable model router |
+| Option     | Type    | Default                      | Description                |
+| ---------- | ------- | ---------------------------- | -------------------------- |
+| `api_key`  | `str`   | —                            | Your GateCtr API key       |
+| `base_url` | `str`   | `https://api.gatectr.com/v1` | API base URL               |
+| `timeout`  | `float` | `30.0`                       | Request timeout in seconds |
+| `optimize` | `bool`  | `True`                       | Enable context optimizer   |
+| `route`    | `bool`  | `False`                      | Enable model router        |
 
 ---
 

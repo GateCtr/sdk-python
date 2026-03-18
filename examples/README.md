@@ -15,13 +15,13 @@
 
 ## Examples
 
-| Example | Stack | What it shows |
-|---|---|---|
-| [`nextjs-app`](./nextjs-app) | Next.js 15 + App Router | API route with GateCtr, budget firewall, streaming |
-| [`langchain-agent`](./langchain-agent) | Python + LangChain | Agent with token cap and auto-fallback to Mistral |
-| [`fastapi-service`](./fastapi-service) | Python + FastAPI | Async completions with budget per endpoint |
-| [`express-proxy`](./express-proxy) | Node.js + Express | Drop-in proxy for existing OpenAI calls |
-| [`budget-alert`](./budget-alert) | Node.js | Webhook to Slack when budget threshold is hit |
+| Example                                | Stack                   | What it shows                                      |
+| -------------------------------------- | ----------------------- | -------------------------------------------------- |
+| [`nextjs-app`](./nextjs-app)           | Next.js 15 + App Router | API route with GateCtr, budget firewall, streaming |
+| [`langchain-agent`](./langchain-agent) | Python + LangChain      | Agent with token cap and auto-fallback to Mistral  |
+| [`fastapi-service`](./fastapi-service) | Python + FastAPI        | Async completions with budget per endpoint         |
+| [`express-proxy`](./express-proxy)     | Node.js + Express       | Drop-in proxy for existing OpenAI calls            |
+| [`budget-alert`](./budget-alert)       | Node.js                 | Webhook to Slack when budget threshold is hit      |
 
 ---
 
@@ -43,14 +43,14 @@ pnpm dev
 
 ```typescript
 // app/api/chat/route.ts
-import { GateCtr } from '@gatectr/sdk';
+import { GateCtr } from "@gatectr/sdk";
 
 const client = new GateCtr({ apiKey: process.env.GATECTR_API_KEY });
 
 export async function POST(req: Request) {
   const { messages } = await req.json();
 
-  const response = await client.complete({ model: 'gpt-4o', messages });
+  const response = await client.complete({ model: "gpt-4o", messages });
 
   return Response.json(response.choices[0].message);
 }
@@ -118,9 +118,9 @@ async def summarize(text: str):
 export async function POST(req: Request) {
   const event = await req.json();
 
-  if (event.type === 'budget.threshold_reached') {
+  if (event.type === "budget.threshold_reached") {
     await fetch(process.env.SLACK_WEBHOOK_URL, {
-      method: 'POST',
+      method: "POST",
       body: JSON.stringify({
         text: `Budget alert: ${event.project} reached ${event.percent}% of limit.`,
       }),

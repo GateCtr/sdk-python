@@ -14,13 +14,17 @@
  * Library: fast-check (fc) + vitest
  */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import * as fc from 'fast-check';
-import { ROLE_PERMISSIONS, type RoleName, type Permission } from '@/lib/permissions';
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import * as fc from "fast-check";
+import {
+  ROLE_PERMISSIONS,
+  type RoleName,
+  type Permission,
+} from "@/lib/permissions";
 
 // ─── Module mocks ─────────────────────────────────────────────────────────────
 
-vi.mock('@/lib/prisma', () => ({
+vi.mock("@/lib/prisma", () => ({
   prisma: {
     userRole: {
       findMany: vi.fn(),
@@ -28,13 +32,13 @@ vi.mock('@/lib/prisma', () => ({
   },
 }));
 
-vi.mock('@/lib/redis', () => ({
+vi.mock("@/lib/redis", () => ({
   getCachedPermissions: vi.fn(),
   setCachedPermissions: vi.fn(),
   invalidateCache: vi.fn(),
   redis: {},
   CACHE_TTL: 300,
-  PERMISSION_CACHE_PREFIX: 'permissions:',
+  PERMISSION_CACHE_PREFIX: "permissions:",
 }));
 
 // ─── Helpers / constants ──────────────────────────────────────────────────────
@@ -55,7 +59,7 @@ const roleArb = fc.constantFrom(...ALL_ROLES);
 // Validates: Requirements 18.7
 // ═════════════════════════════════════════════════════════════════════════════
 
-describe('Property 62: Permission Check Fail-Secure', () => {
+describe("Property 62: Permission Check Fail-Secure", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -66,16 +70,23 @@ describe('Property 62: Permission Check Fail-Secure', () => {
    *
    * **Validates: Requirements 18.7**
    */
-  it('returns false when Redis throws AND database throws (fail-secure)', async () => {
+  it("returns false when Redis throws AND database throws (fail-secure)", async () => {
     await fc.assert(
       fc.asyncProperty(userIdArb, permissionArb, async (userId, permission) => {
-        const { getCachedPermissions, setCachedPermissions } = await import('@/lib/redis');
-        const { prisma } = await import('@/lib/prisma');
-        const { hasPermission } = await import('@/lib/permissions');
+        const { getCachedPermissions, setCachedPermissions } =
+          await import("@/lib/redis");
+        const { prisma } = await import("@/lib/prisma");
+        const { hasPermission } = await import("@/lib/permissions");
 
-        vi.mocked(getCachedPermissions).mockRejectedValue(new Error('Redis connection failed'));
-        vi.mocked(setCachedPermissions).mockRejectedValue(new Error('Redis connection failed'));
-        vi.mocked(prisma.userRole.findMany).mockRejectedValue(new Error('DB connection failed'));
+        vi.mocked(getCachedPermissions).mockRejectedValue(
+          new Error("Redis connection failed"),
+        );
+        vi.mocked(setCachedPermissions).mockRejectedValue(
+          new Error("Redis connection failed"),
+        );
+        vi.mocked(prisma.userRole.findMany).mockRejectedValue(
+          new Error("DB connection failed"),
+        );
 
         const result = await hasPermission(userId, permission);
 
@@ -92,15 +103,19 @@ describe('Property 62: Permission Check Fail-Secure', () => {
    *
    * **Validates: Requirements 18.7**
    */
-  it('never throws when both Redis and database fail', async () => {
+  it("never throws when both Redis and database fail", async () => {
     await fc.assert(
       fc.asyncProperty(userIdArb, permissionArb, async (userId, permission) => {
-        const { getCachedPermissions } = await import('@/lib/redis');
-        const { prisma } = await import('@/lib/prisma');
-        const { hasPermission } = await import('@/lib/permissions');
+        const { getCachedPermissions } = await import("@/lib/redis");
+        const { prisma } = await import("@/lib/prisma");
+        const { hasPermission } = await import("@/lib/permissions");
 
-        vi.mocked(getCachedPermissions).mockRejectedValue(new Error('Redis unavailable'));
-        vi.mocked(prisma.userRole.findMany).mockRejectedValue(new Error('DB unavailable'));
+        vi.mocked(getCachedPermissions).mockRejectedValue(
+          new Error("Redis unavailable"),
+        );
+        vi.mocked(prisma.userRole.findMany).mockRejectedValue(
+          new Error("DB unavailable"),
+        );
 
         // Must resolve, not reject
         await expect(hasPermission(userId, permission)).resolves.toBeDefined();
@@ -115,17 +130,20 @@ describe('Property 62: Permission Check Fail-Secure', () => {
    *
    * **Validates: Requirements 18.7**
    */
-  it('returns false for every permission when database throws', async () => {
+  it("returns false for every permission when database throws", async () => {
     await fc.assert(
       fc.asyncProperty(userIdArb, permissionArb, async (userId, permission) => {
-        const { getCachedPermissions, setCachedPermissions } = await import('@/lib/redis');
-        const { prisma } = await import('@/lib/prisma');
-        const { hasPermission } = await import('@/lib/permissions');
+        const { getCachedPermissions, setCachedPermissions } =
+          await import("@/lib/redis");
+        const { prisma } = await import("@/lib/prisma");
+        const { hasPermission } = await import("@/lib/permissions");
 
         // Redis returns null (cache miss) → falls through to DB
         vi.mocked(getCachedPermissions).mockResolvedValue(null);
         vi.mocked(setCachedPermissions).mockResolvedValue(undefined);
-        vi.mocked(prisma.userRole.findMany).mockRejectedValue(new Error('DB error'));
+        vi.mocked(prisma.userRole.findMany).mockRejectedValue(
+          new Error("DB error"),
+        );
 
         const result = await hasPermission(userId, permission);
 
@@ -141,16 +159,20 @@ describe('Property 62: Permission Check Fail-Secure', () => {
    *
    * **Validates: Requirements 18.7**
    */
-  it('errors never grant access even for permissions that would normally be allowed', async () => {
+  it("errors never grant access even for permissions that would normally be allowed", async () => {
     await fc.assert(
       fc.asyncProperty(userIdArb, roleArb, async (userId, role) => {
-        const { getCachedPermissions } = await import('@/lib/redis');
-        const { prisma } = await import('@/lib/prisma');
-        const { hasPermission } = await import('@/lib/permissions');
+        const { getCachedPermissions } = await import("@/lib/redis");
+        const { prisma } = await import("@/lib/prisma");
+        const { hasPermission } = await import("@/lib/permissions");
 
         // Simulate total failure
-        vi.mocked(getCachedPermissions).mockRejectedValue(new Error('Redis down'));
-        vi.mocked(prisma.userRole.findMany).mockRejectedValue(new Error('DB down'));
+        vi.mocked(getCachedPermissions).mockRejectedValue(
+          new Error("Redis down"),
+        );
+        vi.mocked(prisma.userRole.findMany).mockRejectedValue(
+          new Error("DB down"),
+        );
 
         // Check every permission that this role would normally have
         const rolePermissions = ROLE_PERMISSIONS[role];
@@ -175,7 +197,7 @@ describe('Property 62: Permission Check Fail-Secure', () => {
 // itself throws (which it doesn't — it catches internally).
 // ═════════════════════════════════════════════════════════════════════════════
 
-describe('Redis Fallback: DB is used when Redis is unavailable (returns null)', () => {
+describe("Redis Fallback: DB is used when Redis is unavailable (returns null)", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -187,12 +209,13 @@ describe('Redis Fallback: DB is used when Redis is unavailable (returns null)', 
    *
    * **Validates: Requirements 10.8, 18.3**
    */
-  it('falls back to database when Redis returns null (cache miss due to Redis error)', async () => {
+  it("falls back to database when Redis returns null (cache miss due to Redis error)", async () => {
     await fc.assert(
       fc.asyncProperty(userIdArb, roleArb, async (userId, role) => {
-        const { getCachedPermissions, setCachedPermissions } = await import('@/lib/redis');
-        const { prisma } = await import('@/lib/prisma');
-        const { hasPermission } = await import('@/lib/permissions');
+        const { getCachedPermissions, setCachedPermissions } =
+          await import("@/lib/redis");
+        const { prisma } = await import("@/lib/prisma");
+        const { hasPermission } = await import("@/lib/permissions");
 
         // Redis internally caught its error and returned null (cache miss)
         vi.mocked(getCachedPermissions).mockResolvedValue(null);
@@ -220,12 +243,13 @@ describe('Redis Fallback: DB is used when Redis is unavailable (returns null)', 
    *
    * **Validates: Requirements 10.8, 18.3**
    */
-  it('correctly denies permissions via DB fallback when user has no roles', async () => {
+  it("correctly denies permissions via DB fallback when user has no roles", async () => {
     await fc.assert(
       fc.asyncProperty(userIdArb, permissionArb, async (userId, permission) => {
-        const { getCachedPermissions, setCachedPermissions } = await import('@/lib/redis');
-        const { prisma } = await import('@/lib/prisma');
-        const { hasPermission } = await import('@/lib/permissions');
+        const { getCachedPermissions, setCachedPermissions } =
+          await import("@/lib/redis");
+        const { prisma } = await import("@/lib/prisma");
+        const { hasPermission } = await import("@/lib/permissions");
 
         // Redis returns null (cache miss)
         vi.mocked(getCachedPermissions).mockResolvedValue(null);
@@ -246,12 +270,13 @@ describe('Redis Fallback: DB is used when Redis is unavailable (returns null)', 
    *
    * **Validates: Requirements 10.8, 18.3**
    */
-  it('never throws when Redis returns null but DB succeeds', async () => {
+  it("never throws when Redis returns null but DB succeeds", async () => {
     await fc.assert(
       fc.asyncProperty(userIdArb, permissionArb, async (userId, permission) => {
-        const { getCachedPermissions, setCachedPermissions } = await import('@/lib/redis');
-        const { prisma } = await import('@/lib/prisma');
-        const { hasPermission } = await import('@/lib/permissions');
+        const { getCachedPermissions, setCachedPermissions } =
+          await import("@/lib/redis");
+        const { prisma } = await import("@/lib/prisma");
+        const { hasPermission } = await import("@/lib/permissions");
 
         vi.mocked(getCachedPermissions).mockResolvedValue(null);
         vi.mocked(setCachedPermissions).mockResolvedValue(undefined);
@@ -269,7 +294,7 @@ describe('Redis Fallback: DB is used when Redis is unavailable (returns null)', 
 // Validates: Requirements 18.7
 // ═════════════════════════════════════════════════════════════════════════════
 
-describe('DB Error: hasPermission returns false when database throws', () => {
+describe("DB Error: hasPermission returns false when database throws", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -280,16 +305,19 @@ describe('DB Error: hasPermission returns false when database throws', () => {
    *
    * **Validates: Requirements 18.7**
    */
-  it('returns false on cache miss + DB error', async () => {
+  it("returns false on cache miss + DB error", async () => {
     await fc.assert(
       fc.asyncProperty(userIdArb, permissionArb, async (userId, permission) => {
-        const { getCachedPermissions, setCachedPermissions } = await import('@/lib/redis');
-        const { prisma } = await import('@/lib/prisma');
-        const { hasPermission } = await import('@/lib/permissions');
+        const { getCachedPermissions, setCachedPermissions } =
+          await import("@/lib/redis");
+        const { prisma } = await import("@/lib/prisma");
+        const { hasPermission } = await import("@/lib/permissions");
 
         vi.mocked(getCachedPermissions).mockResolvedValue(null); // cache miss
         vi.mocked(setCachedPermissions).mockResolvedValue(undefined);
-        vi.mocked(prisma.userRole.findMany).mockRejectedValue(new Error('DB timeout'));
+        vi.mocked(prisma.userRole.findMany).mockRejectedValue(
+          new Error("DB timeout"),
+        );
 
         const result = await hasPermission(userId, permission);
         expect(result).toBe(false);
@@ -303,27 +331,33 @@ describe('DB Error: hasPermission returns false when database throws', () => {
    *
    * **Validates: Requirements 18.7**
    */
-  it('returns false for any type of DB error', async () => {
+  it("returns false for any type of DB error", async () => {
     const errorArb = fc.oneof(
-      fc.constant(new Error('Connection timeout')),
-      fc.constant(new Error('Query failed')),
-      fc.constant(new TypeError('Cannot read property of undefined')),
-      fc.constant(new RangeError('Out of range')),
+      fc.constant(new Error("Connection timeout")),
+      fc.constant(new Error("Query failed")),
+      fc.constant(new TypeError("Cannot read property of undefined")),
+      fc.constant(new RangeError("Out of range")),
     );
 
     await fc.assert(
-      fc.asyncProperty(userIdArb, permissionArb, errorArb, async (userId, permission, error) => {
-        const { getCachedPermissions, setCachedPermissions } = await import('@/lib/redis');
-        const { prisma } = await import('@/lib/prisma');
-        const { hasPermission } = await import('@/lib/permissions');
+      fc.asyncProperty(
+        userIdArb,
+        permissionArb,
+        errorArb,
+        async (userId, permission, error) => {
+          const { getCachedPermissions, setCachedPermissions } =
+            await import("@/lib/redis");
+          const { prisma } = await import("@/lib/prisma");
+          const { hasPermission } = await import("@/lib/permissions");
 
-        vi.mocked(getCachedPermissions).mockResolvedValue(null);
-        vi.mocked(setCachedPermissions).mockResolvedValue(undefined);
-        vi.mocked(prisma.userRole.findMany).mockRejectedValue(error);
+          vi.mocked(getCachedPermissions).mockResolvedValue(null);
+          vi.mocked(setCachedPermissions).mockResolvedValue(undefined);
+          vi.mocked(prisma.userRole.findMany).mockRejectedValue(error);
 
-        const result = await hasPermission(userId, permission);
-        expect(result).toBe(false);
-      }),
+          const result = await hasPermission(userId, permission);
+          expect(result).toBe(false);
+        },
+      ),
       { numRuns: 100 },
     );
   });

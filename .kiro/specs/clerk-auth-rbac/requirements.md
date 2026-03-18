@@ -49,7 +49,7 @@ This document specifies the requirements for implementing a complete authenticat
 3. WHEN an authenticated user accesses a protected route, THE Middleware SHALL allow the request to proceed
 4. THE Middleware SHALL preserve locale information during authentication redirects
 5. WHEN an API route requires authentication and the request lacks valid credentials, THE Middleware SHALL return HTTP 401 with error message "Unauthorized"
-6. THE Middleware SHALL not apply authentication checks to Next.js internal routes (_next, _vercel) or static files
+6. THE Middleware SHALL not apply authentication checks to Next.js internal routes (\_next, \_vercel) or static files
 7. THE Middleware SHALL integrate with the i18n_System to maintain locale context during redirects
 
 ### Requirement 3: User Database Synchronization via Webhooks
@@ -110,7 +110,7 @@ This document specifies the requirements for implementing a complete authenticat
 
 #### Acceptance Criteria
 
-1. THE Admin_Area SHALL be accessible at routes /admin/* and /fr/admin/*
+1. THE Admin_Area SHALL be accessible at routes /admin/_ and /fr/admin/_
 2. WHEN a user accesses the Admin_Area, THE RBAC_System SHALL verify the user has one of the following roles: SUPER_ADMIN, ADMIN, MANAGER, or SUPPORT
 3. IF the user lacks an admin role, THEN THE RBAC_System SHALL redirect to /dashboard with error message "Access denied: Admin privileges required"
 4. THE Admin_Area SHALL display a sidebar with menu items filtered by user permissions
@@ -128,7 +128,7 @@ This document specifies the requirements for implementing a complete authenticat
 
 1. THE Authentication_System SHALL provide sign-in pages with translations at /sign-in (English) and /fr/sign-in (French)
 2. THE Authentication_System SHALL provide sign-up pages with translations at /sign-up (English) and /fr/sign-up (French)
-3. THE Admin_Area SHALL provide translated interfaces at /admin/* (English) and /fr/admin/* (French)
+3. THE Admin_Area SHALL provide translated interfaces at /admin/_ (English) and /fr/admin/_ (French)
 4. THE i18n_System SHALL load translation files messages/en/auth.json and messages/fr/auth.json for authentication pages
 5. THE i18n_System SHALL load translation files messages/en/admin.json and messages/fr/admin.json for admin pages
 6. THE i18n_System SHALL be updated in i18n/request.ts to import auth.json translation files
@@ -293,42 +293,51 @@ This document specifies the requirements for implementing a complete authenticat
 ## Correctness Properties for Property-Based Testing
 
 ### Property 1: Permission Monotonicity
+
 **Description:** Adding roles to a user can only increase or maintain their permissions, never decrease them.
 **Test:** For all users U and roles R, if permissions(U) = P1, then after adding role R, permissions(U) = P2 where P1 ⊆ P2
 
 ### Property 2: Role-Permission Bijection
+
 **Description:** The permission set for a role is deterministic and matches the defined matrix exactly.
 **Test:** For all roles R, permissions(R) = DEFINED_MATRIX[R] at all times
 
 ### Property 3: Cache Consistency
+
 **Description:** Cached permissions match database permissions within TTL period.
 **Test:** For all users U, if cache_age < TTL, then cached_permissions(U) = db_permissions(U)
 
 ### Property 4: Webhook Idempotency
+
 **Description:** Processing the same webhook multiple times produces the same result as processing it once.
 **Test:** For all webhook events E, process(E) = process(process(E))
 
 ### Property 5: Authentication Round-Trip
+
 **Description:** Sign in followed by sign out returns to unauthenticated state.
 **Test:** For all users U, unauthenticated → sign_in(U) → sign_out(U) → unauthenticated
 
 ### Property 6: Redirect Preservation
+
 **Description:** Authentication redirects preserve the original destination.
 **Test:** For all protected URLs P, access(P) without auth → sign_in → results in access(P)
 
 ### Property 7: Locale Preservation
+
 **Description:** Authentication flows preserve the user's selected locale.
 **Test:** For all locales L and routes R, access(L/R) → sign_in → results in access(L/R)
 
 ### Property 8: Audit Completeness
+
 **Description:** All security-relevant events generate audit log entries.
 **Test:** For all operations O in {user_create, user_delete, role_grant, role_revoke, access_deny}, performing O generates exactly one audit log entry
 
 ### Property 9: Permission Transitivity
+
 **Description:** If role A includes all permissions of role B, then users with role A can perform all actions users with role B can perform.
 **Test:** For all roles A, B where permissions(A) ⊇ permissions(B), and all actions X, can_perform(user_with_A, X) ≥ can_perform(user_with_B, X)
 
 ### Property 10: Cache Invalidation Completeness
+
 **Description:** Role changes invalidate all affected user caches.
 **Test:** For all users U with role R, when R is modified, cache_exists(U) = false immediately after modification
-

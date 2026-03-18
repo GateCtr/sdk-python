@@ -6,16 +6,16 @@ Every token. Every cost. Real-time.
 
 Every request through GateCtr is logged automatically:
 
-| Metric | Description |
-|---|---|
-| `tokens_in` | Prompt tokens sent |
-| `tokens_out` | Completion tokens received |
+| Metric         | Description                         |
+| -------------- | ----------------------------------- |
+| `tokens_in`    | Prompt tokens sent                  |
+| `tokens_out`   | Completion tokens received          |
 | `tokens_saved` | Tokens removed by Context Optimizer |
-| `cost_usd` | Estimated cost of the request |
-| `model` | Model used |
-| `latency_ms` | End-to-end latency |
-| `project_id` | Project the request belongs to |
-| `timestamp` | UTC timestamp |
+| `cost_usd`     | Estimated cost of the request       |
+| `model`        | Model used                          |
+| `latency_ms`   | End-to-end latency                  |
+| `project_id`   | Project the request belongs to      |
+| `timestamp`    | UTC timestamp                       |
 
 ## Dashboard
 
@@ -46,7 +46,7 @@ Response:
   "tokens_saved": 1920000,
   "requests": 12400,
   "by_model": {
-    "gpt-4o": { "tokens": 2100000, "cost_usd": 10.50 },
+    "gpt-4o": { "tokens": 2100000, "cost_usd": 10.5 },
     "gpt-3.5-turbo": { "tokens": 2720000, "cost_usd": 3.73 }
   }
 }
@@ -60,9 +60,9 @@ Available on Team plan and above.
 
 ## Retention
 
-| Plan | Retention |
-|---|---|
-| Free | 7 days |
-| Pro | 30 days |
-| Team | 90 days |
-| Enterprise | Custom |
+| Plan       | Retention |
+| ---------- | --------- |
+| Free       | 7 days    |
+| Pro        | 30 days   |
+| Team       | 90 days   |
+| Enterprise | Custom    |

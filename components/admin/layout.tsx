@@ -7,11 +7,11 @@
  * Requirements: 6.2, 6.3, 6.8
  */
 
-import { redirect } from 'next/navigation';
-import { requireAdmin } from '@/lib/auth';
-import { AdminSidebar } from '@/components/admin/sidebar';
-import { Header } from '@/components/shared/header';
-import { Footer } from '@/components/shared/footer';
+import { redirect } from "next/navigation";
+import { requireAdmin } from "@/lib/auth";
+import { AdminSidebar } from "@/components/admin/sidebar";
+import { Header } from "@/components/shared/header";
+import { Footer } from "@/components/shared/footer";
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -19,11 +19,14 @@ interface AdminLayoutProps {
   locale?: string;
 }
 
-export default async function AdminLayout({ children, locale = 'en' }: AdminLayoutProps) {
+export default async function AdminLayout({
+  children,
+  locale = "en",
+}: AdminLayoutProps) {
   try {
     await requireAdmin();
   } catch {
-    const dashboardPath = locale === 'fr' ? '/fr/dashboard' : '/dashboard';
+    const dashboardPath = locale === "fr" ? "/fr/dashboard" : "/dashboard";
     redirect(`${dashboardPath}?error=access_denied`);
   }
 
