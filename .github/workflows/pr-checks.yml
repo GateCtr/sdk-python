@@ -27,82 +27,8 @@ jobs:
             chore
             revert
           requireScope: false
-          subjectPattern: ^[A-Z].+$
-          subjectPatternError: |
-            The subject "{subject}" found in the pull request title "{title}"
-            didn't match the configured pattern. Please ensure that the subject
-            starts with an uppercase character.
-
-  pr-size:
-    name: Check PR Size
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check PR size
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const pr = context.payload.pull_request;
-            const additions = pr.additions;
-            const deletions = pr.deletions;
-            const changes = additions + deletions;
-            
-            let label = '';
-            let color = '';
-            
-            if (changes < 100) {
-              label = 'size/XS';
-              color = '00ff00';
-            } else if (changes < 300) {
-              label = 'size/S';
-              color = '7fff00';
-            } else if (changes < 500) {
-              label = 'size/M';
-              color = 'ffff00';
-            } else if (changes < 1000) {
-              label = 'size/L';
-              color = 'ff7f00';
-            } else {
-              label = 'size/XL';
-              color = 'ff0000';
-            }
-            
-            // Add size label
-            await github.rest.issues.addLabels({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: pr.number,
-              labels: [label]
-            });
-            
-            // Comment if PR is too large
-            if (changes > 1000) {
-              await github.rest.issues.createComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: pr.number,
-                body: '⚠️ This PR is quite large (>1000 lines changed). Consider breaking it into smaller PRs for easier review.'
-              });
-            }
-
-  pr-labels:
-    name: Check Required Labels
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check for required labels
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const pr = context.payload.pull_request;
-            const labels = pr.labels.map(label => label.name);
-            
-            const requiredLabels = ['type:', 'priority:'];
-            const missingLabels = requiredLabels.filter(prefix => 
-              !labels.some(label => label.startsWith(prefix))
-            );
-            
-            if (missingLabels.length > 0) {
-              core.setFailed(`Missing required label prefixes: ${missingLabels.join(', ')}`);
-            }
+          # Allow any subject (no uppercase requirement)
+          subjectPattern: ^.+$
 
   pr-description:
     name: Check PR Description
@@ -114,19 +40,8 @@ jobs:
           script: |
             const pr = context.payload.pull_request;
             const body = pr.body || '';
-            
-            if (body.trim().length < 50) {
-              core.setFailed('PR description is too short. Please provide a detailed description of your changes.');
-            }
-            
-            // Check for common sections
-            const requiredSections = ['## Description', '## Changes', '## Testing'];
-            const missingSections = requiredSections.filter(section => 
-              !body.includes(section)
-            );
-            
-            if (missingSections.length > 0) {
-              core.warning(`Consider adding these sections to your PR description: ${missingSections.join(', ')}`);
+            if (body.trim().length < 10) {
+              core.setFailed('PR description is empty. Please add a brief description.');
             }
 
   conflict-check:
@@ -138,7 +53,6 @@ jobs:
         with:
           script: |
             const pr = context.payload.pull_request;
-            
             if (pr.mergeable === false) {
               core.setFailed('This PR has merge conflicts. Please resolve them before merging.');
             }

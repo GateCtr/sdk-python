@@ -99,14 +99,14 @@ jobs:
       - name: Build application
         run: pnpm build
         env:
-          DATABASE_URL: ${{ secrets.PRODUCTION_DATABASE_URL }}
+          DATABASE_URL: ${{ secrets.NEON_DATABASE_URL_MAIN }}
           NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
           CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
 
       - name: Run database migrations
         run: pnpm prisma migrate deploy
         env:
-          DATABASE_URL: ${{ secrets.PRODUCTION_DATABASE_URL }}
+          DATABASE_URL: ${{ secrets.NEON_DATABASE_URL_MAIN }}
 
       - name: Deploy to Vercel (Production)
         uses: amondnet/vercel-action@v25
