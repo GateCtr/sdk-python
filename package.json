@@ -13,7 +13,8 @@
     "test:property": "vitest tests/property",
     "test:webhook": "tsx scripts/test-webhook-setup.ts",
     "test:e2e": "playwright test",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "prepare": "husky"
   },
   "pnpm": {
     "overrides": {
@@ -83,6 +84,14 @@
     "vaul": "^1.1.2",
     "zod": "^4.3.6",
     "zustand": "^5.0.11"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx,json,css,md}": [
+      "prettier --write"
+    ],
+    "*.{ts,tsx,js,jsx}": [
+      "eslint --fix"
+    ]
   },
   "devDependencies": {
     "@playwright/test": "^1.58.2",

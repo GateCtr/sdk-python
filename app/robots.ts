@@ -1,8 +1,5 @@
 import type { MetadataRoute } from "next";
-import {
-  getSeoContext,
-  type SeoContext,
-} from "@/lib/seo";
+import { getSeoContext, type SeoContext } from "@/lib/seo";
 
 export function generateRobots(context: SeoContext): MetadataRoute.Robots {
   // App subdomain: disallow all, no sitemap

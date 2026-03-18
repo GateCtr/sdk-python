@@ -1,8 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
-import {
-  getUserPermissions,
-} from "@/lib/permissions";
+import { getUserPermissions } from "@/lib/permissions";
 import { prisma } from "@/lib/prisma";
 
 /**
