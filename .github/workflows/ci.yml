@@ -133,6 +133,7 @@ jobs:
     name: E2E Tests
     runs-on: ubuntu-latest
     needs: build
+    if: ${{ !failure() && !cancelled() }}
     services:
       postgres:
         image: postgres:16
@@ -182,6 +183,30 @@ jobs:
         run: pnpm prisma migrate deploy
         env:
           DATABASE_URL: postgresql://gatectr:secret@localhost:5432/gatectr_test
+
+      - name: Build application
+        run: pnpm build
+        env:
+          SKIP_ENV_VALIDATION: true
+          RESEND_API_KEY: 're_dummy_ci_key'
+          DATABASE_URL: postgresql://gatectr:secret@localhost:5432/gatectr_test
+
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps
+
+      - name: Run E2E tests
+        run: pnpm test:e2e
+        env:
+          DATABASE_URL: postgresql://gatectr:secret@localhost:5432/gatectr_test
+          REDIS_URL: redis://localhost:6379
+
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
 
       - name: Install Playwright browsers
         run: pnpm exec playwright install --with-deps
