@@ -1,7 +1,6 @@
 import type { MetadataRoute } from "next";
 import {
   getSeoContext,
-  getSeoContextWithHost,
   type SeoContext,
 } from "@/lib/seo";
 

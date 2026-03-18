@@ -1,0 +1,324 @@
+# Implementation Plan: stripe-billing
+
+## Overview
+
+Implement the complete Stripe billing and plan management system for GateCtr. Tasks are sequenced so each step builds on the previous: foundation → core API → quota enforcement → emails → upsell → seats → billing page → admin dashboard → webhook dispatch → API route wiring.
+
+## Tasks
+
+- [ ] 1. Foundation — Stripe client, schema migrations, and seed data
+  - [ ] 1.1 Create `lib/stripe.ts` singleton
+    - Export a single `stripe` instance initialized with `STRIPE_SECRET_KEY` and `apiVersion: '2026-02-25.clover'`
+    - Throw `"STRIPE_SECRET_KEY is not set"` at module load time if the env var is absent
+    - _Requirements: 1.1, 1.2, 1.3, 1.4_
+  - [ ]* 1.2 Write property test for Stripe client initialization
+    - **Property 9: Checkout requires valid price** (partial — env guard behavior)
+    - **Validates: Requirements 1.2, 9.1**
+  - [ ] 1.3 Add Prisma schema fields for extended billing
+    - Add `stripeMeteredItemId String?` and `stripeSeatsItemId String?` to `Subscription` model
+    - Add `trialEnd DateTime?` to `Subscription` model if not present
+    - Ensure `Subscription` has `cancelAtPeriodEnd Boolean @default(false)` and `canceledAt DateTime?`
+    - Run `pnpm prisma migrate dev --name add-billing-extended-fields`
+    - _Requirements: 11.6, 15.6_
+  - [ ] 1.4 Update `prisma/seed.ts` — align plan limits and add yearly price IDs
+    - Update existing `plan.upsert` calls for PRO and TEAM to populate `stripePriceIdYearly` from `STRIPE_PRO_PRICE_ID_YEARLY` and `STRIPE_TEAM_PRICE_ID_YEARLY` env vars
+    - Update all `PlanLimit` upsert values to match spec quotas exactly:
+      - FREE: `maxTokensPerMonth: 500_000`, `maxRequestsPerDay: 1_000`, `maxRequestsPerMinute: 10`, `maxProjects: 1`, `maxApiKeys: 1`, `maxWebhooks: 0`, `maxTeamMembers: 1`
+      - PRO: `maxTokensPerMonth: 20_000_000`, `maxRequestsPerDay: 60_000`, `maxRequestsPerMinute: 60`, `maxProjects: 5`, `maxApiKeys: 5`, `maxWebhooks: 10`, `maxTeamMembers: 1`
+      - TEAM: `maxTokensPerMonth: 100_000_000`, `maxRequestsPerDay: 200_000`, `maxRequestsPerMinute: 200`, `maxProjects: null`, `maxApiKeys: 20`, `maxWebhooks: 50`, `maxTeamMembers: 20`
+      - ENTERPRISE: all numeric limits `null`, all booleans `true`, `auditLogsRetentionDays: 365`
+    - Replace all `-1` values with `null` (schema uses `Int?` nullable, not sentinel values)
+    - Remove any `maxTokensPerDay` references (`PlanLimit` schema has no such field)
+    - _Requirements: 2.1, 2.2, 2.3, 2.6, 18.3_
+
+- [ ] 2. Core API — Checkout, portal, and webhook handler
+  - [ ] 2.1 Implement `app/api/billing/checkout/route.ts`
+    - Authenticate via `auth()` (Clerk) → 401 if unauthenticated
+    - Parse `{ planId, interval?: 'monthly' | 'yearly' }` from request body (default `interval` to `'monthly'`)
+    - Look up or create Stripe customer; upsert `stripeCustomerId` on `Subscription`
+    - Return 409 if user already has ACTIVE subscription
+    - Resolve price ID: `interval === 'yearly'` → use `stripePriceIdYearly`, else `stripePriceIdMonthly`; return 400 if null
+    - Create Checkout Session with `subscription_data.trial_period_days: 14` for PRO when no prior subscription exists (Req 13.1), `allow_promotion_codes: true`, `client_reference_id: userId`, correct `success_url` and `cancel_url`
+    - Return `{ url: session.url }`
+    - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7, 3.8, 3.9, 13.1, 18.4, 18.5_
+  - [ ]* 2.2 Write property test for checkout authentication and price validation
+    - **Property 8: Checkout rejects plans without a Stripe price**
+    - **Property 10: Unauthenticated requests are rejected**
+    - **Validates: Requirements 3.6, 3.7, 9.3**
+  - [ ] 2.3 Implement `app/api/billing/portal/route.ts`
+    - Authenticate via `auth()` → 401 if unauthenticated
+    - Fetch `stripeCustomerId` from `Subscription` → 400 if absent
+    - Create Billing Portal Session with `return_url: {NEXT_PUBLIC_APP_URL}/billing`
+    - Return `{ url: session.url }`
+    - _Requirements: 6.1, 6.2, 6.3, 6.4_
+  - [ ] 2.4 Implement `app/api/webhooks/stripe/route.ts` — core event handling
+    - Use `req.text()` for raw body; verify signature with `STRIPE_WEBHOOK_SECRET` → 400 on failure
+    - Idempotency: attempt `prisma.stripeEvent.create({ processed: false })`; if duplicate, return 200 immediately
+    - Handle `checkout.session.completed`: upsert `Subscription` (stripeSubscriptionId, stripeCustomerId, stripePriceId, status: ACTIVE, currentPeriodStart, currentPeriodEnd, stripeMeteredItemId, stripeSeatsItemId from session items), set `User.plan`, write audit log `"billing.subscription_activated"`, invalidate Redis plan cache
+    - Handle `customer.subscription.updated`: update Subscription fields, update `User.plan`, handle `status: 'trialing'` → set `User.plan = PRO` + `Subscription.status = TRIALING`, write audit log, invalidate Redis cache
+    - Handle `customer.subscription.deleted`: set status CANCELED, `canceledAt`, downgrade `User.plan = FREE`, write audit log `"billing.subscription_canceled"` + `"billing.plan_downgraded"`, invalidate Redis cache
+    - Handle `invoice.payment_failed`: set status PAST_DUE, write audit log `"billing.payment_failed"`
+    - Handle `invoice.payment_succeeded`: update `currentPeriodStart`/`currentPeriodEnd`, ensure `User.plan` is correct
+    - Handle `customer.subscription.trial_will_end`: write audit log `"billing.trial_ending"`
+    - On success: update `StripeEvent.processed = true`; on error: set `StripeEvent.error`, return 500
+    - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 4.8, 4.9, 7.1, 7.2, 7.3, 7.6, 13.4, 13.5, 13.6_
+  - [ ]* 2.5 Write property test for webhook idempotency
+    - **Property 4: Webhook idempotency**
+    - **Validates: Requirement 4.2**
+  - [ ]* 2.6 Write property test for webhook DB state correctness
+    - **Property 5: Webhook event produces correct DB state**
+    - **Property 12: StripeEvent record lifecycle**
+    - **Validates: Requirements 4.3, 4.4, 4.5, 4.6, 4.7, 4.8**
+  - [ ]* 2.7 Write property test for webhook signature rejection
+    - **Property 9: Webhook signature rejection**
+    - **Validates: Requirements 4.1, 9.2**
+  - [ ]* 2.8 Write property test for plan downgrade — no auto-delete
+    - **Property 11: No auto-delete on plan downgrade**
+    - **Validates: Requirement 7.5**
+
+- [ ] 3. Quota enforcement and overage billing
+  - [ ] 3.1 Implement `lib/plan-guard.ts`
+    - Implement `getPlanLimits(planType)`: Redis-first (`plan_limits:{planType}`, TTL 300s), DB fallback, write-back on miss; fail-open if Redis unavailable
+    - Implement `getUserPlanType(userId)`: read `User.plan` from DB
+    - Implement `checkQuota(userId, type)` for all seven `QuotaType` values:
+      - `tokens_per_day`: read `DailyUsageCache` for today, compare vs `maxTokensPerDay`
+      - `tokens_per_month`: aggregate `DailyUsageCache` for current calendar month, compare vs `maxTokensPerMonth`; for PRO/TEAM overage path, call `recordOverage` and return `{ allowed: true, overage: true }` instead of blocking
+      - `requests_per_minute`: Upstash sliding window `ratelimit:{userId}:rpm`; fail-open on Redis error
+      - `projects`, `api_keys`, `webhooks`, `team_members`: count active records, compare vs limit
+      - Return `{ allowed: true }` immediately when limit is null
+    - Implement `checkFeatureAccess(userId, feature)`: resolve boolean from `PlanLimit`
+    - Implement `invalidatePlanCache(planType)`: delete `plan_limits:{planType}` from Redis
+    - _Requirements: 5.1, 5.2, 5.3, 5.4, 5.5, 5.6, 5.7, 5.8, 5.10, 5.11, 5.12, 11.1, 11.3, 11.5_
+  - [ ]* 3.2 Write property test for null limit means unlimited
+    - **Property 1: Null limit means unlimited**
+    - **Validates: Requirements 5.2, 5.3, 5.5, 5.6, 5.7, 5.8**
+  - [ ]* 3.3 Write property test for quota enforcement correctness
+    - **Property 2: Quota enforcement correctness**
+    - **Validates: Requirements 5.1, 5.2, 5.3, 5.5, 5.6, 5.7, 5.8**
+  - [ ]* 3.4 Write property test for plan limit cache round-trip
+    - **Property 3: Plan limit cache round-trip**
+    - **Validates: Requirement 5.10**
+  - [ ]* 3.5 Write property test for feature access matches plan limits
+    - **Property 6: Feature access matches plan limits**
+    - **Validates: Requirement 5.11**
+  - [ ]* 3.6 Write property test for cache invalidation after plan change
+    - **Property 7: Cache invalidation after plan change**
+    - **Validates: Requirements 5.12, 7.6**
+  - [ ]* 3.7 Write property test for plan limits resolve from User.plan
+    - **Property 13: Plan limits resolve from User.plan**
+    - **Validates: Requirement 2.4**
+  - [ ] 3.8 Implement `lib/overage.ts`
+    - Implement `recordOverage(userId, overageTokens)`:
+      1. Fetch `Subscription.stripeMeteredItemId` for the user
+      2. Call `stripe.subscriptionItems.createUsageRecord(stripeMeteredItemId, { quantity: overageTokens, action: 'set', timestamp: 'now' })`
+      3. Update `DailyUsageCache.overageTokens` for today
+      4. On Stripe error: log to Sentry, do not throw (fire-and-forget)
+    - _Requirements: 11.1, 11.2, 11.6_
+  - [ ]* 3.9 Write property test for overage billing only for PRO/TEAM
+    - **Property 15: Overage billing only for PRO/TEAM**
+    - **Validates: Requirements 11.1, 11.3**
+
+- [ ] 4. Checkpoint
+  - Ensure all tests pass, ask the user if questions arise.
+
+- [ ] 5. Transactional billing emails
+  - [ ] 5.1 Create React Email templates
+    - `components/emails/billing-upgrade.tsx` — props: `{ email, planName, locale? }`
+    - `components/emails/billing-receipt.tsx` — props: `{ email, amount, invoicePdfUrl, locale? }`
+    - `components/emails/billing-payment-failed.tsx` — props: `{ email, portalUrl, locale? }`
+    - `components/emails/billing-renewal-reminder.tsx` — props: `{ email, renewalDate, amount, locale? }`
+    - `components/emails/billing-downgrade.tsx` — props: `{ email, lostFeatures, locale? }`
+    - Each template follows the same HTML/CSS-in-JS pattern as `components/emails/user-welcome.tsx`, bilingual EN/FR via `locale` prop
+    - _Requirements: 10.1, 10.2, 10.3, 10.4, 10.5, 10.6_
+  - [ ] 5.2 Add billing email helpers to `lib/resend.ts`
+    - `sendBillingUpgradeEmail(email, planName, locale?)`
+    - `sendBillingReceiptEmail(email, amount, invoicePdfUrl, locale?)`
+    - `sendBillingPaymentFailedEmail(email, portalUrl, locale?)`
+    - `sendBillingRenewalReminderEmail(email, renewalDate, amount, locale?)`
+    - `sendBillingDowngradeEmail(email, lostFeatures, locale?)`
+    - Each wraps `resend.emails.send` in try/catch; on error: `console.error` + `Sentry.captureException`; never throws
+    - _Requirements: 10.6, 10.7_
+  - [ ] 5.3 Wire email sends into the Stripe webhook handler
+    - `checkout.session.completed` → `sendBillingUpgradeEmail` (fire-and-forget after DB update)
+    - `invoice.payment_succeeded` → `sendBillingReceiptEmail`
+    - `invoice.payment_failed` → `sendBillingPaymentFailedEmail`
+    - `customer.subscription.deleted` → `sendBillingDowngradeEmail`
+    - `customer.subscription.trial_will_end` → send trial ending reminder email
+    - _Requirements: 10.1, 10.2, 10.3, 10.5, 13.4_
+  - [ ] 5.4 Create BullMQ renewal reminder worker
+    - `workers/billing-renewal-reminder.worker.ts` — repeatable job scheduled daily at 09:00 UTC
+    - Query: `Subscription` where `currentPeriodEnd BETWEEN now() AND now() + 7 days AND status = ACTIVE`
+    - For each match: enqueue `send-renewal-reminder` job into `billing-emails` BullMQ queue with `{ userId, email, renewalDate, amount }`
+    - Separate processor calls `sendBillingRenewalReminderEmail`
+    - _Requirements: 10.4_
+
+- [ ] 6. Contextual in-app upsell
+  - [ ] 6.1 Implement `app/[locale]/(dashboard)/billing/_actions.ts` — `getUpsellState`
+    - Fetch user's `PlanType` and `PlanLimit`
+    - Compute `percentUsed` for `tokens_per_day` and `tokens_per_month`
+    - If either ≥ 80%: check Redis key `upsell:{userId}:{quotaType}:{YYYY-MM-DD}` (TTL 86400s, `SET NX`)
+    - Return `{ show: true, quotaType, percentUsed, currentLimit, nextPlanLimit, nextPlan }` on first hit; `{ show: false }` if key already set
+    - _Requirements: 12.1, 12.2, 12.3, 12.4_
+  - [ ]* 6.2 Write property test for upsell dedup via Redis
+    - **Property 16: Upsell dedup via Redis**
+    - **Validates: Requirement 12.3**
+  - [ ] 6.3 Create `components/billing/upsell-banner.tsx`
+    - Non-blocking Client Component; shown when `percentUsed >= 80 && percentUsed < 100`
+    - Dismissible via local state; CTA: `<Button variant="cta-accent">Upgrade to {nextPlan}</Button>` linking to `/billing`
+    - Displays quota type, `percentUsed`%, current limit, next plan's limit
+    - _Requirements: 12.1, 12.4, 12.5_
+  - [ ] 6.4 Create `components/billing/upsell-modal.tsx`
+    - Blocking Client Component; shown when `percentUsed >= 100` and user is on FREE plan
+    - Cannot be dismissed without upgrading or waiting for quota reset
+    - CTA: `<Button variant="cta-accent">Upgrade — unlock {nextPlanLimit} tokens</Button>`
+    - _Requirements: 12.2, 12.4, 12.5_
+  - [ ] 6.5 Integrate upsell into dashboard layout
+    - In `app/[locale]/(dashboard)/layout.tsx`, call `getUpsellState(userId)` server-side and pass result to `<UpsellBanner>` / `<UpsellModal>`
+    - _Requirements: 12.1, 12.2_
+
+- [ ] 7. Additional seats (Team plan)
+  - [ ] 7.1 Implement `lib/seats.ts`
+    - Implement `updateSeatCount(userId, newMemberCount)`:
+      1. Fetch `Subscription` → get `stripeSeatsItemId` and `status`
+      2. Return early if `status !== ACTIVE` or `stripeSeatsItemId` is null
+      3. Compute `overageSeats = Math.max(0, newMemberCount - 20)`
+      4. Call `stripe.subscriptions.update(stripeSubscriptionId, { items: [{ id: stripeSeatsItemId, quantity: overageSeats }], proration_behavior: 'always_invoice' })`
+      5. On Stripe error: log to Sentry, rethrow
+    - _Requirements: 15.1, 15.2, 15.3, 15.5, 15.6_
+  - [ ]* 7.2 Write property test for seat overage calculation correctness
+    - **Property 17: Seat overage calculation correctness**
+    - **Validates: Requirements 15.1, 15.2, 15.3**
+  - [ ] 7.3 Create `components/billing/seat-usage.tsx`
+    - Client Component for TEAM plan users; props: `{ currentMembers, includedSeats, additionalSeats, additionalCostEur }`
+    - Displays: "X / 20 included seats · Y additional seats · €Z/mo"
+    - _Requirements: 15.4_
+  - [ ] 7.4 Wire `updateSeatCount` into team member server actions
+    - Call `updateSeatCount(ownerId, newCount)` after DB insert in team member add action
+    - Call `updateSeatCount(ownerId, newCount)` after DB delete in team member remove action
+    - _Requirements: 15.2, 15.3_
+
+- [ ] 8. Billing dashboard page
+  - [ ] 8.1 Create i18n translation files
+    - `messages/en/billing.json` — all billing page strings in English
+    - `messages/fr/billing.json` — all billing page strings in French
+    - Update `i18n/request.ts` to import the new `billing` namespace
+    - _Requirements: 8.6_
+  - [ ] 8.2 Create `components/billing/plan-card.tsx`
+    - Client Component; props: `{ plan, isCurrentPlan, onUpgrade }`
+    - Displays plan name, price, feature list from `PlanLimit`; upgrade/manage CTA using `cta-accent` variant for upgrade, `cta-secondary` for manage
+    - _Requirements: 8.1, 8.3, 8.4, 8.5_
+  - [ ] 8.3 Create `components/billing/usage-bar.tsx`
+    - Client Component; props: `{ label, current, limit, unit }`
+    - Renders labeled Radix UI `Progress` bar with number and percentage
+    - _Requirements: 8.2_
+  - [ ] 8.4 Create `components/billing/invoice-list.tsx`
+    - Client Component; props: `{ invoices: Array<{ id, created, amount_due, currency, status, invoice_pdf }> }`
+    - Renders table: Date, Amount (formatted), Status badge, Download link
+    - Empty state: "No invoices yet."
+    - _Requirements: 14.2, 14.3_
+  - [ ] 8.5 Implement `app/[locale]/(dashboard)/billing/page.tsx`
+    - Server Component; protected by Clerk auth → redirect to `/sign-in` if unauthenticated
+    - Fetch subscription, plan limits, daily usage, monthly usage via Prisma
+    - Fetch invoices via `stripe.invoices.list({ customer: stripeCustomerId, limit: 12 })` — return `[]` on any error, never throw (Req 14.5)
+    - Render `<PlanCard>` for current plan + upgrade options based on `PlanType` (Req 8.3, 8.4, 8.5)
+    - Render `<UsageBar>` for tokens/day and tokens/month (Req 8.2)
+    - Render `<InvoiceList>` only when `stripeCustomerId` is non-null (Req 14.4)
+    - Render `<SeatUsage>` for TEAM plan users (Req 15.4)
+    - Display trial status with days remaining when `status = TRIALING` (Req 13.3)
+    - Display PAST_DUE warning banner with portal link (Req 6.7)
+    - Display `cancelAtPeriodEnd` notice with "Resume subscription" portal link (Req 7.4)
+    - Display over-limit resource warning on FREE plan after downgrade (Req 7.5)
+    - Display overage token count and estimated cost for PRO/TEAM (Req 11.4)
+    - Render monthly/annual toggle and pass selected `interval` to upgrade CTAs (Req 18.6, 18.7)
+    - Display billing interval (monthly/annual) for active subscribers by comparing `Subscription.stripePriceId` against known yearly price IDs (Req 18.9)
+    - _Requirements: 8.1, 8.2, 8.3, 8.4, 8.5, 8.6, 8.7, 6.5, 6.6, 6.7, 7.4, 7.5, 11.4, 13.3, 14.1, 14.4, 14.5, 15.4, 18.6, 18.7, 18.9_
+  - [ ]* 8.6 Write property test for invoice list never throws on Stripe API failure
+    - **Property 20: Invoice list never throws on Stripe API failure**
+    - **Validates: Requirement 14.5**
+  - [ ]* 8.7 Write property test for trial users get PRO feature access
+    - **Property 14: Trial users get PRO feature access**
+    - **Validates: Requirements 13.2, 13.6**
+  - [ ] 8.8 Implement monthly/annual billing toggle in billing page
+    - Add `BillingIntervalToggle` client component: two buttons (Monthly / Annual) with `cta-secondary` inactive / `cta-primary` active variants
+    - Show annual prices (€290/yr PRO, €990/yr TEAM) and "Save 17%" badge when annual is selected
+    - Pass selected `interval` to `<PlanCard>` upgrade CTA → checkout API call includes `{ planId, interval }`
+    - Detect current subscriber's interval from `Subscription.stripePriceId` vs known yearly price IDs; display "Monthly" or "Annual" alongside plan name
+    - Add `messages/en/billing.json` and `messages/fr/billing.json` keys for toggle labels and savings badge
+    - _Requirements: 18.1, 18.6, 18.7, 18.8, 18.9_
+
+- [ ] 9. Admin billing dashboard
+  - [ ] 9.1 Create i18n translation files for admin billing
+    - Add billing section to `messages/en/admin.json` (or create `messages/en/admin-billing.json`)
+    - Add billing section to `messages/fr/admin.json` (or create `messages/fr/admin-billing.json`)
+    - Update `i18n/request.ts` if new files are created
+    - _Requirements: 16.7_
+  - [ ] 9.2 Create `components/admin/billing-stats.tsx`
+    - Server Component; props: `{ planDistribution, mrr, churnRate }`
+    - Displays plan counts per PlanType, MRR in €, churn rate as percentage
+    - _Requirements: 16.2, 16.3, 16.5_
+  - [ ] 9.3 Create `components/admin/billing-events.tsx`
+    - Server Component; props: `{ events: AuditLog[] }`
+    - Renders last 20 billing AuditLog entries: action, userId, createdAt
+    - _Requirements: 16.4_
+  - [ ] 9.4 Implement `app/[locale]/(admin)/admin/billing/page.tsx`
+    - Server Component; protected by existing admin RBAC check (same pattern as `admin/users/page.tsx`)
+    - Fetch all data via Prisma only — no Stripe API calls:
+      - Plan distribution: `prisma.subscription.groupBy` by planId where status IN [ACTIVE, TRIALING]
+      - MRR: sum of `plan.price` for all ACTIVE/TRIALING subscriptions (use hardcoded map `{ PRO: 29, TEAM: 99 }` if `Plan.price` field absent)
+      - Recent events: `prisma.auditLog.findMany` where `action startsWith 'billing.'`, last 20
+      - Churn rate: `(canceledCount in last 30 days / totalCount) * 100`
+    - Pass data as props to `<BillingStats>` and `<BillingEvents>`
+    - _Requirements: 16.1, 16.2, 16.3, 16.4, 16.5, 16.6, 16.7_
+  - [ ]* 9.5 Write property test for admin MRR calculation correctness
+    - **Property 18: Admin MRR calculation correctness**
+    - **Validates: Requirement 16.3**
+
+- [ ] 10. GateCtr webhook dispatch wiring
+  - [ ] 10.1 Add `dispatchWebhook` calls to the Stripe webhook handler
+    - After `checkout.session.completed` DB update → `dispatchWebhook(userId, 'billing.plan_upgraded', { previous_plan, new_plan, subscription_id })`
+    - After `customer.subscription.updated` (upgrade) → `dispatchWebhook(userId, 'billing.plan_upgraded', ...)`
+    - After `customer.subscription.updated` (downgrade) → `dispatchWebhook(userId, 'billing.plan_downgraded', ...)`
+    - After `customer.subscription.updated` (trialing) → `dispatchWebhook(userId, 'billing.trial_started', { plan, trial_end })`
+    - After `customer.subscription.deleted` → `dispatchWebhook(userId, 'billing.plan_downgraded', ...)`
+    - After `customer.subscription.trial_will_end` → `dispatchWebhook(userId, 'billing.trial_ending', { plan, trial_end })`
+    - After `invoice.payment_failed` → `dispatchWebhook(userId, 'billing.payment_failed', { subscription_id, invoice_id })`
+    - All calls are fire-and-forget (no `await`); only dispatch after successful DB update
+    - Payload shape follows the GateCtr webhook format: `{ event, project_id: userId, timestamp, data }`
+    - _Requirements: 17.1, 17.2, 17.3, 17.4, 17.5, 17.6_
+  - [ ]* 10.2 Write property test for GateCtr webhook fired for every plan change
+    - **Property 19: GateCtr webhook fired for every plan change**
+    - **Validates: Requirements 17.1, 17.2, 17.3, 17.4, 17.5**
+
+- [ ] 11. Wire quota enforcement into existing API routes
+  - [ ] 11.1 Add `checkQuota` calls to token-consuming API routes
+    - In `app/api/v1/complete/route.ts` and `app/api/v1/chat/route.ts`: call `checkQuota(userId, 'tokens_per_day')`, `checkQuota(userId, 'tokens_per_month')`, and `checkQuota(userId, 'requests_per_minute')` before processing
+    - Return HTTP 429 with `{ error: "quota_exceeded", quota, limit, current, upgradeUrl: "/billing" }` if `allowed: false`
+    - _Requirements: 5.9_
+  - [ ] 11.2 Add `checkQuota` calls to resource-creation API routes
+    - In project creation route: call `checkQuota(userId, 'projects')` → 429 if exceeded
+    - In API key creation route: call `checkQuota(userId, 'api_keys')` → 429 if exceeded
+    - In webhook creation route: call `checkQuota(userId, 'webhooks')` → 429 if exceeded
+    - In team member add action: call `checkQuota(userId, 'team_members')` → surface error if exceeded
+    - _Requirements: 5.5, 5.6, 5.7, 5.8, 5.9_
+  - [ ] 11.3 Add `checkFeatureAccess` guards to feature-gated routes
+    - In Context Optimizer route: call `checkFeatureAccess(userId, 'contextOptimizer')` → 403 if false
+    - In Model Router route: call `checkFeatureAccess(userId, 'modelRouter')` → 403 if false
+    - In advanced analytics route: call `checkFeatureAccess(userId, 'advancedAnalytics')` → 403 if false
+    - _Requirements: 5.11_
+
+- [ ] 12. Final checkpoint
+  - Ensure all tests pass, ask the user if questions arise.
+
+## Notes
+
+- Tasks marked with `*` are optional and can be skipped for faster MVP
+- Each task references specific requirements for traceability
+- Property tests use Vitest + fast-check (minimum 100 iterations each)
+- Unit tests use Vitest with mocked Prisma and Redis clients
+- All Stripe API calls are server-side only — never from client components
+- `dispatchWebhook` calls are fire-and-forget; errors are caught internally by `lib/webhooks.ts`
+- Redis fail-open pattern applies to `requests_per_minute` quota and plan limit cache reads
+- Stripe API version: `'2026-02-25.clover'` (stripe@20.4.1)
+- Required env vars: `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`, `STRIPE_PRO_PRICE_ID`, `STRIPE_TEAM_PRICE_ID`, `STRIPE_PRO_PRICE_ID_YEARLY`, `STRIPE_TEAM_PRICE_ID_YEARLY`, `STRIPE_PRO_OVERAGE_PRICE_ID`, `STRIPE_TEAM_OVERAGE_PRICE_ID`
+- `PlanLimit` schema fields: `maxTokensPerMonth`, `maxRequestsPerDay`, `maxRequestsPerMinute` — no `maxTokensPerDay`
+- Unlimited values in seed use `null` (not `-1`) — schema uses `Int?` nullable

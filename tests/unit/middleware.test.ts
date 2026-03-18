@@ -251,8 +251,7 @@ describe("Public routes allow unauthenticated access (Req 2.2)", () => {
 describe("Admin routes require admin role (Req 6.2)", () => {
   function isAdminRoute(pathname: string): boolean {
     return (
-      /^\/admin(\/.*)?$/.test(pathname) ||
-      /^\/fr\/admin(\/.*)?$/.test(pathname)
+      /^\/admin(\/.*)?$/.test(pathname) || /^\/fr\/admin(\/.*)?$/.test(pathname)
     );
   }
 
