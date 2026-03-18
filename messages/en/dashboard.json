@@ -1,0 +1,32 @@
+{
+  "page": {
+    "title": "Dashboard",
+    "empty": "No usage yet. Make your first API call to see data here."
+  },
+  "header": {
+    "tokens": "Tokens",
+    "unlimited": "∞",
+    "upgrade": "Upgrade",
+    "notifications": "Notifications"
+  },
+  "sidebar": {
+    "main": "Platform",
+    "account": "Account",
+    "dashboard": "Dashboard",
+    "analytics": "Analytics",
+    "projects": "Projects",
+    "apiKeys": "API Keys",
+    "budget": "Budget",
+    "webhooks": "Webhooks",
+    "billing": "Billing",
+    "settings": "Settings",
+    "workspaces": "Workspaces",
+    "newWorkspace": "New workspace",
+    "freePlan": "Free plan",
+    "free": "Free",
+    "plan": "plan",
+    "loading": "Loading…",
+    "profile": "Profile",
+    "signOut": "Sign out"
+  }
+}

@@ -8,8 +8,16 @@ RUN apk add --no-cache libc6-compat openssl
 
 WORKDIR /app
 
+# Accept DATABASE_URL as build argument
+ARG DATABASE_URL
+ENV DATABASE_URL=$DATABASE_URL
+
 # Copy package files
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+
+# Copy Prisma files (needed for postinstall script)
+COPY prisma ./prisma
+COPY prisma.config.ts ./
 
 # Install all dependencies
 RUN pnpm install --frozen-lockfile

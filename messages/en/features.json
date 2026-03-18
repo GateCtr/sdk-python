@@ -1,0 +1,150 @@
+{
+  "meta": {
+    "title": "Features — GateCtr",
+    "description": "Budget Firewall, Context Optimizer, Model Router, Analytics, Webhooks, and RBAC. One gateway. Full control."
+  },
+  "hero": {
+    "badge": "Six features. One endpoint swap.",
+    "headline": "Full control over every LLM request.",
+    "description": "Budget caps, token optimization, intelligent routing, real-time analytics — all active from day one. No code changes.",
+    "ctaPrimary": "Start free",
+    "ctaSecondary": "View docs"
+  },
+  "grid": {
+    "label": "What's included",
+    "headline": "Everything you need. Nothing you don't.",
+    "items": [
+      {
+        "id": "budget",
+        "plan": "Free",
+        "title": "Budget Firewall",
+        "tagline": "Hard caps. Soft alerts. No surprise invoices.",
+        "description": "Every request passes through the firewall before reaching the LLM. Hit the cap — request blocked, zero tokens consumed.",
+        "metric": "-100%",
+        "metricLabel": "surprise invoices"
+      },
+      {
+        "id": "optimizer",
+        "plan": "Pro",
+        "title": "Context Optimizer",
+        "tagline": "Compresses your prompts. -40% tokens. Same output.",
+        "description": "Automatic prompt compression before every request. No prompt engineering. No code changes. Just savings.",
+        "metric": "-40%",
+        "metricLabel": "token usage"
+      },
+      {
+        "id": "router",
+        "plan": "Pro",
+        "title": "Model Router",
+        "tagline": "Picks the right LLM for each request automatically.",
+        "description": "Simple tasks go to cheaper models. Complex ones go to the best. You pay the right price every time.",
+        "metric": "4",
+        "metricLabel": "LLM providers"
+      },
+      {
+        "id": "analytics",
+        "plan": "Free",
+        "title": "Usage Dashboard",
+        "tagline": "Every token. Every cost. Real-time.",
+        "description": "Token usage, costs, and trends per project, per user, per model. Export to CSV. Query via API.",
+        "metric": "Real-time",
+        "metricLabel": "visibility"
+      },
+      {
+        "id": "webhooks",
+        "plan": "Pro",
+        "title": "Webhooks Engine",
+        "tagline": "Push events to Slack, Teams, or any URL.",
+        "description": "Budget alerts, usage reports, anomaly detection — wherever your team already lives. HMAC-signed payloads.",
+        "metric": "< 1s",
+        "metricLabel": "delivery"
+      },
+      {
+        "id": "rbac",
+        "plan": "Team",
+        "title": "RBAC & Audit Logs",
+        "tagline": "Admin, Manager, Dev, Viewer. 90 days history.",
+        "description": "Role-based access for teams. Full audit trail. Compliance-ready. Every request logged for 90 days.",
+        "metric": "90 days",
+        "metricLabel": "audit retention"
+      }
+    ]
+  },
+  "deep": {
+    "label": "How each feature works",
+    "tabs": {
+      "budget": "Budget Firewall",
+      "optimizer": "Context Optimizer",
+      "router": "Model Router",
+      "analytics": "Analytics",
+      "webhooks": "Webhooks"
+    },
+    "budget": {
+      "headline": "Hard caps. Zero surprise invoices.",
+      "description": "Set token or cost limits per project. GateCtr blocks requests the moment the cap is hit — no tokens consumed, no cost incurred. Soft alerts fire before you reach the limit.",
+      "points": [
+        "Blocks requests at the cap — HTTP 429, zero tokens consumed",
+        "Soft alerts at configurable threshold (e.g. 80%)",
+        "Resets daily, monthly, or lifetime",
+        "Available on Free plan and above"
+      ],
+      "codeLabel": "Set a budget via API",
+      "code": "curl -X PATCH https://api.gatectr.com/v1/budget \\\n  -H \"Authorization: Bearer $GATECTR_API_KEY\" \\\n  -d '{ \"project_id\": \"proj_123\", \"limit_tokens\": 100000, \"alert_at_percent\": 80, \"period\": \"day\" }'"
+    },
+    "optimizer": {
+      "headline": "-40% tokens. Same output quality.",
+      "description": "Before forwarding your request, GateCtr compresses the prompt — removes filler, condenses instructions, trims history. Average reduction: -40%. Output quality maintained.",
+      "points": [
+        "Enabled by default on Pro plans",
+        "Per-request override: gatectr: { optimize: false }",
+        "Response includes tokens_saved and compression_ratio",
+        "Works with all providers — OpenAI, Anthropic, Mistral, Gemini"
+      ],
+      "codeLabel": "Check savings in the response",
+      "code": "const response = await client.complete({\n  model: 'gpt-4o',\n  messages,\n  gatectr: { optimize: true },\n});\n\nconsole.log(response.gatectr.tokens_saved);     // e.g. 312\nconsole.log(response.gatectr.compression_ratio); // e.g. 0.40"
+    },
+    "router": {
+      "headline": "The right model. Every time.",
+      "description": "Pass model: 'auto' and GateCtr scores the request — complexity, quality requirements, provider pricing — then routes to the optimal model. You pay less without thinking about it.",
+      "points": [
+        "Simple Q&A → gpt-3.5-turbo or mistral-small",
+        "Complex reasoning → gpt-4o or claude-3-5-sonnet",
+        "Response includes model_used and routing_reason",
+        "Configure provider preferences in the dashboard"
+      ],
+      "codeLabel": "Enable Model Router",
+      "code": "const response = await client.complete({\n  model: 'auto', // triggers the Model Router\n  messages,\n});\n\nconsole.log(response.gatectr.model_used);    // e.g. \"gpt-3.5-turbo\"\nconsole.log(response.gatectr.routing_reason); // e.g. \"low_complexity\"\nconsole.log(response.gatectr.cost_usd);       // e.g. 0.00008"
+    },
+    "analytics": {
+      "headline": "Every token. Every cost. Measured.",
+      "description": "Every request is logged automatically — tokens in/out, cost, model, latency, project. View in the dashboard or query via API. Export to CSV for your BI tools.",
+      "points": [
+        "Real-time dashboard — overview, by project, by model",
+        "7d / 30d / 90d trend charts",
+        "Query via REST API with date range filters",
+        "CSV export for Metabase, Tableau, Power BI"
+      ],
+      "codeLabel": "Query usage via API",
+      "code": "curl https://api.gatectr.com/v1/usage \\\n  -H \"Authorization: Bearer $GATECTR_API_KEY\" \\\n  -G \\\n  --data-urlencode \"project_id=proj_123\" \\\n  --data-urlencode \"from=2025-01-01\" \\\n  --data-urlencode \"to=2025-01-31\""
+    },
+    "webhooks": {
+      "headline": "Alerts where your team already lives.",
+      "description": "Configure endpoints for budget alerts, usage reports, and anomaly detection. HMAC-SHA256 signed payloads. Automatic retries. Works with Slack, Teams, Zapier, or any HTTP endpoint.",
+      "points": [
+        "Events: budget.threshold_reached, budget.exceeded, request.blocked",
+        "HMAC-SHA256 signature on every payload",
+        "Retries: 3 attempts with exponential backoff",
+        "Native Slack formatting for budget events"
+      ],
+      "codeLabel": "Verify webhook signature",
+      "code": "import { verifyWebhook } from '@gatectr/sdk';\n\nexport async function POST(req: Request) {\n  const body = await req.text();\n  const sig = req.headers.get('X-GateCtr-Signature') ?? '';\n\n  const event = verifyWebhook(body, sig, process.env.GATECTR_WEBHOOK_SECRET);\n\n  if (event.type === 'budget.threshold_reached') {\n    // notify your team\n  }\n\n  return Response.json({ ok: true });\n}"
+    }
+  },
+  "cta": {
+    "headline": "All six features. Free to start.",
+    "description": "No credit card. Setup in 5 min. Budget Firewall and Analytics active on the free plan.",
+    "ctaPrimary": "Start free",
+    "ctaSecondary": "View pricing",
+    "trust": "No credit card required · Cancel anytime"
+  }
+}

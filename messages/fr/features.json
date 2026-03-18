@@ -1,0 +1,150 @@
+{
+  "meta": {
+    "title": "Fonctionnalités — GateCtr",
+    "description": "Budget Firewall, Context Optimizer, Model Router, Analytics, Webhooks et RBAC. Une passerelle. Contrôle total."
+  },
+  "hero": {
+    "badge": "Six fonctionnalités. Un seul changement d'endpoint.",
+    "headline": "Contrôle total sur chaque requête LLM.",
+    "description": "Limites budgétaires, optimisation des tokens, routage intelligent, analytics en temps réel — actifs dès le premier jour. Zéro modification de code.",
+    "ctaPrimary": "Démarrer gratuitement",
+    "ctaSecondary": "Voir la documentation"
+  },
+  "grid": {
+    "label": "Ce qui est inclus",
+    "headline": "Tout ce qu'il faut. Rien de superflu.",
+    "items": [
+      {
+        "id": "budget",
+        "plan": "Gratuit",
+        "title": "Budget Firewall",
+        "tagline": "Limites strictes. Alertes douces. Zéro facture surprise.",
+        "description": "Chaque requête passe par le firewall avant d'atteindre le LLM. Limite atteinte — requête bloquée, zéro token consommé.",
+        "metric": "-100%",
+        "metricLabel": "factures surprises"
+      },
+      {
+        "id": "optimizer",
+        "plan": "Pro",
+        "title": "Context Optimizer",
+        "tagline": "Compresse vos prompts. -40% de tokens. Même résultat.",
+        "description": "Compression automatique des prompts avant chaque requête. Pas de prompt engineering. Pas de modification de code. Juste des économies.",
+        "metric": "-40%",
+        "metricLabel": "utilisation tokens"
+      },
+      {
+        "id": "router",
+        "plan": "Pro",
+        "title": "Model Router",
+        "tagline": "Sélectionne le bon LLM pour chaque requête.",
+        "description": "Les tâches simples vont vers les modèles moins chers. Les complexes vers les meilleurs. Vous payez le juste prix à chaque fois.",
+        "metric": "4",
+        "metricLabel": "providers LLM"
+      },
+      {
+        "id": "analytics",
+        "plan": "Gratuit",
+        "title": "Dashboard d'usage",
+        "tagline": "Chaque token. Chaque coût. En temps réel.",
+        "description": "Usage des tokens, coûts et tendances par projet, par utilisateur, par modèle. Export CSV. Requêtable via API.",
+        "metric": "Temps réel",
+        "metricLabel": "visibilité"
+      },
+      {
+        "id": "webhooks",
+        "plan": "Pro",
+        "title": "Webhooks Engine",
+        "tagline": "Envoyez les événements vers Slack, Teams ou n'importe quelle URL.",
+        "description": "Alertes budget, rapports d'usage, détection d'anomalies — là où votre équipe travaille déjà. Payloads signés HMAC.",
+        "metric": "< 1s",
+        "metricLabel": "livraison"
+      },
+      {
+        "id": "rbac",
+        "plan": "Team",
+        "title": "RBAC & Audit Logs",
+        "tagline": "Admin, Manager, Dev, Viewer. 90 jours d'historique.",
+        "description": "Accès basé sur les rôles pour les équipes. Audit trail complet. Prêt pour la conformité. Chaque requête journalisée 90 jours.",
+        "metric": "90 jours",
+        "metricLabel": "rétention audit"
+      }
+    ]
+  },
+  "deep": {
+    "label": "Comment chaque fonctionnalité fonctionne",
+    "tabs": {
+      "budget": "Budget Firewall",
+      "optimizer": "Context Optimizer",
+      "router": "Model Router",
+      "analytics": "Analytics",
+      "webhooks": "Webhooks"
+    },
+    "budget": {
+      "headline": "Limites strictes. Zéro facture surprise.",
+      "description": "Définissez des limites de tokens ou de coût par projet. GateCtr bloque les requêtes dès que la limite est atteinte — aucun token consommé, aucun coût engagé. Des alertes douces se déclenchent avant la limite.",
+      "points": [
+        "Bloque les requêtes à la limite — HTTP 429, zéro token consommé",
+        "Alertes douces à un seuil configurable (ex. 80%)",
+        "Réinitialisation quotidienne, mensuelle ou à vie",
+        "Disponible sur le plan Gratuit et supérieur"
+      ],
+      "codeLabel": "Définir un budget via API",
+      "code": "curl -X PATCH https://api.gatectr.com/v1/budget \\\n  -H \"Authorization: Bearer $GATECTR_API_KEY\" \\\n  -d '{ \"project_id\": \"proj_123\", \"limit_tokens\": 100000, \"alert_at_percent\": 80, \"period\": \"day\" }'"
+    },
+    "optimizer": {
+      "headline": "-40% de tokens. Même qualité de sortie.",
+      "description": "Avant de transmettre votre requête, GateCtr compresse le prompt — supprime le remplissage, condense les instructions, réduit l'historique. Réduction moyenne : -40%. Qualité maintenue.",
+      "points": [
+        "Activé par défaut sur les plans Pro",
+        "Override par requête : gatectr: { optimize: false }",
+        "La réponse inclut tokens_saved et compression_ratio",
+        "Fonctionne avec tous les providers — OpenAI, Anthropic, Mistral, Gemini"
+      ],
+      "codeLabel": "Vérifier les économies dans la réponse",
+      "code": "const response = await client.complete({\n  model: 'gpt-4o',\n  messages,\n  gatectr: { optimize: true },\n});\n\nconsole.log(response.gatectr.tokens_saved);     // ex. 312\nconsole.log(response.gatectr.compression_ratio); // ex. 0.40"
+    },
+    "router": {
+      "headline": "Le bon modèle. À chaque fois.",
+      "description": "Passez model: 'auto' et GateCtr évalue la requête — complexité, qualité requise, tarification — puis route vers le modèle optimal. Vous payez moins sans y penser.",
+      "points": [
+        "Q&A simple → gpt-3.5-turbo ou mistral-small",
+        "Raisonnement complexe → gpt-4o ou claude-3-5-sonnet",
+        "La réponse inclut model_used et routing_reason",
+        "Configurez les préférences de provider dans le dashboard"
+      ],
+      "codeLabel": "Activer le Model Router",
+      "code": "const response = await client.complete({\n  model: 'auto', // déclenche le Model Router\n  messages,\n});\n\nconsole.log(response.gatectr.model_used);    // ex. \"gpt-3.5-turbo\"\nconsole.log(response.gatectr.routing_reason); // ex. \"low_complexity\"\nconsole.log(response.gatectr.cost_usd);       // ex. 0.00008"
+    },
+    "analytics": {
+      "headline": "Chaque token. Chaque coût. Mesuré.",
+      "description": "Chaque requête est journalisée automatiquement — tokens in/out, coût, modèle, latence, projet. Visualisez dans le dashboard ou requêtez via API. Export CSV pour vos outils BI.",
+      "points": [
+        "Dashboard temps réel — vue globale, par projet, par modèle",
+        "Graphiques de tendances 7j / 30j / 90j",
+        "Requêtable via REST API avec filtres de dates",
+        "Export CSV pour Metabase, Tableau, Power BI"
+      ],
+      "codeLabel": "Requêter l'usage via API",
+      "code": "curl https://api.gatectr.com/v1/usage \\\n  -H \"Authorization: Bearer $GATECTR_API_KEY\" \\\n  -G \\\n  --data-urlencode \"project_id=proj_123\" \\\n  --data-urlencode \"from=2025-01-01\" \\\n  --data-urlencode \"to=2025-01-31\""
+    },
+    "webhooks": {
+      "headline": "Alertes là où votre équipe travaille.",
+      "description": "Configurez des endpoints pour les alertes budget, rapports d'usage et détection d'anomalies. Payloads signés HMAC-SHA256. Retries automatiques. Fonctionne avec Slack, Teams, Zapier ou tout endpoint HTTP.",
+      "points": [
+        "Événements : budget.threshold_reached, budget.exceeded, request.blocked",
+        "Signature HMAC-SHA256 sur chaque payload",
+        "Retries : 3 tentatives avec backoff exponentiel",
+        "Formatage Slack natif pour les événements budget"
+      ],
+      "codeLabel": "Vérifier la signature webhook",
+      "code": "import { verifyWebhook } from '@gatectr/sdk';\n\nexport async function POST(req: Request) {\n  const body = await req.text();\n  const sig = req.headers.get('X-GateCtr-Signature') ?? '';\n\n  const event = verifyWebhook(body, sig, process.env.GATECTR_WEBHOOK_SECRET);\n\n  if (event.type === 'budget.threshold_reached') {\n    // notifier votre équipe\n  }\n\n  return Response.json({ ok: true });\n}"
+    }
+  },
+  "cta": {
+    "headline": "Six fonctionnalités. Gratuit pour démarrer.",
+    "description": "Sans carte bancaire. Configuration en 5 min. Budget Firewall et Analytics actifs sur le plan gratuit.",
+    "ctaPrimary": "Démarrer gratuitement",
+    "ctaSecondary": "Voir les tarifs",
+    "trust": "Sans carte bancaire · Annulez à tout moment"
+  }
+}

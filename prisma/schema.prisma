@@ -107,7 +107,9 @@ model WaitlistEntry {
   referredBy   String?
   position     Int             @default(autoincrement())
   status       WaitlistStatus  @default(WAITING)
+  inviteCode   String?         @unique
   invitedAt    DateTime?
+  inviteExpiresAt DateTime?
   joinedAt     DateTime?
   ipAddress    String?
   userAgent    String?
@@ -116,6 +118,7 @@ model WaitlistEntry {
   @@index([email])
   @@index([status])
   @@index([position])
+  @@index([inviteCode])
   @@map("waitlist_entries")
 }
 
@@ -479,6 +482,8 @@ model UserRole {
   role Role @relation(fields: [roleId], references: [id])
 
   @@unique([userId, roleId])
+  @@index([userId])
+  @@index([roleId])
   @@map("user_roles")
 }
 

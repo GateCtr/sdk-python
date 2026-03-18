@@ -4,6 +4,8 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile.dev
+      args:
+        DATABASE_URL: postgresql://gatectr:secret@postgres:5432/gatectr_dev
     container_name: gatectr_app
     ports:
       - "3000:3000"
@@ -64,6 +66,8 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile.dev
+      args:
+        DATABASE_URL: postgresql://gatectr:secret@postgres:5432/gatectr_dev
     container_name: gatectr_worker
     command: npx tsx workers/webhook.worker.ts
     env_file:

@@ -1,0 +1,110 @@
+{
+  "metadata": {
+    "users": {
+      "title": "User Management",
+      "description": "Manage users and their roles"
+    },
+    "auditLogs": {
+      "title": "Audit Logs",
+      "description": "Security and access event history"
+    },
+    "waitlist": {
+      "title": "Waitlist Management",
+      "description": "Manage and invite users from the waitlist"
+    }
+  },
+  "auditLogs": {
+    "title": "Audit Logs",
+    "subtitle": "Security and access event history",
+    "table": {
+      "timestamp": "Timestamp",
+      "user": "User",
+      "resource": "Resource",
+      "action": "Action",
+      "status": "Status"
+    },
+    "status": {
+      "success": "Success",
+      "failed": "Failed"
+    },
+    "empty": "No audit log entries found"
+  },
+  "users": {
+    "title": "User Management",
+    "subtitle": "Manage users and their roles",
+    "table": {
+      "name": "Name",
+      "email": "Email",
+      "roles": "Roles",
+      "status": "Status",
+      "joined": "Joined",
+      "actions": "Actions"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "actions": {
+      "assignRole": "Assign Role",
+      "revokeRole": "Revoke Role"
+    },
+    "empty": "No users found"
+  },
+  "sidebar": {
+    "users": "Users",
+    "plans": "Plans",
+    "featureFlags": "Feature Flags",
+    "auditLogs": "Audit Logs",
+    "systemHealth": "System Health",
+    "waitlist": "Waitlist"
+  },
+  "errors": {
+    "accessDenied": "Access denied: Admin privileges required",
+    "insufficientPermissions": "You don't have permission to view this page"
+  },
+  "roles": {
+    "SUPER_ADMIN": "Super Admin",
+    "ADMIN": "Admin",
+    "MANAGER": "Manager",
+    "DEVELOPER": "Developer",
+    "VIEWER": "Viewer",
+    "SUPPORT": "Support"
+  },
+  "waitlist": {
+    "title": "Waitlist Management",
+    "subtitle": "Manage and invite users from the waitlist",
+    "stats": {
+      "total": "Total Entries",
+      "waiting": "Waiting",
+      "invited": "Invited",
+      "joined": "Joined"
+    },
+    "table": {
+      "position": "Position",
+      "email": "Email",
+      "name": "Name",
+      "company": "Company",
+      "useCase": "Use Case",
+      "status": "Status",
+      "joined": "Joined",
+      "actions": "Actions"
+    },
+    "filters": {
+      "all": "All Entries",
+      "waiting": "Waiting",
+      "invited": "Invited",
+      "joined": "Joined"
+    },
+    "actions": {
+      "invite": "Invite",
+      "inviteSelected": "Invite Selected ({count})",
+      "sending": "Sending..."
+    },
+    "messages": {
+      "inviteSuccess": "Successfully invited {count} user(s)",
+      "inviteFailed": "Failed to send invites",
+      "loadFailed": "Failed to load waitlist entries"
+    },
+    "empty": "No entries found"
+  }
+}

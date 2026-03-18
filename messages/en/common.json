@@ -1,0 +1,55 @@
+{
+  "metadata": {
+    "siteName": "GateCtr",
+    "defaultTitle": "GateCtr — One gateway. Every LLM.",
+    "defaultDescription": "-40% tokens. Full control. Zero code changes."
+  },
+  "nav": {
+    "home": "Home",
+    "features": "Features",
+    "pricing": "Pricing",
+    "docs": "Docs",
+    "changelog": "Changelog",
+    "signIn": "Sign in",
+    "signUp": "Start free"
+  },
+  "footer": {
+    "product": "Product",
+    "company": "Company",
+    "resources": "Resources",
+    "legal": "Legal",
+    "copyright": "© {year} GateCtr. All rights reserved.",
+    "tagline": "One gateway. Every LLM. Your API key stays yours. Always.",
+    "changelog": "Changelog",
+    "blog": "Blog",
+    "status": "Status",
+    "statusOperational": "All systems operational",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "help": "Help",
+    "about": "About",
+    "careers": "Careers",
+    "contact": "Contact",
+    "githubLabel": "GitHub",
+    "xLabel": "X"
+  },
+  "actions": {
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "loading": "Loading...",
+    "success": "Done",
+    "error": "Error"
+  },
+  "errors": {
+    "required": "Required.",
+    "invalid": "Invalid value.",
+    "network": "Network error. Try again.",
+    "unknown": "Something went wrong. Try again."
+  }
+}

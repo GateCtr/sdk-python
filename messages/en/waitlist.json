@@ -1,0 +1,70 @@
+{
+  "metadata": {
+    "title": "Early Access",
+    "description": "Cut LLM costs by 40%. Without changing a line of code. Join the GateCtr waitlist.",
+    "ogTitle": "Join the GateCtr Waitlist",
+    "ogDescription": "Cut LLM costs by 40%. One endpoint swap. Request early access."
+  },
+  "page": {
+    "title": "Cut LLM costs by 40%.",
+    "subtitle": "Without changing a line of code.",
+    "description": "One endpoint swap. Full control over tokens, budgets, and routing."
+  },
+  "section": {
+    "contact": "Your details",
+    "useCase": "How you use LLMs"
+  },
+  "form": {
+    "email": {
+      "label": "Email",
+      "placeholder": "you@company.com",
+      "required": "Email required.",
+      "invalid": "Invalid email."
+    },
+    "name": {
+      "label": "Name",
+      "placeholder": "Jane Doe"
+    },
+    "company": {
+      "label": "Company",
+      "placeholder": "Acme Inc."
+    },
+    "useCase": {
+      "label": "Use case",
+      "placeholder": "Select one",
+      "options": {
+        "saas": "SaaS product",
+        "agent": "AI agent",
+        "enterprise": "Enterprise",
+        "dev": "Personal / dev"
+      }
+    },
+    "submit": "Request access",
+    "submitting": "Sending..."
+  },
+  "success": {
+    "title": "You're in.",
+    "message": "Position #{position}. We'll email you when your spot opens.",
+    "cta": "Back to home"
+  },
+  "errors": {
+    "duplicate": "Already registered.",
+    "failed": "Request failed. Try again.",
+    "network": "Network error. Check your connection."
+  },
+  "features": {
+    "title": "What you get",
+    "budget": {
+      "title": "Budget Firewall",
+      "description": "Hard caps. Soft alerts. No surprise invoices."
+    },
+    "optimizer": {
+      "title": "Context Optimizer",
+      "description": "-40% tokens. Same output quality."
+    },
+    "router": {
+      "title": "Model Router",
+      "description": "GateCtr picks the right LLM. You pay less."
+    }
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "metadata": {
+    "siteName": "GateCtr",
+    "defaultTitle": "GateCtr — Une passerelle. Tous les LLMs.",
+    "defaultDescription": "-40% de tokens. Contrôle total. Zéro modification de code."
+  },
+  "nav": {
+    "home": "Accueil",
+    "features": "Fonctionnalités",
+    "pricing": "Tarifs",
+    "docs": "Docs",
+    "changelog": "Changelog",
+    "signIn": "Connexion",
+    "signUp": "Démarrer"
+  },
+  "footer": {
+    "product": "Produit",
+    "company": "Entreprise",
+    "resources": "Ressources",
+    "legal": "Légal",
+    "copyright": "© {year} GateCtr. Tous droits réservés.",
+    "tagline": "Une passerelle. Tous les LLMs. Votre clé API reste la vôtre. Toujours.",
+    "changelog": "Changelog",
+    "blog": "Blog",
+    "status": "Statut",
+    "statusOperational": "Tous les systèmes opérationnels",
+    "privacy": "Confidentialité",
+    "terms": "Conditions",
+    "help": "Aide",
+    "about": "À propos",
+    "careers": "Carrières",
+    "contact": "Contact",
+    "githubLabel": "GitHub",
+    "xLabel": "X"
+  },
+  "actions": {
+    "submit": "Envoyer",
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "close": "Fermer",
+    "back": "Retour",
+    "next": "Suivant",
+    "loading": "Chargement...",
+    "success": "Fait",
+    "error": "Erreur"
+  },
+  "errors": {
+    "required": "Requis.",
+    "invalid": "Valeur invalide.",
+    "network": "Erreur réseau. Réessayez.",
+    "unknown": "Une erreur est survenue. Réessayez."
+  }
+}

@@ -12,6 +12,10 @@ WORKDIR /app
 # Copy package files
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 
+# Copy Prisma files (needed for postinstall script)
+COPY prisma ./prisma
+COPY prisma.config.ts ./
+
 # Install production dependencies only
 RUN pnpm install --frozen-lockfile --prod
 
@@ -21,6 +25,10 @@ WORKDIR /app
 
 # Copy package files
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+
+# Copy Prisma files (needed for postinstall script)
+COPY prisma ./prisma
+COPY prisma.config.ts ./
 
 # Install all dependencies (including dev)
 RUN pnpm install --frozen-lockfile

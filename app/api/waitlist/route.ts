@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
 import { sendWelcomeWaitlistEmail } from '@/lib/resend';
+import { isAdmin } from '@/lib/auth';
 
 const waitlistSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -79,8 +80,15 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
-    // Admin only - check for admin authentication
-    // TODO: Add proper admin authentication check
+    // Check admin authentication
+    const admin = await isAdmin();
+    
+    if (!admin) {
+      return NextResponse.json(
+        { error: 'Unauthorized: Admin access required' },
+        { status: 403 }
+      );
+    }
     
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get('page') || '1');

@@ -1,42 +1,41 @@
+---
+inclusion: always
+---
+
 # Product Overview
 
-GateCtr is a universal middleware hub for controlling, optimizing, and securing API calls to LLMs (Large Language Models).
+GateCtr is a middleware gateway for LLM API calls. One endpoint swap. Full control.
 
-## Core Value Proposition
+## Positioning
 
-Acts as an intelligent proxy layer between applications/AI agents and LLM providers (OpenAI, Anthropic, Mistral, Gemini), providing:
+**Tagline:** One gateway. Every LLM.
+**Value prop:** -40% tokens. Zero code changes. GateCtr controls. You save.
 
-- Cost control and budget management
-- Token optimization (up to 40% reduction)
-- Intelligent model routing
-- Real-time analytics and monitoring
-- Security and encryption
-- Automated webhooks and integrations
+GateCtr sits between your app and LLM providers (OpenAI, Anthropic, Mistral, Gemini). It optimizes, routes, and enforces budgets — transparently.
 
 ## Target Users
 
-Teams and organizations integrating LLMs who need visibility, control, and optimization of their API usage and costs.
+Developers and teams calling LLMs who need cost control, visibility, and reliability. They don't want to change their code. They want results.
 
-## Key Problems Solved
+## Problems Solved
 
-- Uncontrollable and unpredictable LLM costs
-- No visibility into token consumption
-- Inefficient prompts leading to expensive responses
-- No intelligent routing between providers
-- Missing alerts and reporting
-- Insufficient API key security
-- Lack of integration with business tools (BI/ERP/Slack)
+- Unpredictable LLM invoices → Budget Firewall with hard caps
+- Wasted tokens on bloated prompts → Context Optimizer (-40%)
+- Wrong model for the job → Model Router (auto-selects by cost/perf)
+- No visibility → Real-time token analytics dashboard
+- API key exposure → AES encryption, multi-tenant isolation
+- No alerts → Webhooks to Slack, Teams, ERP, BI tools
 
 ## Core Features
 
-- **Budget Firewall**: Per-project and per-user limits with hard caps and soft alerts
-- **Context Optimizer**: Intelligent prompt compression and context pruning
-- **Model Router**: Automatic selection of optimal LLM based on cost and performance
-- **Real-time Dashboard**: Token analytics, usage tracking, and automated alerts
-- **Security Layer**: AES encryption, TLS, multi-tenant isolation
-- **Webhooks Engine**: Automated notifications to Slack, Teams, ERP, BI tools
-- **RBAC**: Role-based access control for enterprise environments
+- **Budget Firewall** — Hard caps + soft alerts per project/user. No surprise invoices.
+- **Context Optimizer** — Prompt compression. -40% tokens. Same output quality.
+- **Model Router** — GateCtr picks the right LLM. You pay less.
+- **Analytics Dashboard** — Token usage, costs, trends. Real-time.
+- **Security Layer** — AES encryption, TLS, multi-tenant isolation. Your API key stays yours.
+- **Webhooks Engine** — Push events to Slack, Teams, ERP, BI tools automatically.
+- **RBAC** — Role-based access for teams and enterprise.
 
 ## Integration
 
-Zero-code change integration - simply replace API endpoint while keeping existing API keys. Setup in under 5 minutes via SDK (Node.js, Python) or REST API.
+Swap your endpoint URL. Keep your existing API keys. Setup in 5 min via SDK (Node.js, Python) or REST API. Zero code changes required.

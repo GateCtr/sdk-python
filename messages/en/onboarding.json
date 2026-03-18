@@ -1,0 +1,50 @@
+{
+  "metadata": {
+    "title": "Setup",
+    "description": "30 seconds. Your workspace is ready."
+  },
+  "page": {
+    "title": "30 seconds to your first save.",
+    "subtitle": "Tell us how you use LLMs. We'll configure the rest."
+  },
+  "section": {
+    "organization": "Your workspace",
+    "usage": "Your use case"
+  },
+  "form": {
+    "orgName": {
+      "label": "Workspace name",
+      "placeholder": "Acme Inc.",
+      "hint": "Used to identify your workspace in GateCtr."
+    },
+    "usageType": {
+      "label": "Usage type",
+      "personal": "Personal",
+      "team": "Team",
+      "enterprise": "Enterprise"
+    },
+    "useCase": {
+      "label": "Primary use case",
+      "chatbot": "Chatbot",
+      "analytics": "Analytics",
+      "content": "Content generation",
+      "code": "Code assistance",
+      "other": "Other",
+      "hint": "Tailors your dashboard defaults."
+    },
+    "teamSize": {
+      "label": "Team size",
+      "solo": "Just me",
+      "small": "2–10",
+      "medium": "11–50",
+      "large": "50+"
+    },
+    "submit": "Set up workspace",
+    "submitting": "Saving..."
+  },
+  "errors": {
+    "orgName": "Workspace name required.",
+    "orgNameMin": "At least 2 characters.",
+    "failed": "Setup failed. Try again."
+  }
+}

@@ -1,9 +1,15 @@
-import type { Metadata } from "next";
-import { Inter, JetBrains_Mono, Syne } from "next/font/google";
-import "./globals.css";
+import type { Metadata, Viewport } from "next";
+import { Inter, JetBrains_Mono, Syne, Geist } from "next/font/google";
+import { cookies } from "next/headers";
 import { ThemeProvider } from "@/components/theme-provider";
+import { ClerkProvider } from "@/components/clerk-provider";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { ReactQueryProvider } from "@/components/query-provider";
+import "./globals.css";
+import { cn } from "@/lib/utils";
 
-// Display / Titres - Syne Bold
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
+
 const syne = Syne({
   subsets: ["latin"],
   weight: ["700", "800"],
@@ -11,14 +17,12 @@ const syne = Syne({
   display: "swap",
 });
 
-// Corps de texte - Inter
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-body",
   display: "swap",
 });
 
-// Interface / Code - JetBrains Mono
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
@@ -26,10 +30,17 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_MARKETING_URL ?? 'https://gatectr.com'),
   title: "GateCtr - Control Your LLM Costs",
   description: "Universal middleware hub for controlling, optimizing, and securing API calls to LLMs",
   keywords: ["LLM", "AI", "cost control", "token optimization", "API gateway"],
   authors: [{ name: "GateCtr" }],
+  manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'GateCtr',
+  },
   openGraph: {
     title: "GateCtr - Control Your LLM Costs",
     description: "Universal middleware hub for controlling, optimizing, and securing API calls to LLMs",
@@ -37,21 +48,44 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export const viewport: Viewport = {
+  themeColor: [
+    { media: '(prefers-color-scheme: dark)', color: '#0a0a0a' },
+    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+  ],
+  width: 'device-width',
+  initialScale: 1,
+};
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Read locale from next-intl cookie for Clerk localization
+  const cookieStore = await cookies();
+  const locale = cookieStore.get('NEXT_LOCALE')?.value ?? 'en';
+
   return (
-    <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable} ${syne.variable}`} suppressHydrationWarning>
+    <html 
+      lang={locale}
+      className={cn(inter.variable, jetbrainsMono.variable, syne.variable, "font-sans", geist.variable)} 
+      suppressHydrationWarning
+    >
       <body className="antialiased">
         <ThemeProvider
-          attribute="class"
+          attribute="data-theme"
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <ClerkProvider locale={locale}>
+            <ReactQueryProvider>
+              <TooltipProvider>
+                {children}
+              </TooltipProvider>
+            </ReactQueryProvider>
+          </ClerkProvider>
         </ThemeProvider>
       </body>
     </html>

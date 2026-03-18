@@ -1,0 +1,70 @@
+{
+  "metadata": {
+    "title": "Accès anticipé",
+    "description": "Réduisez vos coûts LLM de 40%. Sans toucher à votre code. Rejoignez la liste d'attente GateCtr.",
+    "ogTitle": "Rejoignez la liste d'attente GateCtr",
+    "ogDescription": "Réduisez vos coûts LLM de 40%. Un seul changement d'endpoint. Demandez un accès anticipé."
+  },
+  "page": {
+    "title": "Réduisez vos coûts LLM de 40%.",
+    "subtitle": "Sans toucher à votre code.",
+    "description": "Un seul changement d'endpoint. Contrôle total sur les tokens, budgets et le routage."
+  },
+  "section": {
+    "contact": "Vos coordonnées",
+    "useCase": "Comment vous utilisez les LLMs"
+  },
+  "form": {
+    "email": {
+      "label": "Email",
+      "placeholder": "vous@entreprise.com",
+      "required": "Email requis.",
+      "invalid": "Email invalide."
+    },
+    "name": {
+      "label": "Nom",
+      "placeholder": "Jean Dupont"
+    },
+    "company": {
+      "label": "Entreprise",
+      "placeholder": "Acme SAS"
+    },
+    "useCase": {
+      "label": "Cas d'usage",
+      "placeholder": "Sélectionner",
+      "options": {
+        "saas": "Produit SaaS",
+        "agent": "Agent IA",
+        "enterprise": "Entreprise",
+        "dev": "Personnel / dev"
+      }
+    },
+    "submit": "Demander l'accès",
+    "submitting": "Envoi..."
+  },
+  "success": {
+    "title": "C'est noté.",
+    "message": "Position #{position}. Vous recevrez un email dès que votre place est disponible.",
+    "cta": "Retour à l'accueil"
+  },
+  "errors": {
+    "duplicate": "Déjà enregistré.",
+    "failed": "Échec. Réessayez.",
+    "network": "Erreur réseau. Vérifiez votre connexion."
+  },
+  "features": {
+    "title": "Ce que vous obtenez",
+    "budget": {
+      "title": "Budget Firewall",
+      "description": "Limites strictes. Alertes douces. Zéro facture surprise."
+    },
+    "optimizer": {
+      "title": "Context Optimizer",
+      "description": "-40% de tokens. Même qualité de sortie."
+    },
+    "router": {
+      "title": "Model Router",
+      "description": "GateCtr choisit le bon LLM. Vous payez moins."
+    }
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "metadata": {
+    "title": "Configuration",
+    "description": "30 secondes. Votre espace est prêt."
+  },
+  "page": {
+    "title": "30 secondes pour votre première économie.",
+    "subtitle": "Dites-nous comment vous utilisez les LLMs. On s'occupe du reste."
+  },
+  "section": {
+    "organization": "Votre espace de travail",
+    "usage": "Votre cas d'usage"
+  },
+  "form": {
+    "orgName": {
+      "label": "Nom de l'espace",
+      "placeholder": "Acme SAS",
+      "hint": "Identifie votre espace dans GateCtr."
+    },
+    "usageType": {
+      "label": "Type d'usage",
+      "personal": "Personnel",
+      "team": "Équipe",
+      "enterprise": "Entreprise"
+    },
+    "useCase": {
+      "label": "Cas d'usage principal",
+      "chatbot": "Chatbot",
+      "analytics": "Analyse",
+      "content": "Génération de contenu",
+      "code": "Assistance au code",
+      "other": "Autre",
+      "hint": "Personnalise les paramètres par défaut."
+    },
+    "teamSize": {
+      "label": "Taille de l'équipe",
+      "solo": "Juste moi",
+      "small": "2–10",
+      "medium": "11–50",
+      "large": "50+"
+    },
+    "submit": "Créer l'espace",
+    "submitting": "Enregistrement..."
+  },
+  "errors": {
+    "orgName": "Nom requis.",
+    "orgNameMin": "2 caractères minimum.",
+    "failed": "Échec. Réessayez."
+  }
+}

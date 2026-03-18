@@ -1,0 +1,110 @@
+{
+  "metadata": {
+    "users": {
+      "title": "Gestion des utilisateurs",
+      "description": "Gérer les utilisateurs et leurs rôles"
+    },
+    "auditLogs": {
+      "title": "Journaux d'audit",
+      "description": "Historique des événements de sécurité et d'accès"
+    },
+    "waitlist": {
+      "title": "Gestion de la liste d'attente",
+      "description": "Gérer et inviter les utilisateurs de la liste d'attente"
+    }
+  },
+  "auditLogs": {
+    "title": "Journaux d'audit",
+    "subtitle": "Historique des événements de sécurité et d'accès",
+    "table": {
+      "timestamp": "Horodatage",
+      "user": "Utilisateur",
+      "resource": "Ressource",
+      "action": "Action",
+      "status": "Statut"
+    },
+    "status": {
+      "success": "Succès",
+      "failed": "Échec"
+    },
+    "empty": "Aucune entrée de journal d'audit trouvée"
+  },
+  "users": {
+    "title": "Gestion des utilisateurs",
+    "subtitle": "Gérer les utilisateurs et leurs rôles",
+    "table": {
+      "name": "Nom",
+      "email": "E-mail",
+      "roles": "Rôles",
+      "status": "Statut",
+      "joined": "Inscrit le",
+      "actions": "Actions"
+    },
+    "status": {
+      "active": "Actif",
+      "inactive": "Inactif"
+    },
+    "actions": {
+      "assignRole": "Attribuer un rôle",
+      "revokeRole": "Révoquer le rôle"
+    },
+    "empty": "Aucun utilisateur trouvé"
+  },
+  "sidebar": {
+    "users": "Utilisateurs",
+    "plans": "Plans",
+    "featureFlags": "Indicateurs de fonctionnalité",
+    "auditLogs": "Journaux d'audit",
+    "systemHealth": "Santé du système",
+    "waitlist": "Liste d'attente"
+  },
+  "errors": {
+    "accessDenied": "Accès refusé : privilèges administrateur requis",
+    "insufficientPermissions": "Vous n'avez pas la permission de consulter cette page"
+  },
+  "roles": {
+    "SUPER_ADMIN": "Super Administrateur",
+    "ADMIN": "Administrateur",
+    "MANAGER": "Gestionnaire",
+    "DEVELOPER": "Développeur",
+    "VIEWER": "Observateur",
+    "SUPPORT": "Support"
+  },
+  "waitlist": {
+    "title": "Gestion de la liste d'attente",
+    "subtitle": "Gérer et inviter les utilisateurs de la liste d'attente",
+    "stats": {
+      "total": "Total des entrées",
+      "waiting": "En attente",
+      "invited": "Invités",
+      "joined": "Inscrits"
+    },
+    "table": {
+      "position": "Position",
+      "email": "Email",
+      "name": "Nom",
+      "company": "Entreprise",
+      "useCase": "Cas d'usage",
+      "status": "Statut",
+      "joined": "Inscrit le",
+      "actions": "Actions"
+    },
+    "filters": {
+      "all": "Toutes les entrées",
+      "waiting": "En attente",
+      "invited": "Invités",
+      "joined": "Inscrits"
+    },
+    "actions": {
+      "invite": "Inviter",
+      "inviteSelected": "Inviter la sélection ({count})",
+      "sending": "Envoi en cours..."
+    },
+    "messages": {
+      "inviteSuccess": "{count} utilisateur(s) invité(s) avec succès",
+      "inviteFailed": "Échec de l'envoi des invitations",
+      "loadFailed": "Échec du chargement des entrées"
+    },
+    "empty": "Aucune entrée trouvée"
+  }
+}

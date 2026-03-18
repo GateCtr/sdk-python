@@ -1,0 +1,157 @@
+{
+  "meta": {
+    "title": "Tarifs — GateCtr",
+    "description": "Plan gratuit pour démarrer. Pro à 29 €/mois. Team à 99 €/mois. Enterprise sur devis. Vous payez votre provider LLM directement — GateCtr facture la couche de contrôle."
+  },
+  "hero": {
+    "badge": "Zéro commission sur les tokens. Jamais.",
+    "headline": "Payez pour le contrôle. Pas pour les tokens.",
+    "description": "Vous payez OpenAI, Anthropic, Mistral directement. GateCtr facture la valeur ajoutée — optimisation, routage, analytics.",
+    "trust": "Sans carte bancaire pour démarrer"
+  },
+  "plans": {
+    "popular": "Le plus populaire",
+    "perMonth": "/mois",
+    "ctaFree": "Démarrer gratuitement",
+    "ctaPro": "Démarrer gratuitement",
+    "ctaTeam": "Démarrer gratuitement",
+    "ctaEnterprise": "Réserver une démo",
+    "items": [
+      {
+        "name": "Free",
+        "price": "{price}",
+        "description": "Pour les devs solo qui démarrent.",
+        "features": [
+          "Jusqu'à {tokenLimit} tokens/mois",
+          "{projects} projet",
+          "Budget Firewall",
+          "Analytics de base",
+          "{webhooks} webhook",
+          "API REST + SDK",
+          "Support communauté"
+        ]
+      },
+      {
+        "name": "Pro",
+        "price": "{price}",
+        "description": "Pour les devs qui livrent des features LLM en production.",
+        "features": [
+          "Jusqu'à {tokenLimit} tokens/mois",
+          "{projects} projets",
+          "Context Optimizer — {tokenReduction} de tokens",
+          "Model Router basique",
+          "Analytics avancées",
+          "Webhooks illimités",
+          "Support email"
+        ]
+      },
+      {
+        "name": "Team",
+        "price": "{price}",
+        "description": "Pour les équipes qui ont besoin de visibilité et de gouvernance.",
+        "features": [
+          "Jusqu'à {tokenLimit} tokens/mois",
+          "Projets illimités",
+          "RBAC — Admin, Manager, Dev, Viewer",
+          "Dashboard équipe",
+          "Audit logs — {auditDays} jours",
+          "Model Router avancé",
+          "Support prioritaire"
+        ]
+      },
+      {
+        "name": "Enterprise",
+        "price": "{price}",
+        "description": "Pour les organisations avec des exigences de conformité et d'échelle.",
+        "features": [
+          "Tokens illimités",
+          "SLA garanti {sla}",
+          "Déploiement dédié / on-prem",
+          "SSO / SAML",
+          "Audit logs illimités",
+          "Intégrations ERP/BI",
+          "Customer success manager"
+        ]
+      }
+    ]
+  },
+  "addons": {
+    "label": "Modèles de facturation complémentaires",
+    "headline": "Flexible à chaque échelle.",
+    "description": "L'abonnement couvre la plateforme. Scalez au-delà de votre plan avec des add-ons à l'usage.",
+    "colModel": "Modèle",
+    "colDescription": "Description",
+    "colSegment": "Segment",
+    "items": [
+      {
+        "model": "Abonnement mensuel",
+        "description": "Accès plateforme selon le plan choisi.",
+        "segment": "Tous les plans"
+      },
+      {
+        "model": "Usage-based add-on",
+        "description": "Facturation par tranche de 10M tokens routés au-delà du plan.",
+        "segment": "Pro & Team"
+      },
+      {
+        "model": "Savings sharing",
+        "description": "Option premium : % des économies tokens réalisées via l'optimizer.",
+        "segment": "Enterprise"
+      },
+      {
+        "model": "Sièges supplémentaires",
+        "description": "15 €/utilisateur/mois pour les membres additionnels.",
+        "segment": "Team"
+      },
+      {
+        "model": "Onboarding premium",
+        "description": "Session de setup et intégration par notre équipe technique.",
+        "segment": "Enterprise"
+      }
+    ]
+  },
+  "philosophy": {
+    "label": "Philosophie de facturation",
+    "headline": "Vous payez OpenAI. Nous facturons la couche de contrôle.",
+    "description": "GateCtr ne prend aucune commission sur les tokens. Vous payez votre provider LLM directement avec votre propre clé API. GateCtr facture uniquement la valeur ajoutée — optimisation, routage, budget, analytics.",
+    "points": [
+      "Vos clés API vont directement à OpenAI, Anthropic, Mistral, Gemini",
+      "GateCtr ne touche jamais à votre facturation tokens",
+      "Un abonnement fixe. Des coûts prévisibles.",
+      "Annulez à tout moment. Pas de lock-in."
+    ]
+  },
+  "faq": {
+    "label": "FAQ",
+    "headline": "Questions fréquentes.",
+    "items": [
+      {
+        "q": "Prenez-vous une commission sur mes tokens ?",
+        "a": "Non. Vous payez votre provider LLM directement avec votre propre clé API. GateCtr facture un abonnement fixe pour la plateforme — optimisation, routage, analytics. Zéro commission sur les tokens."
+      },
+      {
+        "q": "Que se passe-t-il quand j'atteins ma limite de tokens ?",
+        "a": "Le Budget Firewall bloque les requêtes et retourne HTTP 429. Aucun token n'est consommé. Aucun coût n'est engagé. Vous pouvez upgrader votre plan ou ajuster les limites dans le dashboard."
+      },
+      {
+        "q": "Puis-je changer de plan à tout moment ?",
+        "a": "Oui. Upgrade ou downgrade à tout moment. La facturation est au prorata. Pas de lock-in."
+      },
+      {
+        "q": "Y a-t-il un essai gratuit pour Pro ?",
+        "a": "Le plan Free donne accès complet au Budget Firewall et aux Analytics. Passez à Pro quand vous avez besoin du Context Optimizer et du Model Router."
+      },
+      {
+        "q": "Que signifie le déploiement on-prem ?",
+        "a": "Les clients Enterprise peuvent faire tourner GateCtr sur leur propre infrastructure. Vos données ne quittent jamais votre environnement. Contactez-nous pour les détails."
+      }
+    ]
+  },
+  "cta": {
+    "headline": "Démarrez gratuitement. Upgradez quand vous en avez besoin.",
+    "description": "Budget Firewall et Analytics sur le plan gratuit. Sans carte bancaire.",
+    "ctaPrimary": "Démarrer gratuitement",
+    "ctaSecondary": "Réserver une démo",
+    "trust": "Sans carte bancaire · Annulez à tout moment"
+  }
+}

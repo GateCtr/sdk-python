@@ -150,3 +150,4 @@ CHANGELOG.md
 ✅ **Phase 0 - Waitlist : COMPLÈTE ET FONCTIONNELLE**
 
 Prêt pour le déploiement et la collecte d'inscriptions.
+

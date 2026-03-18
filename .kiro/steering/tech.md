@@ -6,6 +6,7 @@
 - **React 19.2.3**
 - **TypeScript 5** (strict mode enabled)
 - **Node.js 20+** required
+- **next-intl 4.8.3** for internationalization (i18n)
 
 ## Styling
 

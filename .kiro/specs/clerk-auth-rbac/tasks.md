@@ -1,0 +1,643 @@
+# Implementation Plan: Clerk Authentication & RBAC
+
+## Overview
+
+This implementation plan breaks down the Clerk authentication and RBAC system into discrete coding tasks. The plan follows a logical sequence: environment setup → database schema → core libraries → API routes → React components → middleware enhancement → testing. Each task builds on previous work to ensure incremental progress with no orphaned code.
+
+The system implements 6 roles (SUPER_ADMIN, ADMIN, MANAGER, DEVELOPER, VIEWER, SUPPORT) with granular permissions, webhook synchronization with Clerk, Redis-based permission caching, comprehensive audit logging, and full internationalization support (English/French).
+
+## Tasks
+
+- [x] 1. Environment setup and dependencies
+  - Install required packages: `svix` for webhook signature verification, `fast-check` for property-based testing
+  - Add environment variables to `.env.local`: CLERK_WEBHOOK_SECRET, UPSTASH_REDIS_REST_URL, UPSTASH_REDIS_REST_TOKEN
+  - Verify existing Clerk environment variables are configured: NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY, CLERK_SECRET_KEY
+  - _Requirements: 1.1, 1.2, 8.1, 8.9_
+
+- [x] 2. Database schema and seeding
+  - [x] 2.1 Create database migration for RBAC tables
+    - ✓ Role, Permission, UserRole, RolePermission, and AuditLog models exist in prisma/schema.prisma
+    - ✓ Migrations already applied
+    - _Requirements: 4.1, 4.10, 9.6_
+  
+  - [x] 2.2 Create database seed script for roles and permissions
+    - ✓ prisma/seed.ts already exists with 6 roles (SUPER_ADMIN, ADMIN, MANAGER, DEVELOPER, VIEWER, SUPPORT)
+    - ✓ 9 permissions already created (users:read, users:write, users:delete, analytics:read, analytics:export, billing:read, billing:write, system:read, audit:read)
+    - ✓ Roles linked to permissions according to permission matrix
+    - ✓ Database already seeded
+    - _Requirements: 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 5.1_
+
+- [x] 3. Core library: Redis client (lib/redis.ts)
+  - [x] 3.1 Implement Redis client singleton
+    - Create Redis client using @upstash/redis with environment variables
+    - Export redis instance, CACHE_TTL constant (300 seconds), and PERMISSION_CACHE_PREFIX constant
+    - _Requirements: 5.7, 10.3_
+  
+  - [x] 3.2 Implement permission caching functions
+    - Write getCachedPermissions(userId) to retrieve cached permissions from Redis
+    - Write setCachedPermissions(userId, permissions) to store permissions with 5-minute TTL
+    - Write invalidateCache(userId) to remove cached permissions
+    - _Requirements: 5.8, 5.9, 5.10_
+
+  - [x] 3.3 Write property test for Redis caching
+    - **Property 43: Redis Unavailable Fallback**
+    - **Validates: Requirements 10.8, 18.3**
+
+- [x] 4. Core library: Audit logging (lib/audit.ts)
+  - [x] 4.1 Implement audit logging functions
+    - Write logAudit(entry) function to create AuditLog records in database
+    - Write getAuditLogs(filters, pagination) function to query audit logs with filtering
+    - Export AuditAction type and AuditLogEntry interface
+    - _Requirements: 9.1, 9.2, 9.3, 9.4, 9.5, 9.6, 9.7_
+  
+  - [x] 4.2 Write unit tests for audit logging
+    - Test audit log creation with all required fields
+    - Test audit log querying with filters (userId, resource, action, date range)
+    - Test pagination functionality
+    - _Requirements: 9.1, 9.2, 9.3, 9.4, 9.5_
+
+- [x] 5. Core library: Permission checking (lib/permissions.ts)
+  - [x] 5.1 Define permission types and constants
+    - Export Resource, Action, Permission, and RoleName types
+    - Define ROLE_PERMISSIONS constant with permission matrix (6 roles × permissions)
+    - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 5.3_
+  
+  - [x] 5.2 Implement hasPermission function
+    - Write hasPermission(userId, permission) to check if user has specific permission
+    - Check Redis cache first, fall back to database query if cache miss
+    - Query user roles from UserRole table, check if any role grants the permission
+    - Cache result in Redis with 5-minute TTL
+    - _Requirements: 5.1, 5.2, 5.3, 5.4, 5.7, 5.8_
+  
+  - [x] 5.3 Implement getUserPermissions function
+    - Write getUserPermissions(userId) to return all permissions for a user
+    - Fetch all user roles, compute union of all permissions from all roles
+    - Cache result in Redis
+    - _Requirements: 4.9, 5.5, 5.6_
+  
+  - [x] 5.4 Implement cache invalidation function
+    - Write invalidatePermissionCache(userId) to clear cached permissions
+    - Call Redis invalidateCache function
+    - _Requirements: 5.10_
+  
+  - [x] 5.5 Implement route access checking function
+    - Write checkRouteAccess(userId, route) to verify user can access specific route
+    - Map routes to required permissions (e.g., /admin/users requires users:read)
+    - Return boolean indicating access allowed
+    - _Requirements: 6.2, 6.3_
+
+  - [x] 5.6 Write property test for permission matrix correctness
+    - **Property 21: Permission Matrix Correctness**
+    - **Validates: Requirements 5.3, 5.4, 13.1, 13.2, 13.3**
+  
+  - [x] 5.7 Write property test for multiple role permission union
+    - **Property 22: Multiple Role Permission Union**
+    - **Validates: Requirements 4.9, 13.4**
+  
+  - [x] 5.8 Write property test for no role permission denial
+    - **Property 23: No Role Permission Denial**
+    - **Validates: Requirements 13.5**
+  
+  - [x] 5.9 Write property test for permission check idempotence
+    - **Property 27: Permission Check Idempotence**
+    - **Validates: Requirements 13.6**
+
+- [x] 6. Core library: Enhanced auth utilities (lib/auth.ts)
+  - [x] 6.1 Implement authentication helper functions
+    - Write getCurrentUser() to get current user from Clerk session and database
+    - Write hasRole(role) to check if current user has specific role
+    - Write hasAnyRole(roles) to check if current user has any of the specified roles
+    - Write isAdmin() to check if current user has SUPER_ADMIN or ADMIN role
+    - Write getUserRoles() to get all roles for current user
+    - _Requirements: 1.3, 6.2_
+  
+  - [x] 6.2 Implement authorization helper functions
+    - Write requireAdmin() to throw error if current user is not admin
+    - Write requirePermission(permission) to throw error if current user lacks permission
+    - Write hasPermissions(permissions) to check if current user has all specified permissions
+    - _Requirements: 6.2, 6.3_
+  
+  - [x] 6.3 Write unit tests for auth utilities
+    - Test getCurrentUser returns user with roles
+    - Test hasRole correctly identifies user roles
+    - Test requireAdmin throws for non-admin users
+    - Test requirePermission throws for insufficient permissions
+    - _Requirements: 6.2, 6.3_
+
+- [x] 7. API route: Clerk webhook handler (app/api/webhooks/clerk/route.ts)
+  - [x] 7.1 Implement webhook signature verification
+    - Import Webhook from svix and WebhookEvent from @clerk/nextjs/server
+    - Extract svix headers (svix-id, svix-timestamp, svix-signature) from request
+    - Verify webhook signature using Svix with CLERK_WEBHOOK_SECRET
+    - Return HTTP 401 if signature invalid, log security violation to audit log
+    - _Requirements: 3.1, 3.2, 8.1, 8.2_
+  
+  - [x] 7.2 Implement user.created event handler
+    - Parse user.created webhook event
+    - Create User record in database with clerkId, email, name, avatarUrl
+    - Assign DEVELOPER role to new user via UserRole table
+    - Log audit entry with action "user.created"
+    - _Requirements: 3.3, 3.4, 3.6, 4.8, 8.10_
+
+  - [x] 7.3 Implement welcome email sending
+    - Send welcome email via Resend after user creation
+    - Use React Email template with user's name, welcome message, and dashboard link
+    - Send asynchronously to avoid blocking webhook response
+    - Log email attempt to EmailLog table with status SENT or FAILED
+    - If email fails, log error to Sentry but still return HTTP 200
+    - _Requirements: 3.5, 11.1, 11.2, 11.4, 11.5, 11.7_
+  
+  - [x] 7.4 Implement user.updated event handler
+    - Parse user.updated webhook event
+    - Update User record with new email, name, and avatarUrl
+    - Log audit entry with action "user.updated"
+    - _Requirements: 3.7_
+  
+  - [x] 7.5 Implement user.deleted event handler
+    - Parse user.deleted webhook event
+    - Set isActive to false (soft delete) instead of removing record
+    - Log audit entry with action "user.deleted"
+    - _Requirements: 3.8, 3.9_
+  
+  - [x] 7.6 Implement error handling and response codes
+    - Return HTTP 200 for successfully processed events
+    - Return HTTP 400 for malformed payloads with error details
+    - Return HTTP 500 for database errors to trigger Clerk retry
+    - Log all errors to Sentry with full context
+    - _Requirements: 3.10, 3.11, 18.2, 18.5_
+  
+  - [x] 7.7 Implement webhook idempotency
+    - Use Clerk event ID for deduplication checks
+    - Check if event already processed before creating/updating records
+    - Return HTTP 200 for duplicate events without performing duplicate operations
+    - _Requirements: 14.1, 14.2, 14.3, 14.4, 14.6_
+  
+  - [x] 7.8 Write property test for webhook idempotency
+    - **Property 48: Webhook Idempotency - User Creation**
+    - **Property 49: Webhook Idempotency - User Update**
+    - **Property 50: Webhook Idempotency - User Deletion**
+    - **Property 51: Webhook Idempotency General**
+    - **Validates: Requirements 14.1, 14.2, 14.3, 14.4**
+  
+  - [x] 7.9 Write unit tests for webhook handler
+    - Test signature verification rejects invalid signatures
+    - Test user.created creates User record and assigns DEVELOPER role
+    - Test user.updated updates User record
+    - Test user.deleted sets isActive to false
+    - Test error handling returns appropriate HTTP codes
+    - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.7, 3.8_
+
+- [x] 8. Checkpoint - Verify webhook integration
+  - Ensure all tests pass, ask the user if questions arise.
+
+- [x] 9. API route: Permission checking endpoint (app/api/auth/permissions/route.ts)
+  - [x] 9.1 Implement GET /api/auth/permissions
+    - Get current user from Clerk session using auth()
+    - Call getUserPermissions(userId) to fetch all permissions
+    - Return permissions array as JSON
+    - Return HTTP 401 if user not authenticated
+    - _Requirements: 5.5, 5.6_
+  
+  - [x] 9.2 Implement POST /api/auth/permissions/check
+    - Get current user from Clerk session
+    - Parse requested permission from request body
+    - Call hasPermission(userId, permission) to check permission
+    - Return boolean result as JSON
+    - _Requirements: 5.1, 5.2_
+  
+  - [x] 9.3 Write unit tests for permission API
+    - Test GET returns all user permissions
+    - Test POST correctly checks specific permission
+    - Test both endpoints return 401 for unauthenticated requests
+    - _Requirements: 5.1, 5.5_
+
+- [x] 10. React Email: Welcome email template (components/emails/welcome.tsx)
+  - [x] 10.1 Create welcome email React component
+    - Create React Email template with user's name, welcome message, and dashboard link
+    - Support both English and French versions based on locale parameter
+    - Include unsubscribe link as required by email regulations
+    - Use GateCtr branding and styling
+    - _Requirements: 11.1, 11.2, 11.6, 11.8_
+  
+  - [x] 10.2 Write unit tests for email template
+    - Test email renders correctly with user data
+    - Test English and French versions render correctly
+    - Test unsubscribe link is included
+    - _Requirements: 11.1, 11.2, 11.8_
+
+- [x] 11. React hooks: Permission checking hooks (hooks/use-permissions.ts)
+  - [x] 11.1 Implement usePermissions hook
+    - Use TanStack Query to fetch permissions from /api/auth/permissions
+    - Cache results with 5-minute staleTime
+    - Return permissions array
+    - _Requirements: 5.5, 5.6_
+  
+  - [x] 11.2 Implement useHasPermission hook
+    - Call usePermissions to get all permissions
+    - Check if specific permission is in the array
+    - Return boolean
+    - _Requirements: 5.1, 5.2_
+  
+  - [x] 11.3 Implement useHasAnyPermission hook
+    - Call usePermissions to get all permissions
+    - Check if any of the required permissions are in the array
+    - Return boolean
+    - _Requirements: 5.1, 5.2_
+
+- [x] 12. React hooks: Role checking hooks (hooks/use-roles.ts)
+  - [x] 12.1 Implement useRoles hook
+    - Use useUser from @clerk/nextjs to get current user
+    - Fetch user roles from database via API endpoint
+    - Return roles array
+    - _Requirements: 4.1, 6.2_
+  
+  - [x] 12.2 Implement useHasRole hook
+    - Call useRoles to get all roles
+    - Check if specific role is in the array
+    - Return boolean
+    - _Requirements: 6.2_
+  
+  - [x] 12.3 Implement useIsAdmin hook
+    - Call useRoles to get all roles
+    - Check if user has SUPER_ADMIN or ADMIN role
+    - Return boolean
+    - _Requirements: 6.2_
+
+- [x] 13. React components: Permission gate (components/auth/permission-gate.tsx)
+  - [x] 13.1 Create PermissionGate component
+    - Accept permission, fallback, and children props
+    - Use useHasPermission hook to check if user has permission
+    - Render children if user has permission, fallback otherwise
+    - _Requirements: 5.1, 5.2_
+  
+  - [x] 13.2 Write unit tests for PermissionGate
+    - Test component renders children when user has permission
+    - Test component renders fallback when user lacks permission
+    - Test component handles loading state
+    - _Requirements: 5.1, 5.2_
+
+- [x] 14. React components: Role gate (components/auth/role-gate.tsx)
+  - [x] 14.1 Create RoleGate component
+    - Accept roles, requireAll, fallback, and children props
+    - Use useRoles hook to check if user has required role(s)
+    - Support requireAll flag to check if user has all roles vs any role
+    - Render children if authorized, fallback otherwise
+    - _Requirements: 6.2_
+  
+  - [x] 14.2 Write unit tests for RoleGate
+    - Test component renders children when user has required role
+    - Test component renders fallback when user lacks role
+    - Test requireAll flag works correctly
+    - _Requirements: 6.2_
+
+- [x] 15. React components: Admin sidebar (components/admin/sidebar.tsx)
+  - [x] 15.1 Create admin sidebar component
+    - Define menu items with labels, hrefs, and required permissions
+    - Use usePermissions hook to get user permissions
+    - Filter menu items based on user permissions
+    - Render navigation links for accessible items only
+    - Support internationalization with useTranslations hook
+    - _Requirements: 6.4, 6.5, 6.6, 6.7_
+
+  - [x] 15.2 Write unit tests for admin sidebar
+    - Test menu items are filtered based on user permissions
+    - Test SUPER_ADMIN sees all menu items
+    - Test MANAGER sees only allowed menu items
+    - Test SUPPORT sees only Users and Audit Logs
+    - _Requirements: 6.5, 6.6, 6.7_
+
+- [x] 16. React components: Admin layout (components/admin/layout.tsx)
+  - [x] 16.1 Create admin layout component
+    - Call requireAdmin() for server-side role verification
+    - Render AdminSidebar and main content area
+    - Handle access denied errors with redirect to dashboard
+    - _Requirements: 6.2, 6.3, 6.8_
+  
+  - [x] 16.2 Write unit tests for admin layout
+    - Test layout renders for admin users
+    - Test layout redirects non-admin users
+    - _Requirements: 6.2, 6.3_
+
+- [x] 17. Internationalization: Auth translation files
+  - [x] 17.1 Create English auth translations (messages/en/auth.json)
+    - Add translations for sign-in page (title, subtitle, form labels, buttons)
+    - Add translations for sign-up page
+    - Add translations for error messages (unauthorized, access denied, session expired)
+    - Add translations for success messages
+    - _Requirements: 1.8, 7.1, 7.2, 7.8_
+  
+  - [x] 17.2 Create French auth translations (messages/fr/auth.json)
+    - Translate all English auth strings to French
+    - Ensure consistency with existing French translations
+    - _Requirements: 1.8, 7.1, 7.2, 7.8_
+  
+  - [x] 17.3 Update admin translations (messages/en/admin.json, messages/fr/admin.json)
+    - Add translations for admin sidebar menu items
+    - Add translations for permission error messages
+    - Add translations for role names and descriptions
+    - _Requirements: 6.4, 6.9, 7.3, 7.5_
+  
+  - [x] 17.4 Update i18n/request.ts to import auth translations
+    - Add auth.json import to messages object
+    - Ensure auth translations are loaded for all locales
+    - _Requirements: 7.4, 7.6_
+
+- [x] 18. Clerk integration: Root layout ClerkProvider (app/layout.tsx)
+  - [x] 18.1 Wrap application with ClerkProvider
+    - Import ClerkProvider from @clerk/nextjs
+    - Configure with NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
+    - Ensure ClerkProvider wraps all child components
+    - Verify Clerk hooks are available throughout app
+    - _Requirements: 12.1, 12.2, 12.3, 12.4_
+  
+  - [x] 18.2 Write unit tests for ClerkProvider integration
+    - Test ClerkProvider is configured correctly
+    - Test Clerk hooks are available to child components
+    - _Requirements: 12.1, 12.4_
+
+- [x] 19. Clerk integration: Authentication pages
+  - [x] 19.1 Create sign-in page (app/[locale]/(auth)/sign-in/[[...sign-in]]/page.tsx)
+    - Import SignIn component from @clerk/nextjs
+    - Configure redirect URLs for post-sign-in
+    - Add LanguageSwitcher component
+    - Use translations from auth.json
+    - _Requirements: 1.1, 1.4, 1.8_
+  
+  - [x] 19.2 Create sign-up page (app/[locale]/(auth)/sign-up/[[...sign-up]]/page.tsx)
+    - Import SignUp component from @clerk/nextjs
+    - Configure redirect URLs for post-sign-up
+    - Add LanguageSwitcher component
+    - Use translations from auth.json
+    - _Requirements: 1.2, 1.4, 1.8_
+  
+  - [x] 19.3 Write E2E tests for authentication pages
+    - Test sign-in page exists at /sign-in and /fr/sign-in
+    - Test sign-up page exists at /sign-up and /fr/sign-up
+    - Test successful sign-in redirects to dashboard
+    - Test locale is preserved during authentication
+    - _Requirements: 1.1, 1.2, 1.4, 2.4_
+
+- [x] 20. Middleware enhancement: RBAC integration (proxy.ts)
+  - [x] 20.1 Add admin route protection
+    - Import checkRouteAccess from lib/permissions
+    - Create isAdminRoute matcher for /admin/* and /fr/admin/*
+    - For admin routes, verify user has admin role using checkRouteAccess
+    - Redirect unauthorized users to dashboard with error message
+    - _Requirements: 6.1, 6.2, 6.3_
+  
+  - [x] 20.2 Add audit logging for access denials
+    - Import logAudit from lib/audit
+    - Log all permission denials with user ID, resource, and timestamp
+    - Include IP address and user agent in audit log
+    - _Requirements: 8.7, 9.3_
+  
+  - [x] 20.3 Add redirect URL sanitization
+    - Validate redirect_url parameter against whitelist
+    - Reject external domain redirects (security property)
+    - URL-encode redirect parameters
+    - Log suspicious redirect attempts
+    - _Requirements: 8.6, 17.5, 17.6_
+  
+  - [x] 20.4 Add locale preservation logic
+    - Extract locale from pathname
+    - Preserve locale in all authentication redirects
+    - Ensure redirect URLs include locale prefix when needed
+    - _Requirements: 2.4, 2.7, 17.4_
+  
+  - [x] 20.5 Add error handling and monitoring
+    - Handle Clerk service unavailable errors gracefully
+    - Display user-friendly error messages in appropriate locale
+    - Log all errors to Sentry with context
+    - _Requirements: 18.1, 18.8_
+
+  - [x] 20.6 Write property test for redirect preservation
+    - **Property 6: Unauthenticated Protected Route Redirect**
+    - **Property 56: Redirect URL Completion**
+    - **Property 57: Query Parameter Preservation**
+    - **Validates: Requirements 2.1, 17.1, 17.2, 17.3**
+  
+  - [x] 20.7 Write property test for locale preservation
+    - **Property 8: Locale Preservation Through Authentication**
+    - **Property 32: Locale Switch Session Persistence**
+    - **Validates: Requirements 2.4, 2.7, 7.7, 15.5, 17.4**
+  
+  - [x] 20.8 Write unit tests for middleware
+    - Test unauthenticated users are redirected to sign-in
+    - Test authenticated users can access protected routes
+    - Test admin routes require admin role
+    - Test public routes allow unauthenticated access
+    - Test API routes return 401 for unauthenticated requests
+    - _Requirements: 2.1, 2.2, 2.3, 2.5, 6.2_
+
+- [x] 21. Checkpoint - Verify middleware and authentication flow
+  - Ensure all tests pass, ask the user if questions arise.
+
+- [x] 22. Admin pages: User management (app/[locale]/(admin)/admin/users/page.tsx)
+  - [x] 22.1 Create user management page
+    - Use requireAdmin() for server-side access control
+    - Fetch users from database with roles
+    - Display users in table with role badges
+    - Add role assignment/revocation functionality
+    - Use translations from admin.json
+    - _Requirements: 6.1, 6.2, 6.5_
+  
+  - [x] 22.2 Write unit tests for user management page
+    - Test page requires admin role
+    - Test users are displayed correctly
+    - Test role assignment creates UserRole record
+    - _Requirements: 6.2, 6.5_
+
+- [x] 23. Admin pages: Audit logs (app/[locale]/(admin)/admin/audit-logs/page.tsx)
+  - [x] 23.1 Create audit logs page
+    - Use requirePermission('audit:read') for access control
+    - Fetch audit logs using getAuditLogs with filters and pagination
+    - Display logs in table with filtering by user, resource, action, date
+    - Use translations from admin.json
+    - _Requirements: 9.8, 6.7_
+  
+  - [x] 23.2 Write unit tests for audit logs page
+    - Test page requires audit:read permission
+    - Test logs are displayed correctly
+    - Test filtering works correctly
+    - _Requirements: 9.8_
+
+- [x] 24. Property-based testing: Core properties
+  - [x] 24.1 Write property test for session persistence
+    - **Property 3: Session Persistence Round-Trip**
+    - **Property 53: Session Refresh Persistence**
+    - **Validates: Requirements 1.6, 15.1, 15.2, 15.3**
+
+  - [x] 24.2 Write property test for sign-out session termination
+    - **Property 4: Sign-Out Session Termination**
+    - **Validates: Requirements 1.7, 15.4**
+  
+  - [x] 24.3 Write property test for cache invalidation
+    - **Property 26: Permission Cache Invalidation on Role Change**
+    - **Property 54: Cache Invalidation Freshness**
+    - **Property 55: Cache Miss Database Fetch**
+    - **Validates: Requirements 5.10, 16.1, 16.2, 16.4, 16.5**
+  
+  - [x] 24.4 Write property test for role modification inverse
+    - **Property 28: Role Modification Inverse Property**
+    - **Validates: Requirements 13.7**
+  
+  - [x] 24.5 Write property test for admin area access control
+    - **Property 29: Admin Area Access Control**
+    - **Property 30: Admin Area Unauthorized Redirect**
+    - **Validates: Requirements 6.2, 6.3, 8.4**
+  
+  - [x] 24.6 Write property test for audit logging completeness
+    - **Property 15: User Creation Audit Logging**
+    - **Property 18: User Deletion Audit Logging**
+    - **Property 35: Access Denial Audit Logging**
+    - **Property 36: Role Grant Audit Logging**
+    - **Property 37: Role Revoke Audit Logging**
+    - **Validates: Requirements 3.6, 3.9, 8.7, 9.1, 9.2, 9.3, 9.4, 9.5**
+
+- [x] 25. Performance testing and optimization
+  - [x] 25.1 Write property test for permission check performance
+    - **Property 24: Permission Cache Hit Performance**
+    - **Property 40: Permission Check Database Performance**
+    - **Validates: Requirements 5.7, 5.8, 10.1, 10.2**
+  
+  - [x] 25.2 Write property test for middleware performance
+    - **Property 41: Middleware Authentication Performance**
+    - **Validates: Requirements 10.4**
+  
+  - [x] 25.3 Write property test for webhook processing performance
+    - **Property 42: Webhook Processing Performance**
+    - **Validates: Requirements 10.5**
+  
+  - [x] 25.4 Optimize database queries
+    - Add indexes on frequently queried fields (userId, clerkId, roleId)
+    - Implement batch permission queries for multiple permissions
+    - Use database connection pooling
+    - _Requirements: 10.2, 10.6_
+  
+  - [x] 25.5 Optimize Redis caching
+    - Implement Redis pipelining for bulk cache operations
+    - Cache role-permission mappings in memory (rarely changes)
+    - Implement request-level caching for repeated permission checks
+    - _Requirements: 10.7_
+
+- [x] 26. Error handling and resilience
+  - [x] 26.1 Implement comprehensive error handling
+    - Add try-catch blocks to all async functions
+    - Log all errors to Sentry with appropriate context
+    - Return user-friendly error messages in appropriate locale
+    - Implement fail-secure behavior (deny access on errors)
+    - _Requirements: 18.1, 18.2, 18.7, 18.8_
+
+  - [x] 26.2 Implement Redis fallback logic
+    - Add error handling for Redis connection failures
+    - Fall back to direct database queries when Redis unavailable
+    - Log Redis errors to Sentry
+    - Continue serving requests without caching
+    - _Requirements: 10.8, 18.3_
+  
+  - [x] 26.3 Implement race condition handling
+    - Use database transactions for role modifications
+    - Implement optimistic locking where appropriate
+    - Handle concurrent role modifications gracefully
+    - _Requirements: 18.6_
+  
+  - [x] 26.4 Write property test for error handling
+    - **Property 62: Permission Check Fail-Secure**
+    - **Validates: Requirements 18.7**
+
+- [x] 27. Integration testing
+  - [x] 27.1 Write integration test for complete authentication flow
+    - Test user signs up → webhook creates user → role assigned → welcome email sent
+    - Test user signs in → session created → can access protected routes
+    - Test user signs out → session terminated → redirected to home
+    - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.7, 3.3, 3.4, 3.5_
+  
+  - [x] 27.2 Write integration test for permission checking flow
+    - Test user with role → permissions cached → permission check succeeds
+    - Test role granted → cache invalidated → new permissions available
+    - Test role revoked → cache invalidated → permissions removed
+    - _Requirements: 5.1, 5.2, 5.10, 16.1, 16.2_
+  
+  - [x] 27.3 Write integration test for admin area access
+    - Test admin user can access all admin pages
+    - Test manager user can access limited admin pages
+    - Test developer user cannot access admin pages
+    - Test sidebar shows correct menu items based on permissions
+    - _Requirements: 6.2, 6.3, 6.4, 6.5, 6.6, 6.7_
+  
+  - [x] 27.4 Write integration test for webhook synchronization
+    - Test user.created webhook creates user and assigns role
+    - Test user.updated webhook updates user data
+    - Test user.deleted webhook soft deletes user
+    - Test duplicate webhooks are handled idempotently
+    - _Requirements: 3.3, 3.4, 3.7, 3.8, 14.1, 14.2, 14.3_
+
+- [x] 28. End-to-end testing
+  - [x] 28.1 Write E2E test for sign-in and dashboard access
+    - Test user signs in at /sign-in
+    - Test user is redirected to /dashboard
+    - Test user can navigate to protected pages
+    - Test user can sign out
+    - _Requirements: 1.1, 1.4, 1.7, 2.3_
+  
+  - [x] 28.2 Write E2E test for admin area access
+    - Test admin user can access /admin/users
+    - Test non-admin user is redirected from /admin/users
+    - Test admin sidebar shows correct menu items
+    - _Requirements: 6.1, 6.2, 6.3, 6.4_
+
+  - [x] 28.3 Write E2E test for locale switching
+    - Test user switches from English to French
+    - Test authentication pages display in French
+    - Test session is preserved during locale switch
+    - Test user is redirected to French version of current page
+    - _Requirements: 1.8, 7.7, 15.5, 17.4_
+  
+  - [x] 28.4 Write E2E test for permission-based UI
+    - Test PermissionGate shows/hides content based on permissions
+    - Test RoleGate shows/hides content based on roles
+    - Test admin sidebar filters menu items by permissions
+    - _Requirements: 5.1, 5.2, 6.2, 6.4_
+
+- [x] 29. Documentation and configuration
+  - [x] 29.1 Update environment variables documentation
+    - Document all required environment variables in README.md
+    - Add CLERK_WEBHOOK_SECRET, UPSTASH_REDIS_REST_URL, UPSTASH_REDIS_REST_TOKEN
+    - Update .env.example with new variables
+    - _Requirements: 8.1, 8.9_
+  
+  - [x] 29.2 Create Clerk webhook configuration guide
+    - Document how to configure Clerk webhook in Clerk Dashboard
+    - Document webhook endpoint URL and events to subscribe to
+    - Document how to test webhook locally with Clerk CLI
+    - _Requirements: 3.1, 8.1_
+  
+  - [x] 29.3 Create RBAC usage guide
+    - Document how to check permissions in server components
+    - Document how to check permissions in client components
+    - Document how to use PermissionGate and RoleGate components
+    - Document permission matrix and role descriptions
+    - _Requirements: 4.1, 5.1, 6.2_
+  
+  - [x] 29.4 Update database seeding instructions
+    - Document how to run database seed script
+    - Document how to verify roles and permissions are created
+    - Document how to manually assign roles to users
+    - _Requirements: 4.1, 4.2_
+
+- [x] 30. Final checkpoint - Comprehensive testing and verification
+  - Ensure all tests pass, ask the user if questions arise.
+
+## Notes
+
+- Tasks marked with `*` are optional testing tasks and can be skipped for faster MVP
+- Each task references specific requirements for traceability
+- Checkpoints ensure incremental validation at key milestones
+- Property tests validate universal correctness properties (63 properties total)
+- Unit tests validate specific examples and edge cases
+- Integration tests validate end-to-end flows
+- E2E tests validate user journeys in browser environment
+- All code uses TypeScript with strict mode enabled
+- All user-facing text must be internationalized (English and French)
+- All errors must be logged to Sentry with appropriate context
+- All security events must be logged to audit log

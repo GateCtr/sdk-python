@@ -1,0 +1,214 @@
+{
+  "metadata": {
+    "title": "One gateway. Every LLM.",
+    "description": "Cut LLM costs by 40%. One endpoint swap. Full control over tokens, budgets, and routing. No code changes.",
+    "ogTitle": "GateCtr — One gateway. Every LLM.",
+    "ogDescription": "Cut LLM costs by 40%. Without changing a line of code."
+  },
+  "hero": {
+    "badge": "LLM Middleware · Zero code changes",
+    "headline": "Cut LLM costs by 40%.",
+    "headlineSub": "Without changing a line of code.",
+    "description": "Swap your endpoint. GateCtr optimizes, routes, and enforces budgets — transparently.",
+    "ctaPrimary": "Start free",
+    "ctaSecondary": "See how it works",
+    "trust": "Your API key stays yours. Always.",
+    "statsTokens": "{tokenReduction} tokens",
+    "statsSetup": "{setupTime} setup",
+    "statsLatency": "{latency} latency",
+    "codeTabBefore": "Before",
+    "codeTabAfter": "After GateCtr",
+    "codeCommentBefore": "// Before",
+    "codeCommentAfter": "// After — only change",
+    "codeCallout": "{tokenReduction} token reduction · active"
+  },
+  "logos": {
+    "label": "Works with every major LLM provider"
+  },
+  "problem": {
+    "label": "The problem",
+    "headline": "LLM costs are unpredictable. Until now.",
+    "description": "Every API call is a black box. No visibility, no control, no alerts. Until the invoice arrives.",
+    "items": [
+      {
+        "stat": "$0 → $4,200",
+        "label": "Unexpected monthly invoice",
+        "description": "One agent loop. No cap. Full bill."
+      },
+      {
+        "stat": "60%",
+        "label": "Tokens wasted on bloated prompts",
+        "description": "Context you don't need. Tokens you still pay for."
+      },
+      {
+        "stat": "0",
+        "label": "Visibility on what's happening",
+        "description": "No dashboard. No alerts. No audit trail."
+      }
+    ]
+  },
+  "features": {
+    "label": "Core features",
+    "headline": "Everything you need. Nothing you don't.",
+    "description": "Six features. One endpoint swap. Full control.",
+    "items": [
+      {
+        "title": "Budget Firewall",
+        "description": "Hard caps. Soft alerts. No surprise invoices.",
+        "metric": "Free plan",
+        "detail": "Set token limits per project or user. Get Slack alerts before you hit the cap."
+      },
+      {
+        "title": "Context Optimizer",
+        "description": "Compresses your prompts. {tokenReduction} tokens. Same output.",
+        "metric": "Pro plan",
+        "detail": "Automatic prompt compression. No prompt engineering required."
+      },
+      {
+        "title": "Model Router",
+        "description": "Picks the right LLM for each request automatically.",
+        "metric": "Pro plan",
+        "detail": "GPT-3.5 for simple tasks. GPT-4o for complex ones. You pay the right price."
+      },
+      {
+        "title": "Usage Dashboard",
+        "description": "Every token. Every cost. Real-time.",
+        "metric": "Free plan",
+        "detail": "Token usage, costs, and trends. Per project, per user, per model."
+      },
+      {
+        "title": "Webhooks Engine",
+        "description": "Push events to Slack, Teams, or any URL.",
+        "metric": "Pro plan",
+        "detail": "Budget alerts, usage reports, anomaly detection — wherever your team lives."
+      },
+      {
+        "title": "RBAC & Audit Logs",
+        "description": "Owner, Admin, Member, Viewer. {auditDays} days history.",
+        "metric": "Team plan",
+        "detail": "Role-based access for teams. Full audit trail. Compliance-ready."
+      }
+    ]
+  },
+  "howItWorks": {
+    "label": "How it works",
+    "headline": "One swap. Full control.",
+    "description": "No SDK lock-in. No architecture changes. Just swap the endpoint.",
+    "steps": [
+      {
+        "step": "01",
+        "title": "Swap your endpoint",
+        "description": "Replace your LLM provider URL with GateCtr. Keep your existing API keys."
+      },
+      {
+        "step": "02",
+        "title": "GateCtr takes control",
+        "description": "Every request is optimized, routed, and measured automatically."
+      },
+      {
+        "step": "03",
+        "title": "You save. You see everything.",
+        "description": "Real-time dashboard. Budget alerts. {tokenReduction} token cost from day one."
+      }
+    ]
+  },
+  "codePreview": {
+    "label": "Integration",
+    "headline": "Up and running in 5 min.",
+    "description": "Node.js, Python, cURL, or drop-in with your existing OpenAI client. Zero architecture changes.",
+    "ctaCode": "npm install {sdkNpm}",
+    "ctaDocs": "View docs",
+    "calloutNode": "{sdkNpm} · optimize + route enabled by default",
+    "calloutPython": "pip install {sdkPip} · same API, same output",
+    "calloutCurl": "No SDK required · any HTTP client works",
+    "calloutDropin": "One line change · your existing code stays intact",
+    "calloutAdvanced": "budget + optimizer + router — Pro plan features"
+  },
+  "metrics": {
+    "label": "By the numbers",
+    "headline": "Measured. Guaranteed.",
+    "items": [
+      { "value": "{tokenReduction}", "label": "Token reduction", "description": "Average across all customers" },
+      { "value": "{latency}", "label": "Added latency", "description": "Transparent middleware" },
+      { "value": "{setupTime}", "label": "Setup time", "description": "Endpoint swap, no code changes" },
+      { "value": "{providers} LLMs", "label": "Providers supported", "description": "OpenAI, Anthropic, Mistral, Gemini" }
+    ]
+  },
+  "pricing": {
+    "label": "Pricing",
+    "headline": "Pay for control. Not for tokens.",
+    "description": "You pay your LLM provider directly. GateCtr charges for the value on top — optimization, routing, analytics.",
+    "ctaFree": "Start free",
+    "ctaPro": "Start free — upgrade anytime",
+    "ctaTeam": "Start free — upgrade anytime",
+    "ctaEnterprise": "Book a demo",
+    "popular": "Most popular",
+    "custom": "Custom",
+    "perMonth": "/mo",
+    "plans": [
+      {
+        "name": "Free",
+        "price": "{price}",
+        "description": "For solo devs getting started.",
+        "features": [
+          "Up to {tokenLimit} tokens/month",
+          "{projects} project",
+          "Budget Firewall",
+          "Basic analytics",
+          "{webhooks} webhook",
+          "REST API + SDK",
+          "Community support"
+        ]
+      },
+      {
+        "name": "Pro",
+        "price": "{price}",
+        "description": "For devs shipping LLM features in production.",
+        "features": [
+          "Up to {tokenLimit} tokens/month",
+          "{projects} projects",
+          "Context Optimizer — {tokenReduction} tokens",
+          "Basic Model Router",
+          "Advanced analytics",
+          "Unlimited webhooks",
+          "Email support"
+        ]
+      },
+      {
+        "name": "Team",
+        "price": "{price}",
+        "description": "For teams that need visibility and governance.",
+        "features": [
+          "Up to {tokenLimit} tokens/month",
+          "Unlimited projects",
+          "Team roles — Owner, Admin, Member, Viewer",
+          "Team dashboard",
+          "Audit logs — {auditDays} days",
+          "Advanced Model Router",
+          "Priority support"
+        ]
+      },
+      {
+        "name": "Enterprise",
+        "price": "{price}",
+        "description": "For organizations with compliance and scale requirements.",
+        "features": [
+          "Unlimited tokens",
+          "{sla} SLA guaranteed",
+          "Dedicated / on-prem deploy",
+          "SSO / SAML",
+          "Unlimited audit logs",
+          "ERP/BI integrations",
+          "Customer success manager"
+        ]
+      }
+    ]
+  },
+  "finalCta": {
+    "headline": "Start saving on LLM costs today.",
+    "description": "Free plan. No credit card. Setup in {setupTime}.",
+    "ctaPrimary": "Start free",
+    "ctaSecondary": "Book a demo",
+    "trust": "No credit card required · Cancel anytime"
+  }
+}

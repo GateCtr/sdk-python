@@ -409,3 +409,99 @@ Propriétaire - Tous droits réservés
 ## Support
 
 Pour toute question ou problème, consultez la documentation dans `/docs` ou contactez l'équipe de développement.
+
+## Authentication & RBAC
+
+GateCtr uses [Clerk](https://clerk.com) for authentication and a custom RBAC system for authorization.
+
+### Required Environment Variables
+
+```bash
+# Clerk Authentication
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY="pk_test_..."
+CLERK_SECRET_KEY="sk_test_..."
+CLERK_WEBHOOK_SECRET="whsec_..."          # From Clerk Dashboard → Webhooks
+NEXT_PUBLIC_CLERK_SIGN_IN_URL="/sign-in"
+NEXT_PUBLIC_CLERK_SIGN_UP_URL="/sign-up"
+NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL="/dashboard"
+
+# Upstash Redis (permission caching)
+UPSTASH_REDIS_REST_URL="https://your-redis.upstash.io"
+UPSTASH_REDIS_REST_TOKEN="your-token"
+```
+
+### Roles & Permissions
+
+| Role | Permissions |
+|------|-------------|
+| SUPER_ADMIN | All permissions |
+| ADMIN | users:read/write, analytics:read/export, billing:read/write, system:read, audit:read |
+| MANAGER | analytics:read, users:read, billing:read |
+| DEVELOPER | analytics:read |
+| VIEWER | analytics:read |
+| SUPPORT | users:read, audit:read |
+
+New users are assigned the **DEVELOPER** role by default.
+
+### Checking Permissions
+
+**Server components / API routes:**
+```typescript
+import { requirePermission, requireAdmin } from '@/lib/auth';
+
+// Throws if user lacks permission
+await requirePermission('users:read');
+
+// Throws if user is not SUPER_ADMIN or ADMIN
+await requireAdmin();
+```
+
+**Client components:**
+```typescript
+import { PermissionGate } from '@/components/auth/permission-gate';
+import { RoleGate } from '@/components/auth/role-gate';
+
+<PermissionGate permission="users:read">
+  <UserTable />
+</PermissionGate>
+
+<RoleGate roles={['SUPER_ADMIN', 'ADMIN']}>
+  <AdminPanel />
+</RoleGate>
+```
+
+**Hooks:**
+```typescript
+import { useHasPermission, useHasAnyPermission } from '@/hooks/use-permissions';
+import { useIsAdmin } from '@/hooks/use-roles';
+
+const canReadUsers = useHasPermission('users:read');
+const isAdmin = useIsAdmin();
+```
+
+### Clerk Webhook Setup
+
+1. Go to **Clerk Dashboard → Webhooks → Add Endpoint**
+2. Set URL to `https://your-domain.com/api/webhooks/clerk`
+3. Subscribe to events: `user.created`, `user.updated`, `user.deleted`
+4. Copy the **Signing Secret** → set as `CLERK_WEBHOOK_SECRET`
+
+For local development, use the [Clerk CLI](https://clerk.com/docs/testing/webhooks):
+```bash
+clerk webhooks proxy http://localhost:3000/api/webhooks/clerk
+```
+
+### Database Seeding
+
+After running migrations, seed roles and permissions:
+```bash
+pnpm prisma db seed
+```
+
+To verify:
+```bash
+pnpm prisma studio
+# Check the Role, Permission, and RolePermission tables
+```
+
+To manually assign a role to a user, see `docs/ASSIGN_ADMIN_ROLE.md`.
