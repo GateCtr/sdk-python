@@ -250,7 +250,7 @@ jobs:
       - name: Generate Prisma Client
         run: pnpm prisma generate
 
-      - name: Run migrations on Neon branch
+      - name: Run migrations and seed on Neon branch
         run: |
           if [ "${{ github.ref }}" = "refs/heads/main" ]; then
             DB_URL="${{ secrets.NEON_DATABASE_URL_MAIN }}"
@@ -262,3 +262,4 @@ jobs:
             exit 0
           fi
           DATABASE_URL="$DB_URL" pnpm prisma migrate deploy
+          DATABASE_URL="$DB_URL" pnpm prisma db seed
