@@ -1,161 +1,59 @@
-# Changelog - GateCtr
+# Changelog
 
-## [Phase 0] - 2026-03-15
+All notable changes to GateCtr are documented here.
+Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-### ✅ Implémentation complète de la Phase 0 - Waitlist
+---
 
-#### Base de données
+## [v0.1.0-onboarding] — 2026-03-20
 
-- ✅ Schéma Prisma complet avec 30+ tables
-- ✅ Migration initiale appliquée
-- ✅ Seed avec plans (FREE, PRO), rôles (6), permissions (47), et providers LLM (3)
-- ✅ Configuration Prisma 7 avec `prisma.config.ts`
+### Added
 
-#### Pages & Interface
+- 3-step onboarding flow: Workspace → LLM Provider → Budget
+- Step 1: workspace creation with `usageType` (solo / team / enterprise)
+- Step 2: LLM provider connection (OpenAI, Anthropic, Mistral, Gemini) with AES-encrypted key storage
+- Step 3: Budget Firewall setup — monthly token limit, alert threshold, hard stop toggle
+- Server actions: `createWorkspace()`, `connectProvider()`, `setupBudget()`
+- `lib/encryption.ts` — AES-256 encrypt/decrypt for LLM API keys
+- Onboarding settings page — edit workspace name and provider keys post-onboarding
+- Admin panel: onboarding status column + manual reset action on users page
+- Progress indicator (Step X of 3) with step labels
+- Skip option on provider step with warning copy
+- Translation files: `messages/en/onboarding.json`, `messages/fr/onboarding.json`
+- Full unit test coverage for all 3 steps and server actions
 
-- ✅ Page d'accueil avec redirection automatique vers waitlist
-- ✅ Page publique d'inscription `/waitlist`
-- ✅ Interface admin `/admin/waitlist` avec filtres et pagination
-- ✅ Design system complet avec palette GateCtr
-- ✅ Typographie configurée (Syne, Inter, JetBrains Mono)
+---
 
-#### API & Backend
+## [v0.1.0-billing] — 2026-03-20
 
-- ✅ API REST `/api/waitlist` (POST/GET)
-- ✅ Validation avec Zod
-- ✅ Détection des doublons
-- ✅ Position automatique dans la file
+### Added
 
-#### Infrastructure
+- Stripe Checkout integration — hosted payment page per plan (Pro, Team, Enterprise)
+- Stripe Customer Portal — self-serve subscription management and cancellation
+- Stripe webhook handler — handles `checkout.session.completed`, `customer.subscription.*`, `invoice.*`
+- Admin billing panel — list all subscriptions, filter by plan/status, view details
+- Admin subscription detail page — customer info, plan, status, Stripe links
+- Admin coupon management — create and list discount coupons via Stripe API
+- Admin refund action — issue full or partial refunds from the admin panel
+- Plan guard middleware — blocks access to features above the user's current plan
+- Seat overage detection — alerts when Team plan exceeds included seats
+- Upsell banners — contextual upgrade prompts triggered by plan limits
+- Transactional emails: subscription confirmation, payment failed, cancellation
+- `lib/stripe.ts` — lazy singleton client (no module-level instantiation)
+- Translation files: `messages/en/billing.json`, `messages/fr/billing.json`
 
-- ✅ Proxy Next.js 16 avec Clerk (`proxy.ts`)
-- ✅ Docker Compose (PostgreSQL 16, Redis 7)
-- ✅ Configuration multi-environnement (.env.example, .env.local.example)
+### Infrastructure
 
-#### Emails
+- CI/CD pipeline with GitHub Actions (lint, test, build, Docker, deploy)
+- Docker multi-stage build with standalone Next.js output
+- Husky pre-commit hooks with lint-staged
+- Dashboard sidebar redesign — active states, team switcher, user menu
+- Dashboard header — breadcrumb, token usage bar, upgrade CTA
 
-- ✅ Intégration Resend
-- ✅ Email de bienvenue avec position
-- ✅ Email d'invitation (template prêt)
-- ✅ Templates HTML responsive avec gradient
+---
 
-#### Design System
+## [163894f] — Initial commit
 
-- ✅ **Palette de couleurs** configurée dans Tailwind CSS 4
-  - Primary: Navy Blue (#1B4F82, #14406A)
-  - Secondary: Cyan (#00B4C8, #00D4E8)
-  - Grey: Neutral (#4A5568, #EDF2F7)
-- ✅ **Typographie** complète
-  - Display/Titres: Syne Bold (700-800)
-  - Corps de texte: Inter
-  - Interface/Code: JetBrains Mono
-  - Échelle typographique (xs à 6xl)
-  - Line heights et letter spacing
-- ✅ Support dark mode automatique
-- ✅ Composants stylisés avec la nouvelle palette
-- ✅ Documentation complète du design system
-
-#### Documentation
-
-- ✅ `README_PHASE_0.md` - Guide de démarrage
-- ✅ `docs/PHASE_0_WAITLIST.md` - Documentation technique
-- ✅ `docs/SETUP_CLERK.md` - Configuration Clerk
-- ✅ `docs/SETUP_RESEND.md` - Configuration Resend
-- ✅ `docs/DESIGN_SYSTEM.md` - Guide du design system (couleurs + typo)
-- ✅ `docs/DOCKER_SETUP.md` - Configuration Docker
-- ✅ `public/fonts/README.md` - Guide des polices
-- ✅ Steering rules (product.md, tech.md, structure.md)
-
-### Configuration requise
-
-```bash
-# Dépendances
-pnpm add zod resend @clerk/nextjs @prisma/adapter-pg pg @types/pg
-
-# Variables d'environnement minimales
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY="pk_test_..."
-CLERK_SECRET_KEY="sk_test_..."
-RESEND_API_KEY="re_..."
-DATABASE_URL="postgresql://gatectr:secret@localhost:5432/gatectr_dev"
-ENABLE_WAITLIST="true"
-ENABLE_SIGNUPS="false"
-```
-
-### Workflow Phase 0
-
-1. **Pré-lancement** : `ENABLE_WAITLIST=true` + `ENABLE_SIGNUPS=false`
-   - `/` → redirige vers `/waitlist`
-   - `/sign-up` → redirige vers `/waitlist`
-   - Collecte des inscriptions
-
-2. **Lancement** : `ENABLE_WAITLIST=false` + `ENABLE_SIGNUPS=true`
-   - `/` → landing page
-   - `/sign-up` → inscription Clerk
-   - Accès complet à l'application
-
-### Prochaines étapes
-
-#### À implémenter
-
-- [ ] Système d'invitation par batch
-- [ ] Protection RBAC de l'admin
-- [ ] Analytics waitlist
-- [ ] Système de parrainage
-
-#### Phase 1 - Onboarding
-
-- [ ] Configuration Clerk complète
-- [ ] Création du premier projet
-- [ ] Ajout des clés API LLM
-- [ ] Génération de la clé GateCtr
-
-### Fichiers créés
-
-```
-app/
-├── page.tsx (mise à jour avec palette)
-├── (marketing)/waitlist/page.tsx (nouvelle palette)
-├── (admin)/admin/waitlist/page.tsx (nouvelle palette)
-├── api/waitlist/route.ts
-└── globals.css (design system complet)
-
-lib/
-├── prisma.ts
-└── resend.ts
-
-prisma/
-├── schema.prisma
-├── prisma.config.ts
-├── seed.ts
-└── migrations/20260315114234_init_complete_schema/
-
-docs/
-├── PHASE_0_WAITLIST.md
-├── SETUP_CLERK.md
-├── SETUP_RESEND.md
-├── DESIGN_SYSTEM.md
-└── DOCKER_SETUP.md
-
-.kiro/steering/
-├── product.md
-├── tech.md
-└── structure.md
-
-proxy.ts
-.env.local.example
-README_PHASE_0.md
-CHANGELOG.md
-```
-
-### Notes techniques
-
-- Next.js 16 utilise `proxy.ts` au lieu de `middleware.ts`
-- Prisma 7 nécessite `prisma.config.ts` pour la configuration
-- Tailwind CSS 4 utilise la syntaxe `@theme inline` dans globals.css
-- Le design system respecte WCAG 2.1 niveau AA pour l'accessibilité
-
-### Statut
-
-✅ **Phase 0 - Waitlist : COMPLÈTE ET FONCTIONNELLE**
-
-Prêt pour le déploiement et la collecte d'inscriptions.
+- GateCtr Next.js project scaffold (Next.js 16, React 19, TypeScript 5, Tailwind 4)
+- Clerk authentication, Prisma + Neon PostgreSQL, Upstash Redis
+- next-intl i18n (EN/FR), Sentry error monitoring
