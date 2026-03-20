@@ -22,6 +22,8 @@ model User {
   isActive      Boolean   @default(true)
   isBanned      Boolean   @default(false)
   bannedReason  String?
+  lastLoginAt   DateTime?
+  authProvider  String?   // "email" | "google" | "github" | "microsoft" | "apple"
   metadata      Json?     @default("{}")
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
@@ -159,10 +161,10 @@ model PlanLimit {
   maxTokensPerMonth        Int?
   maxRequestsPerDay        Int?
   maxRequestsPerMinute     Int      @default(60)
-  maxProjects              Int      @default(1)
-  maxApiKeys               Int      @default(1)
-  maxWebhooks              Int      @default(0)
-  maxTeamMembers           Int      @default(1)
+  maxProjects              Int?
+  maxApiKeys               Int?
+  maxWebhooks              Int?
+  maxTeamMembers           Int?
   contextOptimizerEnabled  Boolean  @default(false)
   modelRouterEnabled       Boolean  @default(false)
   advancedAnalytics        Boolean  @default(false)
@@ -183,6 +185,8 @@ model Subscription {
   stripeCustomerId     String?      @unique
   stripeSubscriptionId String?      @unique
   stripePriceId        String?
+  stripeMeteredItemId  String?
+  stripeSeatsItemId    String?
   status               SubStatus    @default(INCOMPLETE)
   currentPeriodStart   DateTime?
   currentPeriodEnd     DateTime?
@@ -388,6 +392,7 @@ model DailyUsageCache {
   savedTokens   Int      @default(0)
   totalRequests Int      @default(0)
   totalCostUsd  Float    @default(0)
+  overageTokens Int      @default(0)
   lastUpdated   DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)

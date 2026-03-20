@@ -1,0 +1,131 @@
+{
+  "page": {
+    "title": "Facturation",
+    "subtitle": "Gérez votre plan, votre utilisation et vos factures.",
+    "plansTitle": "Plans",
+    "currentPlanTitle": "Plan actuel",
+    "renewsOn": "Renouvellement le {date}",
+    "expiresOn": "Expire le {date}",
+    "freePlanNote": "Aucun paiement requis.",
+    "upgradeNext": "Passer à {plan}"
+  },
+  "plan": {
+    "current": "Actuel",
+    "upgrade": "Passer à {plan}",
+    "manage": "Gérer la facturation",
+    "interval": {
+      "monthly": "Mensuel",
+      "annual": "Annuel",
+      "saveBadge": "Économisez 17%"
+    },
+    "trial": {
+      "active": "Essai actif — {days} jours restants",
+      "ends": "Se termine le {date}"
+    },
+    "cancelNotice": "Se termine le {date}. Accès maintenu jusqu'à cette date.",
+    "resumeSubscription": "Reprendre l'abonnement",
+    "pastDue": "Paiement échoué. Mettez à jour votre moyen de paiement.",
+    "updatePayment": "Mettre à jour le paiement"
+  },
+  "usage": {
+    "title": "Utilisation",
+    "tokensMonth": "Tokens ce mois",
+    "requestsDay": "Requêtes aujourd'hui",
+    "overage": "{tokens} tokens en dépassement · ~${cost} estimé",
+    "unlimited": "Illimité",
+    "defaultUnit": "unités",
+    "unitTokens": "tokens",
+    "unitRequests": "requêtes"
+  },
+  "seats": {
+    "title": "Sièges équipe",
+    "included": "inclus",
+    "additional": "{count} siège{count, plural, =1 {} other {s}} supplémentaire{count, plural, =1 {} other {s}} · ${cost}/mois"
+  },
+  "upsell": {
+    "tokensLabel": "tokens/mois",
+    "requestsLabel": "requêtes/jour",
+    "unlimited": "illimité",
+    "ofLabel": "de vos",
+    "used": "utilisés",
+    "upgradeHint": "Passez à {plan} pour {limit} {label}.",
+    "cta": "Passer à {plan}",
+    "dismiss": "Fermer",
+    "modal": {
+      "title": "Limite atteinte.",
+      "description": "Vous avez utilisé tous vos {label}. Passez à un plan supérieur pour continuer.",
+      "unlocks": "{plan} débloque",
+      "cta": "Passer à {plan} — {limit} {label}",
+      "resetHint": "Votre quota se réinitialise au début de la prochaine période de facturation."
+    }
+  },
+  "invoices": {
+    "title": "Factures",
+    "empty": "Aucune facture pour l'instant.",
+    "date": "Date",
+    "amount": "Montant",
+    "status": "Statut",
+    "download": "PDF",
+    "statuses": {
+      "paid": "Payée",
+      "open": "En attente",
+      "void": "Annulée",
+      "uncollectible": "Irrécouvrable"
+    }
+  },
+  "downgradeWarning": "Certaines ressources dépassent les limites du plan Free. Elles restent accessibles mais de nouvelles ne peuvent pas être créées.",
+  "plans": {
+    "free": {
+      "name": "Free",
+      "price": "$0",
+      "description": "Tout ce qu'il faut pour démarrer.",
+      "features": [
+        "500K tokens/mois",
+        "1 projet",
+        "1 clé API",
+        "Analytics de base"
+      ]
+    },
+    "pro": {
+      "name": "Pro",
+      "priceMonthly": "$29/mois",
+      "priceYearly": "$290/an",
+      "description": "Pour les développeurs qui passent à l'échelle.",
+      "features": [
+        "20M tokens/mois",
+        "5 projets",
+        "5 clés API",
+        "Context Optimizer",
+        "Model Router",
+        "Webhooks illimités"
+      ]
+    },
+    "team": {
+      "name": "Team",
+      "priceMonthly": "$99/mois",
+      "priceYearly": "$990/an",
+      "description": "Pour les équipes qui ont besoin de contrôle.",
+      "features": [
+        "100M tokens/mois",
+        "Projets illimités",
+        "RBAC multi-utilisateurs",
+        "Audit logs 90 jours",
+        "Analytics avancées",
+        "Support prioritaire"
+      ]
+    },
+    "enterprise": {
+      "name": "Enterprise",
+      "price": "Sur devis",
+      "description": "Échelle illimitée. Support dédié.",
+      "features": [
+        "Tokens illimités",
+        "SLA 99,9%",
+        "Option on-premise",
+        "SSO / SAML",
+        "Audit logs illimités",
+        "Customer success manager"
+      ]
+    }
+  }
+}

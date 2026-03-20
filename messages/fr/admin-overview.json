@@ -1,0 +1,21 @@
+{
+  "metadata": {
+    "title": "Vue d'ensemble admin"
+  },
+  "title": "Vue d'ensemble",
+  "subtitle": "État de la plateforme en un coup d'œil.",
+  "waitlist": {
+    "title": "Funnel liste d'attente",
+    "subtitle": "Conversion de l'inscription à l'utilisateur actif.",
+    "total": "Inscriptions totales",
+    "waiting": "En attente",
+    "invited": "Invités",
+    "joined": "Inscrits",
+    "skipped": "Blacklistés",
+    "conversionInvited": "Taux d'invitation",
+    "conversionJoined": "Taux d'inscription",
+    "conversionOverall": "Conversion globale",
+    "trend": "7 derniers jours",
+    "today": "Aujourd'hui"
+  }
+}

@@ -1,0 +1,131 @@
+{
+  "page": {
+    "title": "Billing",
+    "subtitle": "Manage your plan, usage, and invoices.",
+    "plansTitle": "Plans",
+    "currentPlanTitle": "Current plan",
+    "renewsOn": "Renews {date}",
+    "expiresOn": "Expires {date}",
+    "freePlanNote": "No payment required.",
+    "upgradeNext": "Upgrade to {plan}"
+  },
+  "plan": {
+    "current": "Current",
+    "upgrade": "Upgrade to {plan}",
+    "manage": "Manage billing",
+    "interval": {
+      "monthly": "Monthly",
+      "annual": "Annual",
+      "saveBadge": "Save 17%"
+    },
+    "trial": {
+      "active": "Trial active — {days} days remaining",
+      "ends": "Ends {date}"
+    },
+    "cancelNotice": "Cancels on {date}. You keep access until then.",
+    "resumeSubscription": "Resume subscription",
+    "pastDue": "Payment failed. Update your payment method to keep access.",
+    "updatePayment": "Update payment method"
+  },
+  "usage": {
+    "title": "Usage",
+    "tokensMonth": "Tokens this month",
+    "requestsDay": "Requests today",
+    "overage": "{tokens} overage tokens · ~${cost} estimated",
+    "unlimited": "Unlimited",
+    "defaultUnit": "units",
+    "unitTokens": "tokens",
+    "unitRequests": "requests"
+  },
+  "seats": {
+    "title": "Team seats",
+    "included": "included",
+    "additional": "{count} additional seat{count, plural, =1 {} other {s}} · ${cost}/mo"
+  },
+  "upsell": {
+    "tokensLabel": "tokens/month",
+    "requestsLabel": "requests/day",
+    "unlimited": "unlimited",
+    "ofLabel": "of your",
+    "used": "used",
+    "upgradeHint": "Upgrade to {plan} for {limit} {label}.",
+    "cta": "Upgrade to {plan}",
+    "dismiss": "Dismiss",
+    "modal": {
+      "title": "Limit reached.",
+      "description": "You've used all your {label}. Upgrade to keep going.",
+      "unlocks": "{plan} unlocks",
+      "cta": "Upgrade — unlock {limit} {label}",
+      "resetHint": "Your quota resets at the start of the next billing period."
+    }
+  },
+  "invoices": {
+    "title": "Invoices",
+    "empty": "No invoices yet.",
+    "date": "Date",
+    "amount": "Amount",
+    "status": "Status",
+    "download": "PDF",
+    "statuses": {
+      "paid": "Paid",
+      "open": "Open",
+      "void": "Void",
+      "uncollectible": "Uncollectible"
+    }
+  },
+  "downgradeWarning": "Some resources exceed your Free plan limits. They remain accessible but new ones cannot be created.",
+  "plans": {
+    "free": {
+      "name": "Free",
+      "price": "$0",
+      "description": "Everything you need to start.",
+      "features": [
+        "500K tokens/month",
+        "1 project",
+        "1 API key",
+        "Basic analytics"
+      ]
+    },
+    "pro": {
+      "name": "Pro",
+      "priceMonthly": "$29/mo",
+      "priceYearly": "$290/yr",
+      "description": "For developers scaling up.",
+      "features": [
+        "20M tokens/month",
+        "5 projects",
+        "5 API keys",
+        "Context Optimizer",
+        "Model Router",
+        "Unlimited webhooks"
+      ]
+    },
+    "team": {
+      "name": "Team",
+      "priceMonthly": "$99/mo",
+      "priceYearly": "$990/yr",
+      "description": "For teams that need control.",
+      "features": [
+        "100M tokens/month",
+        "Unlimited projects",
+        "RBAC multi-user",
+        "Audit logs 90 days",
+        "Advanced analytics",
+        "Priority support"
+      ]
+    },
+    "enterprise": {
+      "name": "Enterprise",
+      "price": "Custom",
+      "description": "Unlimited scale. Dedicated support.",
+      "features": [
+        "Unlimited tokens",
+        "SLA 99.9%",
+        "On-premise option",
+        "SSO / SAML",
+        "Unlimited audit logs",
+        "Customer success manager"
+      ]
+    }
+  }
+}

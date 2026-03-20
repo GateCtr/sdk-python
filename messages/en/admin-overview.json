@@ -1,0 +1,21 @@
+{
+  "metadata": {
+    "title": "Admin Overview"
+  },
+  "title": "Overview",
+  "subtitle": "Platform health at a glance.",
+  "waitlist": {
+    "title": "Waitlist Funnel",
+    "subtitle": "Conversion from signup to active user.",
+    "total": "Total signups",
+    "waiting": "Waiting",
+    "invited": "Invited",
+    "joined": "Joined",
+    "skipped": "Blacklisted",
+    "conversionInvited": "Invite rate",
+    "conversionJoined": "Join rate",
+    "conversionOverall": "Overall conversion",
+    "trend": "Last 7 days",
+    "today": "Today"
+  }
+}

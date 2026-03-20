@@ -1,0 +1,200 @@
+{
+  "title": "Billing",
+  "subtitle": "Revenue, subscriptions, and billing events.",
+  "metadata": {
+    "title": "Billing",
+    "description": "Revenue and plan distribution"
+  },
+  "tabs": {
+    "overview": "Overview",
+    "subscriptions": "Subscriptions",
+    "events": "Events",
+    "coupons": "Coupons"
+  },
+  "stats": {
+    "mrr": "MRR",
+    "arr": "ARR",
+    "churnRate": "Churn (30d)",
+    "activeSubscriptions": "Active subscriptions",
+    "planDistribution": "Plan distribution",
+    "vsLastMonth": "vs last month",
+    "newThisMonth": "new this month",
+    "canceledThisMonth": "canceled this month",
+    "mrrTrend": "MRR trend (6 months)",
+    "revenueAtRisk": "Revenue at risk",
+    "pastDue": "past due"
+  },
+  "plans": {
+    "FREE": "Free",
+    "PRO": "Pro",
+    "TEAM": "Team",
+    "ENTERPRISE": "Enterprise"
+  },
+  "chart": {
+    "title": "MRR over time",
+    "tooltip": "MRR"
+  },
+  "coupons": {
+    "title": "Coupons & Promotions",
+    "create": "Create coupon",
+    "createError": "Failed to create coupon",
+    "empty": "No coupons yet. Create one to offer discounts.",
+    "delete": "Delete coupon",
+    "form": {
+      "sectionDiscount": "Discount",
+      "sectionDuration": "Duration",
+      "sectionRestrictions": "Restrictions",
+      "sectionPromoCode": "Promo code (optional)",
+      "name": "Internal name",
+      "namePlaceholder": "e.g. Black Friday 2025",
+      "discountType": "Discount type",
+      "discountTypePercent": "Percentage",
+      "discountTypeFixed": "Fixed amount",
+      "percentOff": "Percentage off",
+      "amountOff": "Amount off",
+      "currency": "Currency",
+      "duration": "Applies to",
+      "durationMonths": "Number of months",
+      "maxRedemptions": "Max redemptions",
+      "maxRedemptionsHint": "Leave empty for unlimited",
+      "redeemBy": "Expiry date",
+      "redeemByHint": "Leave empty for no expiry",
+      "promoCode": "Custom code",
+      "promoCodePlaceholder": "e.g. BLACKFRIDAY25",
+      "promoCodeHint": "Leave empty to auto-generate",
+      "promoMaxRedemptions": "Max uses (this code)",
+      "promoMaxRedemptionsHint": "Leave empty for unlimited",
+      "promoExpiresAt": "Code expiry date",
+      "promoExpiresAtHint": "Independent from coupon expiry",
+      "firstTimeOnly": "First-time customers only",
+      "minimumAmount": "Minimum order amount",
+      "minimumAmountHint": "Leave empty for no minimum",
+      "restrictToCustomer": "Restrict to customer",
+      "restrictToCustomerPlaceholder": "cus_xxxxxxxxxxxxxxxx",
+      "restrictToCustomerHint": "Stripe customer ID — leave empty for all customers",
+      "submit": "Create coupon",
+      "cancel": "Cancel"
+    },
+    "duration": {
+      "once": "First invoice only",
+      "repeating": "Multiple months",
+      "forever": "All invoices"
+    },
+    "table": {
+      "code": "Code",
+      "discount": "Discount",
+      "duration": "Duration",
+      "restrictions": "Restrictions",
+      "redeemed": "Used",
+      "expiry": "Expires",
+      "valid": "Status",
+      "actions": ""
+    },
+    "badge": {
+      "active": "Active",
+      "expired": "Expired",
+      "firstTime": "1st order",
+      "minAmount": "Min"
+    }
+  },
+  "detail": {
+    "invoices": "Invoices",
+    "invoiceNumber": "Invoice",
+    "date": "Date",
+    "amount": "Amount",
+    "status": "Status",
+    "actions": "Actions",
+    "noInvoices": "No invoices.",
+    "history": "Change history",
+    "actor": "Actor",
+    "refund": "Refund",
+    "issueRefund": "Issue refund",
+    "refundAmount": "Amount ($)",
+    "refundReason": "Reason",
+    "maxRefund": "Max",
+    "confirmRefund": "Confirm refund",
+    "cancel": "Cancel",
+    "processing": "Processing…",
+    "refundSuccess": "Refund issued.",
+    "refundError": "Refund failed.",
+    "reasonCustomer": "Requested by customer",
+    "reasonDuplicate": "Duplicate",
+    "reasonFraudulent": "Fraudulent",
+    "currentPeriod": "Current period",
+    "trialEnd": "Trial end",
+    "cancelAtPeriodEnd": "Cancels at period end",
+    "customerSince": "Customer since",
+    "totalPaid": "Total paid",
+    "backToBilling": "Back to billing",
+    "invoicesPaid": "invoices paid",
+    "periodActive": "Active",
+    "periodExpired": "Expired",
+    "willCancel": "Will cancel at period end",
+    "autoRenews": "Auto-renews",
+    "daysAgo": "days ago",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "subscriptions": {
+    "title": "Subscriptions",
+    "empty": "No subscriptions found.",
+    "filters": {
+      "all": "All",
+      "active": "Active",
+      "trialing": "Trialing",
+      "pastDue": "Past due",
+      "canceled": "Canceled",
+      "paused": "Paused"
+    },
+    "table": {
+      "user": "User",
+      "plan": "Plan",
+      "status": "Status",
+      "period": "Current period",
+      "cancelAt": "Cancels",
+      "stripeId": "Stripe ID",
+      "actions": "Actions"
+    },
+    "actions": {
+      "openStripe": "Open in Stripe",
+      "restricted": "Requires billing:write"
+    },
+    "status": {
+      "ACTIVE": "Active",
+      "TRIALING": "Trialing",
+      "PAST_DUE": "Past due",
+      "CANCELED": "Canceled",
+      "PAUSED": "Paused",
+      "INCOMPLETE": "Incomplete",
+      "INCOMPLETE_EXPIRED": "Expired",
+      "UNPAID": "Unpaid"
+    }
+  },
+  "events": {
+    "title": "Billing events",
+    "empty": "No billing events yet.",
+    "table": {
+      "action": "Event",
+      "user": "User",
+      "timestamp": "Date"
+    }
+  },
+  "auditLogs": {
+    "table": {
+      "status": "Status"
+    },
+    "status": {
+      "success": "Success",
+      "failed": "Failed"
+    }
+  },
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next",
+    "morePages": "More pages",
+    "goPrevious": "Go to previous page",
+    "goNext": "Go to next page",
+    "showing_prefix": "Showing",
+    "showing_of": "of"
+  }
+}

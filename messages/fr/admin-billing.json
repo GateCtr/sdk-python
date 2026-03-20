@@ -1,0 +1,200 @@
+{
+  "title": "Facturation",
+  "subtitle": "Revenus, abonnements et événements de facturation.",
+  "metadata": {
+    "title": "Facturation",
+    "description": "Revenus et distribution des plans"
+  },
+  "tabs": {
+    "overview": "Vue d'ensemble",
+    "subscriptions": "Abonnements",
+    "events": "Événements",
+    "coupons": "Coupons"
+  },
+  "stats": {
+    "mrr": "MRR",
+    "arr": "ARR",
+    "churnRate": "Churn (30j)",
+    "activeSubscriptions": "Abonnements actifs",
+    "planDistribution": "Distribution des plans",
+    "vsLastMonth": "vs mois précédent",
+    "newThisMonth": "nouveaux ce mois",
+    "canceledThisMonth": "annulés ce mois",
+    "mrrTrend": "Tendance MRR (6 mois)",
+    "revenueAtRisk": "Revenus à risque",
+    "pastDue": "en retard"
+  },
+  "plans": {
+    "FREE": "Gratuit",
+    "PRO": "Pro",
+    "TEAM": "Team",
+    "ENTERPRISE": "Enterprise"
+  },
+  "chart": {
+    "title": "MRR dans le temps",
+    "tooltip": "MRR"
+  },
+  "coupons": {
+    "title": "Coupons & Promotions",
+    "create": "Créer un coupon",
+    "createError": "Échec de la création du coupon",
+    "empty": "Aucun coupon. Créez-en un pour offrir des réductions.",
+    "delete": "Supprimer le coupon",
+    "form": {
+      "sectionDiscount": "Réduction",
+      "sectionDuration": "Durée",
+      "sectionRestrictions": "Restrictions",
+      "sectionPromoCode": "Code promo (optionnel)",
+      "name": "Nom interne",
+      "namePlaceholder": "ex. Black Friday 2025",
+      "discountType": "Type de réduction",
+      "discountTypePercent": "Pourcentage",
+      "discountTypeFixed": "Montant fixe",
+      "percentOff": "Pourcentage de réduction",
+      "amountOff": "Montant de réduction",
+      "currency": "Devise",
+      "duration": "Applicable à",
+      "durationMonths": "Nombre de mois",
+      "maxRedemptions": "Utilisations max",
+      "maxRedemptionsHint": "Laisser vide pour illimité",
+      "redeemBy": "Date d'expiration",
+      "redeemByHint": "Laisser vide pour aucune expiration",
+      "promoCode": "Code personnalisé",
+      "promoCodePlaceholder": "ex. BLACKFRIDAY25",
+      "promoCodeHint": "Laisser vide pour générer automatiquement",
+      "promoMaxRedemptions": "Utilisations max (ce code)",
+      "promoMaxRedemptionsHint": "Laisser vide pour illimité",
+      "promoExpiresAt": "Date d'expiration du code",
+      "promoExpiresAtHint": "Indépendante de l'expiration du coupon",
+      "firstTimeOnly": "Nouveaux clients uniquement",
+      "minimumAmount": "Montant minimum de commande",
+      "minimumAmountHint": "Laisser vide pour aucun minimum",
+      "restrictToCustomer": "Restreindre à un client",
+      "restrictToCustomerPlaceholder": "cus_xxxxxxxxxxxxxxxx",
+      "restrictToCustomerHint": "ID client Stripe — laisser vide pour tous les clients",
+      "submit": "Créer le coupon",
+      "cancel": "Annuler"
+    },
+    "duration": {
+      "once": "Première facture uniquement",
+      "repeating": "Plusieurs mois",
+      "forever": "Toutes les factures"
+    },
+    "table": {
+      "code": "Code",
+      "discount": "Réduction",
+      "duration": "Durée",
+      "restrictions": "Restrictions",
+      "redeemed": "Utilisé",
+      "expiry": "Expire",
+      "valid": "Statut",
+      "actions": ""
+    },
+    "badge": {
+      "active": "Actif",
+      "expired": "Expiré",
+      "firstTime": "1ère commande",
+      "minAmount": "Min"
+    }
+  },
+  "detail": {
+    "invoices": "Factures",
+    "invoiceNumber": "Facture",
+    "date": "Date",
+    "amount": "Montant",
+    "status": "Statut",
+    "actions": "Actions",
+    "noInvoices": "Aucune facture.",
+    "history": "Historique des modifications",
+    "actor": "Acteur",
+    "refund": "Remboursement",
+    "issueRefund": "Émettre un remboursement",
+    "refundAmount": "Montant ($)",
+    "refundReason": "Motif",
+    "maxRefund": "Max",
+    "confirmRefund": "Confirmer le remboursement",
+    "cancel": "Annuler",
+    "processing": "Traitement…",
+    "refundSuccess": "Remboursement émis.",
+    "refundError": "Échec du remboursement.",
+    "reasonCustomer": "Demande du client",
+    "reasonDuplicate": "Doublon",
+    "reasonFraudulent": "Frauduleux",
+    "currentPeriod": "Période en cours",
+    "trialEnd": "Fin d'essai",
+    "cancelAtPeriodEnd": "Annulation en fin de période",
+    "customerSince": "Client depuis",
+    "totalPaid": "Total payé",
+    "backToBilling": "Retour à la facturation",
+    "invoicesPaid": "factures payées",
+    "periodActive": "Active",
+    "periodExpired": "Expirée",
+    "willCancel": "Annulation en fin de période",
+    "autoRenews": "Renouvellement auto",
+    "daysAgo": "jours",
+    "yes": "Oui",
+    "no": "Non"
+  },
+  "subscriptions": {
+    "title": "Abonnements",
+    "empty": "Aucun abonnement trouvé.",
+    "filters": {
+      "all": "Tous",
+      "active": "Actifs",
+      "trialing": "En essai",
+      "pastDue": "En retard",
+      "canceled": "Annulés",
+      "paused": "En pause"
+    },
+    "table": {
+      "user": "Utilisateur",
+      "plan": "Plan",
+      "status": "Statut",
+      "period": "Période en cours",
+      "cancelAt": "Annulation",
+      "stripeId": "ID Stripe",
+      "actions": "Actions"
+    },
+    "actions": {
+      "openStripe": "Ouvrir dans Stripe",
+      "restricted": "Nécessite billing:write"
+    },
+    "status": {
+      "ACTIVE": "Actif",
+      "TRIALING": "En essai",
+      "PAST_DUE": "En retard",
+      "CANCELED": "Annulé",
+      "PAUSED": "En pause",
+      "INCOMPLETE": "Incomplet",
+      "INCOMPLETE_EXPIRED": "Expiré",
+      "UNPAID": "Impayé"
+    }
+  },
+  "events": {
+    "title": "Événements de facturation",
+    "empty": "Aucun événement de facturation.",
+    "table": {
+      "action": "Événement",
+      "user": "Utilisateur",
+      "timestamp": "Date"
+    }
+  },
+  "auditLogs": {
+    "table": {
+      "status": "Statut"
+    },
+    "status": {
+      "success": "Succès",
+      "failed": "Échec"
+    }
+  },
+  "pagination": {
+    "previous": "Précédent",
+    "next": "Suivant",
+    "morePages": "Plus de pages",
+    "goPrevious": "Page précédente",
+    "goNext": "Page suivante",
+    "showing_prefix": "Affichage",
+    "showing_of": "sur"
+  }
+}
