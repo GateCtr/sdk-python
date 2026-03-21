@@ -5,55 +5,50 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
-## [v0.1.0-onboarding] — 2026-03-20
+## [v0.1.0] — 2026-03-20
 
-### Added
+### Onboarding
 
 - 3-step onboarding flow: Workspace → LLM Provider → Budget
-- Step 1: workspace creation with `usageType` (solo / team / enterprise)
-- Step 2: LLM provider connection (OpenAI, Anthropic, Mistral, Gemini) with AES-encrypted key storage
-- Step 3: Budget Firewall setup — monthly token limit, alert threshold, hard stop toggle
-- Server actions: `createWorkspace()`, `connectProvider()`, `setupBudget()`
-- `lib/encryption.ts` — AES-256 encrypt/decrypt for LLM API keys
-- Onboarding settings page — edit workspace name and provider keys post-onboarding
-- Admin panel: onboarding status column + manual reset action on users page
+- Workspace creation with usage type (solo / team / enterprise)
+- LLM provider connection — OpenAI, Anthropic, Mistral, Gemini — keys stored encrypted at rest
+- Budget Firewall setup — monthly token limit, alert threshold, hard stop toggle
+- Settings page to edit workspace name and provider keys after onboarding
+- Skip option on provider step with contextual warning
 - Progress indicator (Step X of 3) with step labels
-- Skip option on provider step with warning copy
-- Translation files: `messages/en/onboarding.json`, `messages/fr/onboarding.json`
-- Full unit test coverage for all 3 steps and server actions
+- EN/FR translations
 
----
+### Billing
 
-## [v0.1.0-billing] — 2026-03-20
-
-### Added
-
-- Stripe Checkout integration — hosted payment page per plan (Pro, Team, Enterprise)
+- Stripe Checkout — hosted payment page for Pro, Team, and Enterprise plans
 - Stripe Customer Portal — self-serve subscription management and cancellation
-- Stripe webhook handler — handles `checkout.session.completed`, `customer.subscription.*`, `invoice.*`
-- Admin billing panel — list all subscriptions, filter by plan/status, view details
-- Admin subscription detail page — customer info, plan, status, Stripe links
-- Admin coupon management — create and list discount coupons via Stripe API
-- Admin refund action — issue full or partial refunds from the admin panel
-- Plan guard middleware — blocks access to features above the user's current plan
+- Webhook handling for subscription lifecycle events (created, updated, canceled, payment failed)
+- Transactional emails: subscription confirmation, payment failed, cancellation
+
+### Admin
+
+- Billing panel — list all subscriptions, filter by plan and status
+- Subscription detail view — customer info, plan, status, direct Stripe links
+- Coupon management — create and list discount coupons
+- Refund action — issue full or partial refunds
+- Users page — onboarding status column and manual reset action
+- Plan guard — blocks access to features above the user's current plan
 - Seat overage detection — alerts when Team plan exceeds included seats
 - Upsell banners — contextual upgrade prompts triggered by plan limits
-- Transactional emails: subscription confirmation, payment failed, cancellation
-- `lib/stripe.ts` — lazy singleton client (no module-level instantiation)
-- Translation files: `messages/en/billing.json`, `messages/fr/billing.json`
 
 ### Infrastructure
 
-- CI/CD pipeline with GitHub Actions (lint, test, build, Docker, deploy)
-- Docker multi-stage build with standalone Next.js output
-- Husky pre-commit hooks with lint-staged
+- CI/CD pipeline with GitHub Actions (lint, test, build, deploy)
+- Docker multi-stage build
+- Pre-commit hooks with lint-staged
 - Dashboard sidebar redesign — active states, team switcher, user menu
 - Dashboard header — breadcrumb, token usage bar, upgrade CTA
 
 ---
 
-## [163894f] — Initial commit
+## [v0.0.1] — Initial release
 
-- GateCtr Next.js project scaffold (Next.js 16, React 19, TypeScript 5, Tailwind 4)
-- Clerk authentication, Prisma + Neon PostgreSQL, Upstash Redis
-- next-intl i18n (EN/FR), Sentry error monitoring
+- GateCtr platform scaffold — Next.js 16, React 19, TypeScript 5, Tailwind 4
+- Authentication via Clerk (SSO, MFA, OAuth)
+- PostgreSQL database with Neon, Redis caching
+- EN/FR internationalization, Sentry error monitoring
