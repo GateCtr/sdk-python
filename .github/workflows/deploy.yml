@@ -105,9 +105,26 @@ jobs:
 
       - name: Wake up Neon database
         run: |
-          for i in 1 2 3; do
-            psql "$DATABASE_URL" -c "SELECT 1" && break || sleep 5
-          done
+          node -e "
+          const { Client } = require('pg');
+          async function wake() {
+            for (let i = 0; i < 5; i++) {
+              try {
+                const client = new Client({ connectionString: process.env.DATABASE_URL, connectionTimeoutMillis: 10000 });
+                await client.connect();
+                await client.query('SELECT 1');
+                await client.end();
+                console.log('DB is awake after attempt ' + (i+1));
+                process.exit(0);
+              } catch(e) {
+                console.log('Attempt ' + (i+1) + ' failed: ' + e.message + ' — retrying in 5s');
+                await new Promise(r => setTimeout(r, 5000));
+              }
+            }
+            console.log('DB did not wake up in time, proceeding anyway');
+          }
+          wake();
+          "
         env:
           DATABASE_URL: ${{ secrets.NEON_DIRECT_URL_MAIN }}
 
