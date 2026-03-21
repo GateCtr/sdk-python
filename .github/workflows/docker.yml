@@ -68,6 +68,7 @@ jobs:
           context: .
           file: ./docker/Dockerfile.dev
           push: true
+          platforms: linux/amd64
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWER }}:dev-latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
