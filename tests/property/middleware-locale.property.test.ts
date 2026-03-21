@@ -54,9 +54,9 @@ function buildUnauthRedirect(pathname: string, baseUrl: string): string {
 
 const pathSegment = fc.stringMatching(/^[a-z][a-z0-9-]{0,12}$/);
 
-// First segment must not be "fr" — otherwise prefixing /fr produces /fr/fr/...
-// which is not a valid locale-prefixed path and breaks the strip-prefix invariant.
-const nonFrSegment = pathSegment.filter((s) => s !== "fr");
+// First segment must not start with "fr" — otherwise prefixing /fr produces /fr/fr0/...
+// which breaks the strip-prefix invariant (replace(/^\/fr/, "") still starts with /fr).
+const nonFrSegment = pathSegment.filter((s) => !s.startsWith("fr"));
 
 const enProtectedPath = fc
   .tuple(nonFrSegment, fc.array(pathSegment, { minLength: 0, maxLength: 2 }))
