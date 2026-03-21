@@ -106,8 +106,7 @@ jobs:
       - name: Run database migrations
         run: pnpm prisma migrate deploy
         env:
-          DATABASE_URL: ${{ secrets.NEON_DATABASE_URL_MAIN }}
-          DIRECT_URL: ${{ secrets.NEON_DIRECT_URL_MAIN }}
+          DATABASE_URL: ${{ secrets.NEON_DIRECT_URL_MAIN }}
 
       - name: Deploy to Vercel (Production)
         id: vercel-deploy
