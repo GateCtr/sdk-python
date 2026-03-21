@@ -411,7 +411,12 @@ async function main() {
   for (const provider of providers) {
     await prisma.lLMProviderConfig.upsert({
       where: { provider: provider.provider },
-      update: {},
+      update: {
+        defaultTimeout: 30000,
+        maxRetries: 3,
+        retryDelay: 1000,
+        isActive: true,
+      },
       create: {
         ...provider,
         defaultTimeout: 30000,
@@ -422,6 +427,205 @@ async function main() {
   }
 
   console.log("✅ LLM Provider configs created");
+
+  // ── Model Catalog ──────────────────────────────────────────────────────────
+
+  const providerConfigMap = await prisma.lLMProviderConfig.findMany({
+    where: { provider: { in: ["openai", "anthropic", "mistral", "gemini"] } },
+  });
+  const providerIdMap = Object.fromEntries(
+    providerConfigMap.map((p) => [p.provider, p.id]),
+  );
+
+  // Model catalog — updated March 2026
+  // Sources: OpenAI pricing (pecollective.com), Anthropic (claudefa.st),
+  //          Mistral (inworld.ai / docs.mistral.ai), Google (winbuzzer / deepmind.google)
+  // Costs stored per 1K tokens (divide published per-1M prices by 1000)
+  const models = [
+    // ── OpenAI ────────────────────────────────────────────────────────────────
+    // GPT-4.1 — recommended production model (replaced GPT-4o), 1M context
+    {
+      modelId: "gpt-4.1",
+      provider: "openai",
+      displayName: "GPT-4.1",
+      contextWindow: 1_000_000,
+      maxOutputTokens: 32_768,
+      inputCostPer1kTokens: 0.002, // $2.00 / 1M
+      outputCostPer1kTokens: 0.008, // $8.00 / 1M
+      capabilities: ["chat", "complete", "vision", "function_calling"],
+    },
+    // GPT-4.1 Mini — mid-tier, 5× cheaper than GPT-4.1
+    {
+      modelId: "gpt-4.1-mini",
+      provider: "openai",
+      displayName: "GPT-4.1 Mini",
+      contextWindow: 1_000_000,
+      maxOutputTokens: 32_768,
+      inputCostPer1kTokens: 0.0004, // $0.40 / 1M
+      outputCostPer1kTokens: 0.0016, // $1.60 / 1M
+      capabilities: ["chat", "complete", "function_calling"],
+    },
+    // GPT-4.1 Nano — cheapest capable OpenAI model, routing & classification
+    {
+      modelId: "gpt-4.1-nano",
+      provider: "openai",
+      displayName: "GPT-4.1 Nano",
+      contextWindow: 1_000_000,
+      maxOutputTokens: 16_384,
+      inputCostPer1kTokens: 0.0001, // $0.10 / 1M
+      outputCostPer1kTokens: 0.0004, // $0.40 / 1M
+      capabilities: ["chat", "complete"],
+    },
+    // GPT-5 — flagship, agentic workflows
+    {
+      modelId: "gpt-5",
+      provider: "openai",
+      displayName: "GPT-5",
+      contextWindow: 128_000,
+      maxOutputTokens: 16_384,
+      inputCostPer1kTokens: 0.00125, // $1.25 / 1M
+      outputCostPer1kTokens: 0.01, // $10.00 / 1M
+      capabilities: ["chat", "complete", "vision", "function_calling"],
+    },
+    // o4-mini — best-value reasoning model
+    {
+      modelId: "o4-mini",
+      provider: "openai",
+      displayName: "o4-mini",
+      contextWindow: 200_000,
+      maxOutputTokens: 100_000,
+      inputCostPer1kTokens: 0.0011, // $1.10 / 1M
+      outputCostPer1kTokens: 0.0044, // $4.40 / 1M
+      capabilities: ["chat", "complete", "function_calling"],
+    },
+    // o3 — advanced reasoning
+    {
+      modelId: "o3",
+      provider: "openai",
+      displayName: "o3",
+      contextWindow: 200_000,
+      maxOutputTokens: 100_000,
+      inputCostPer1kTokens: 0.002, // $2.00 / 1M
+      outputCostPer1kTokens: 0.008, // $8.00 / 1M
+      capabilities: ["chat", "complete", "function_calling"],
+    },
+
+    // ── Anthropic ─────────────────────────────────────────────────────────────
+    // Claude Sonnet 4.6 — daily driver, opus-level coding at sonnet price
+    {
+      modelId: "claude-sonnet-4-6",
+      provider: "anthropic",
+      displayName: "Claude Sonnet 4.6",
+      contextWindow: 1_000_000,
+      maxOutputTokens: 8_192,
+      inputCostPer1kTokens: 0.003, // $3.00 / 1M
+      outputCostPer1kTokens: 0.015, // $15.00 / 1M
+      capabilities: ["chat", "complete", "vision", "function_calling"],
+    },
+    // Claude Opus 4.6 — deep reasoning, 1M context GA, agent teams
+    {
+      modelId: "claude-opus-4-6",
+      provider: "anthropic",
+      displayName: "Claude Opus 4.6",
+      contextWindow: 1_000_000,
+      maxOutputTokens: 8_192,
+      inputCostPer1kTokens: 0.005, // $5.00 / 1M
+      outputCostPer1kTokens: 0.025, // $25.00 / 1M
+      capabilities: ["chat", "complete", "vision", "function_calling"],
+    },
+    // Claude Haiku 4.5 — budget tier, fast & cheap
+    {
+      modelId: "claude-haiku-4-5",
+      provider: "anthropic",
+      displayName: "Claude Haiku 4.5",
+      contextWindow: 200_000,
+      maxOutputTokens: 8_192,
+      inputCostPer1kTokens: 0.0008, // $0.80 / 1M (estimated budget tier)
+      outputCostPer1kTokens: 0.004, // $4.00 / 1M
+      capabilities: ["chat", "complete", "vision"],
+    },
+
+    // ── Mistral ───────────────────────────────────────────────────────────────
+    // Mistral Large 3 — frontier open-weight, 256K context, vision
+    {
+      modelId: "mistral-large-2512",
+      provider: "mistral",
+      displayName: "Mistral Large 3",
+      contextWindow: 256_000,
+      maxOutputTokens: 8_192,
+      inputCostPer1kTokens: 0.0005, // $0.50 / 1M
+      outputCostPer1kTokens: 0.0015, // $1.50 / 1M
+      capabilities: ["chat", "complete", "vision", "function_calling"],
+    },
+    // Mistral Medium 3 — frontier perf at fraction of cost
+    {
+      modelId: "mistral-medium-2505",
+      provider: "mistral",
+      displayName: "Mistral Medium 3",
+      contextWindow: 128_000,
+      maxOutputTokens: 8_192,
+      inputCostPer1kTokens: 0.0004, // $0.40 / 1M
+      outputCostPer1kTokens: 0.002, // $2.00 / 1M
+      capabilities: ["chat", "complete", "function_calling"],
+    },
+    // Mistral Small 3.2 — latest small, cost-efficient
+    {
+      modelId: "mistral-small-latest",
+      provider: "mistral",
+      displayName: "Mistral Small 3.2",
+      contextWindow: 128_000,
+      maxOutputTokens: 8_192,
+      inputCostPer1kTokens: 0.0001, // $0.10 / 1M
+      outputCostPer1kTokens: 0.0003, // $0.30 / 1M
+      capabilities: ["chat", "complete"],
+    },
+
+    // ── Google Gemini ─────────────────────────────────────────────────────────
+    // Gemini 3 Flash — outperforms Gemini 2.5 Pro on coding, 1M context
+    {
+      modelId: "gemini-3-flash",
+      provider: "gemini",
+      displayName: "Gemini 3 Flash",
+      contextWindow: 1_000_000,
+      maxOutputTokens: 8_192,
+      inputCostPer1kTokens: 0.0005, // ~$0.50 / 1M (estimated, between 2.5 Flash and 3 Pro)
+      outputCostPer1kTokens: 0.002,
+      capabilities: ["chat", "complete", "vision", "function_calling"],
+    },
+    // Gemini 3.1 Flash-Lite — fastest, cheapest Gemini, 2.5× faster TTFB
+    {
+      modelId: "gemini-3.1-flash-lite",
+      provider: "gemini",
+      displayName: "Gemini 3.1 Flash-Lite",
+      contextWindow: 1_000_000,
+      maxOutputTokens: 8_192,
+      inputCostPer1kTokens: 0.00025, // $0.25 / 1M
+      outputCostPer1kTokens: 0.0015, // $1.50 / 1M
+      capabilities: ["chat", "complete", "vision"],
+    },
+    // Gemini 2.5 Pro — still widely used, top LMArena score
+    {
+      modelId: "gemini-2.5-pro",
+      provider: "gemini",
+      displayName: "Gemini 2.5 Pro",
+      contextWindow: 1_000_000,
+      maxOutputTokens: 8_192,
+      inputCostPer1kTokens: 0.00125, // $1.25 / 1M
+      outputCostPer1kTokens: 0.01, // $10.00 / 1M
+      capabilities: ["chat", "complete", "vision", "function_calling"],
+    },
+  ];
+
+  for (const model of models) {
+    const { provider, ...modelData } = model;
+    await prisma.modelCatalog.upsert({
+      where: { modelId: model.modelId },
+      update: { ...modelData, providerId: providerIdMap[provider] },
+      create: { ...modelData, providerId: providerIdMap[provider] },
+    });
+  }
+
+  console.log("✅ Model catalog seeded");
   console.log("🎉 Seeding completed!");
 }
 
