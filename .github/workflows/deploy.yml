@@ -109,6 +109,7 @@ jobs:
           DATABASE_URL: ${{ secrets.NEON_DATABASE_URL_MAIN }}
 
       - name: Deploy to Vercel (Production)
+        id: vercel-deploy
         uses: amondnet/vercel-action@v25
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
@@ -116,9 +117,11 @@ jobs:
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
           vercel-args: '--prod'
           scope: ${{ secrets.VERCEL_ORG_ID }}
-          alias-domains: |
-            gatectr.com
-            www.gatectr.com
+
+      - name: Alias production domains
+        run: |
+          npx vercel@25 alias ${{ steps.vercel-deploy.outputs.preview-url }} gatectr.com -t ${{ secrets.VERCEL_TOKEN }} --scope ${{ secrets.VERCEL_ORG_ID }}
+          npx vercel@25 alias ${{ steps.vercel-deploy.outputs.preview-url }} www.gatectr.com -t ${{ secrets.VERCEL_TOKEN }} --scope ${{ secrets.VERCEL_ORG_ID }}
 
       - name: Create Sentry release
         uses: getsentry/action-release@v1

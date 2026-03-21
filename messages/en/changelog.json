@@ -1,0 +1,19 @@
+{
+  "metadata": {
+    "title": "Changelog — GateCtr",
+    "description": "Every release, every fix, every improvement. GateCtr's full history.",
+    "ogTitle": "GateCtr Changelog",
+    "ogDescription": "Every release, every fix, every improvement."
+  },
+  "page": {
+    "title": "Changelog",
+    "subtitle": "Every release. Every improvement. Documented."
+  },
+  "release": {
+    "added": "Added",
+    "fixed": "Fixed",
+    "changed": "Changed",
+    "infrastructure": "Infrastructure",
+    "initial": "Initial release"
+  }
+}

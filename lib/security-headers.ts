@@ -43,7 +43,7 @@ export function applySecurityHeaders(response: NextResponse): NextResponse {
     // Scripts: self + Next.js inline scripts + Clerk + Stripe
     isDev
       ? "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.clerk.accounts.dev https://js.stripe.com"
-      : "script-src 'self' 'unsafe-inline' https://*.clerk.accounts.dev https://js.stripe.com https://cdn.jsdelivr.net",
+      : "script-src 'self' 'unsafe-inline' blob: https://*.clerk.accounts.dev https://clerk.app.gatectr.com https://js.stripe.com https://cdn.jsdelivr.net",
     // Styles: self + inline (Tailwind/shadcn injects inline styles)
     "style-src 'self' 'unsafe-inline'",
     // Images: self + data URIs + Clerk avatars + external CDNs
@@ -51,10 +51,10 @@ export function applySecurityHeaders(response: NextResponse): NextResponse {
     // Fonts: self
     "font-src 'self' data:",
     // Connect: self + Clerk + Stripe + Sentry + Upstash
-    `connect-src 'self' ${appUrl} https://*.clerk.accounts.dev https://api.clerk.dev https://js.stripe.com https://api.stripe.com https://*.sentry.io https://o*.ingest.sentry.io wss://*.clerk.accounts.dev`,
+    `connect-src 'self' ${appUrl} https://*.clerk.accounts.dev https://clerk.app.gatectr.com https://api.clerk.dev https://js.stripe.com https://api.stripe.com https://*.sentry.io https://o*.ingest.sentry.io wss://*.clerk.accounts.dev wss://clerk.app.gatectr.com`,
     // Frames: Stripe only (for payment elements)
     "frame-src https://js.stripe.com https://hooks.stripe.com",
-    // Workers: self
+    // Workers: self + blob (Next.js RSC + Clerk workers)
     "worker-src 'self' blob:",
     // Form actions: self only
     "form-action 'self'",

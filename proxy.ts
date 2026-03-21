@@ -98,17 +98,48 @@ export default clerkMiddleware(
     }
 
     // ── Subdomain routing ─────────────────────────────────────────────────────
-    // gatectr.com (marketing) → block access to app routes in prod
-    if (
-      !isAppSubdomain &&
-      (pathname.startsWith("/dashboard") ||
-        pathname.startsWith("/onboarding") ||
-        pathname.startsWith("/admin") ||
-        pathname.startsWith("/fr/dashboard") ||
-        pathname.startsWith("/fr/onboarding") ||
-        pathname.startsWith("/fr/admin"))
-    ) {
-      return secure(NextResponse.redirect(new URL("/", req.url)));
+    // gatectr.com (marketing) → redirect app routes to app.gatectr.com
+    if (!isAppSubdomain) {
+      const appRoutes = [
+        "/dashboard",
+        "/fr/dashboard",
+        "/onboarding",
+        "/fr/onboarding",
+        "/admin",
+        "/fr/admin",
+        "/sign-in",
+        "/fr/sign-in",
+        "/sign-up",
+        "/fr/sign-up",
+      ];
+      if (appRoutes.some((r) => pathname.startsWith(r))) {
+        const appBase =
+          process.env.NEXT_PUBLIC_APP_URL ?? "https://app.gatectr.com";
+        return secure(NextResponse.redirect(new URL(pathname, appBase)));
+      }
+    }
+
+    // app.gatectr.com (app) → redirect marketing-only routes to gatectr.com
+    if (isAppSubdomain && !isDev) {
+      const marketingRoutes = [
+        "/waitlist",
+        "/fr/waitlist",
+        "/features",
+        "/fr/features",
+        "/pricing",
+        "/fr/pricing",
+        "/changelog",
+        "/fr/changelog",
+      ];
+      if (
+        marketingRoutes.some(
+          (r) => pathname === r || pathname.startsWith(r + "/"),
+        )
+      ) {
+        const marketingBase =
+          process.env.NEXT_PUBLIC_MARKETING_URL ?? "https://gatectr.com";
+        return secure(NextResponse.redirect(new URL(pathname, marketingBase)));
+      }
     }
 
     // ── API routes ────────────────────────────────────────────────────────────

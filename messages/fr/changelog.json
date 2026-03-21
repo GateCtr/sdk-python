@@ -1,0 +1,19 @@
+{
+  "metadata": {
+    "title": "Changelog — GateCtr",
+    "description": "Chaque version, chaque correctif, chaque amélioration. L'historique complet de GateCtr.",
+    "ogTitle": "Changelog GateCtr",
+    "ogDescription": "Chaque version, chaque correctif, chaque amélioration."
+  },
+  "page": {
+    "title": "Changelog",
+    "subtitle": "Chaque version. Chaque amélioration. Documentée."
+  },
+  "release": {
+    "added": "Ajouté",
+    "fixed": "Corrigé",
+    "changed": "Modifié",
+    "infrastructure": "Infrastructure",
+    "initial": "Version initiale"
+  }
+}
