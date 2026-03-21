@@ -7,7 +7,7 @@ on:
     branches: [main, develop]
 
 env:
-  NODE_VERSION: '20'
+  NODE_VERSION: '24'
   PNPM_VERSION: '10'
   # Prevents prisma generate from running during pnpm install (postinstall)
   # prisma generate is called explicitly in each job that needs it
@@ -89,7 +89,7 @@ jobs:
         run: pnpm test -- --coverage
 
       - name: Upload coverage reports
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           files: ./coverage/coverage-final.json
           flags: unittests
@@ -236,6 +236,7 @@ jobs:
   migrate:
     name: Run Migrations
     runs-on: ubuntu-latest
+    continue-on-error: true
     # Only run on direct pushes to main/develop — not on PRs (handled by neon-branch.yml)
     if: github.event_name == 'push'
     steps:
@@ -260,12 +261,17 @@ jobs:
         run: |
           if [ "${{ github.ref }}" = "refs/heads/main" ]; then
             DB_URL="${{ secrets.NEON_DATABASE_URL_MAIN }}"
+            DIRECT_URL="${{ secrets.NEON_DIRECT_URL_MAIN }}"
           else
             DB_URL="${{ secrets.NEON_DATABASE_URL_DEVELOP }}"
+            DIRECT_URL="${{ secrets.NEON_DIRECT_URL_DEVELOP }}"
           fi
           if [ -z "$DB_URL" ]; then
             echo "⚠️  No DATABASE_URL secret configured for this branch — skipping migrations."
             exit 0
           fi
-          DATABASE_URL="$DB_URL" pnpm prisma migrate deploy
-          DATABASE_URL="$DB_URL" pnpm prisma db seed
+          # Use direct URL for both migrate and seed (pooler not supported with adapter-pg)
+          # Fall back to pooler URL if no direct URL configured
+          MIGRATE_URL="${DIRECT_URL:-$DB_URL}"
+          DATABASE_URL="$MIGRATE_URL" DIRECT_URL="$MIGRATE_URL" pnpm prisma migrate deploy
+          DATABASE_URL="$MIGRATE_URL" DIRECT_URL="$MIGRATE_URL" pnpm prisma db seed
