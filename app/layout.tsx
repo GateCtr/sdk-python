@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono, Syne, Geist } from "next/font/google";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ClerkProvider } from "@/components/clerk-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -82,9 +82,14 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Read locale from next-intl cookie for Clerk localization
+  // Derive locale from URL pathname first, fall back to cookie
+  const headerStore = await headers();
+  const pathname =
+    headerStore.get("x-pathname") ?? headerStore.get("x-invoke-path") ?? "";
+  const localeFromPath = pathname.startsWith("/fr") ? "fr" : null;
   const cookieStore = await cookies();
-  const locale = cookieStore.get("NEXT_LOCALE")?.value ?? "en";
+  const locale =
+    localeFromPath ?? cookieStore.get("NEXT_LOCALE")?.value ?? "en";
 
   return (
     <html
