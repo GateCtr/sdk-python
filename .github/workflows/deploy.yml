@@ -103,6 +103,14 @@ jobs:
           NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
           CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
 
+      - name: Wake up Neon database
+        run: |
+          for i in 1 2 3; do
+            psql "$DATABASE_URL" -c "SELECT 1" && break || sleep 5
+          done
+        env:
+          DATABASE_URL: ${{ secrets.NEON_DIRECT_URL_MAIN }}
+
       - name: Run database migrations
         run: pnpm prisma migrate deploy
         env:
