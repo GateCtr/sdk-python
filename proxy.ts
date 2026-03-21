@@ -198,14 +198,18 @@ export default clerkMiddleware(
         sessionClaims?.publicMetadata) as Record<string, unknown> | undefined;
       const onboardingMeta = meta?.onboardingComplete;
       const onboardingDone = onboardingMeta === true;
-      const onboardingExplicitlyFalse = onboardingMeta === false;
+      // Treat undefined (legacy accounts without the key) same as false,
+      // unless the user has an explicit role (established admin/team accounts)
+      const hasRole = !!meta?.role;
+      const onboardingNotDone =
+        onboardingMeta === false || (onboardingMeta === undefined && !hasRole);
 
       if (onboardingDone && isOnboardingRoute(req)) {
         const dashboardPath = locale === "fr" ? "/fr/dashboard" : "/dashboard";
         return secure(NextResponse.redirect(new URL(dashboardPath, req.url)));
       }
 
-      if (onboardingExplicitlyFalse && !isOnboardingRoute(req)) {
+      if (onboardingNotDone && !isOnboardingRoute(req)) {
         const onboardingPath =
           locale === "fr" ? "/fr/onboarding" : "/onboarding";
         return secure(NextResponse.redirect(new URL(onboardingPath, req.url)));
