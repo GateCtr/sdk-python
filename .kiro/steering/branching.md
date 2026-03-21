@@ -38,8 +38,8 @@ Puis :
 
 1. Ouvrir une Pull Request vers `develop`
 2. Code review
-3. Merge avec squash
-4. Delete branch
+3. Merge avec **merge commit** (pas de squash)
+4. Delete branch (sauf `develop` et `main`)
 
 ## Conventions de nommage
 
@@ -58,3 +58,4 @@ Puis :
 - Jamais de push direct sur `main` ou `develop`
 - Une branche = une feature / un fix
 - Supprimer la branche après merge
+- **JAMAIS supprimer `develop` ou `main`** — ces deux branches sont permanentes et protégées
