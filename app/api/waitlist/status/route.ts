@@ -4,7 +4,15 @@ import { prisma } from "@/lib/prisma";
 export async function GET(request: NextRequest) {
   const email = request.nextUrl.searchParams.get("email");
 
-  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+  // Validate email with a linear-time check to avoid ReDoS (CodeQL: polynomial regex)
+  const atIndex = email ? email.indexOf("@") : -1;
+  const isValidEmail =
+    atIndex > 0 &&
+    atIndex === email.lastIndexOf("@") &&
+    email.indexOf(".", atIndex) > atIndex + 1 &&
+    !email.includes(" ");
+
+  if (!email || !isValidEmail) {
     return NextResponse.json(
       { error: "Valid email required" },
       { status: 400 },
