@@ -23,14 +23,20 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           body: |
-            ## Installation
+            ## What's new in ${{ github.ref_name }}
+
+            See [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md) for the full list of changes.
+
+            ## Quick start
 
             ```bash
-            git clone -b ${{ github.ref_name }} https://github.com/${{ github.repository }}.git
-            pnpm install
-            cp .env.example .env.local
-            pnpm prisma migrate deploy
-            pnpm build && pnpm start
+            npm install @gatectr/sdk
+            ```
+
+            Or swap your endpoint:
+
+            ```
+            https://api.gatectr.com/v1
             ```
 
             ## Docker
@@ -40,7 +46,7 @@ jobs:
             ```
           draft: false
           prerelease: ${{ contains(github.ref, 'alpha') || contains(github.ref, 'beta') || contains(github.ref, 'rc') }}
-          generate_release_notes: true
+          generate_release_notes: false
 
   publish-docker:
     name: Publish Docker Image
