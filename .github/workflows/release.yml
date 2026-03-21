@@ -19,40 +19,22 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Generate changelog
-        id: changelog
-        uses: metcalfc/changelog-generator@v4.1.0
-        with:
-          myToken: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Create Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           body: |
-            ## What's Changed
-            ${{ steps.changelog.outputs.changelog }}
-            
             ## Installation
-            
+
             ```bash
-            # Clone the repository
             git clone -b ${{ github.ref_name }} https://github.com/${{ github.repository }}.git
-            
-            # Install dependencies
             pnpm install
-            
-            # Setup environment
             cp .env.example .env.local
-            
-            # Run migrations
             pnpm prisma migrate deploy
-            
-            # Start the application
             pnpm build && pnpm start
             ```
-            
+
             ## Docker
-            
+
             ```bash
             docker pull ghcr.io/${{ github.repository }}:${{ github.ref_name }}
             ```
