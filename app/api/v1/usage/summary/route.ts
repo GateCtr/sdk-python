@@ -17,17 +17,42 @@ export async function GET(): Promise<NextResponse> {
   const now = new Date();
   const monthStart = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
 
-  const [agg, limits] = await Promise.all([
+  const [agg, limits, budget] = await Promise.all([
     prisma.dailyUsageCache.aggregate({
       where: { userId: user.id, date: { startsWith: monthStart } },
-      _sum: { totalTokens: true },
+      _sum: { totalTokens: true, totalCostUsd: true },
     }),
     getPlanLimits(user.plan),
+    prisma.budget.findUnique({ where: { userId: user.id } }),
   ]);
+
+  const tokensUsed = agg._sum.totalTokens ?? 0;
+  const costUsed = agg._sum.totalCostUsd ?? 0;
+
+  let budgetStatus: object | undefined;
+  if (budget) {
+    budgetStatus = {
+      maxTokensPerMonth: budget.maxTokensPerMonth,
+      maxCostPerMonth: budget.maxCostPerMonth,
+      tokensUsed,
+      costUsed,
+      alertThresholdPct: budget.alertThresholdPct,
+      hardStop: budget.hardStop,
+      ...(budget.maxTokensPerMonth
+        ? {
+            tokensPct: Math.round(
+              (tokensUsed / budget.maxTokensPerMonth) * 100,
+            ),
+          }
+        : {}),
+    };
+  }
 
   return NextResponse.json({
     plan: user.plan,
-    tokensUsed: agg._sum.totalTokens ?? 0,
+    tokensUsed,
     tokensLimit: limits?.maxTokensPerMonth ?? null,
+    costUsed,
+    ...(budgetStatus ? { budgetStatus } : {}),
   });
 }
