@@ -270,8 +270,8 @@ jobs:
             echo "⚠️  No DATABASE_URL secret configured for this branch — skipping migrations."
             exit 0
           fi
-          # Use direct URL for migrate (required by Prisma — pooler not supported)
+          # Use direct URL for both migrate and seed (pooler not supported with adapter-pg)
           # Fall back to pooler URL if no direct URL configured
           MIGRATE_URL="${DIRECT_URL:-$DB_URL}"
           DATABASE_URL="$MIGRATE_URL" DIRECT_URL="$MIGRATE_URL" pnpm prisma migrate deploy
-          DATABASE_URL="$DB_URL" pnpm prisma db seed
+          DATABASE_URL="$MIGRATE_URL" DIRECT_URL="$MIGRATE_URL" pnpm prisma db seed
