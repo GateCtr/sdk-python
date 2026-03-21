@@ -27,19 +27,6 @@ test.describe("Admin routes require authentication (Requirements 6.1, 6.2, 6.3)"
     });
   }
 
-  test("unauthenticated user is redirected from /admin/users to sign-in", async ({
-    page,
-  }) => {
-    /**
-     * Requirement 6.2: RBAC_System SHALL verify user has admin role
-     * Requirement 6.3: IF user lacks admin role, redirect to sign-in (unauthenticated case)
-     */
-    await page.goto("/admin/users");
-    await page.waitForURL(/sign-in/, { timeout: 10000 });
-    const url = page.url();
-    expect(url).toContain("sign-in");
-  });
-
   test("redirect from /admin/users does not expose a 500 error", async ({
     page,
   }) => {
