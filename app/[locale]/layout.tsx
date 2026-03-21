@@ -26,6 +26,20 @@ export async function generateMetadata({
       siteName: t("siteName"),
       title: t("defaultTitle"),
       description: t("defaultDescription"),
+      images: [
+        {
+          url: "/api/og",
+          width: 1200,
+          height: 630,
+          alt: t("defaultTitle"),
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: t("defaultTitle"),
+      description: t("defaultDescription"),
+      images: ["/api/og"],
     },
   };
 }
