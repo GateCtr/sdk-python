@@ -116,7 +116,9 @@ jobs:
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
           vercel-args: '--prod'
           scope: ${{ secrets.VERCEL_ORG_ID }}
-          alias-domains: gatectr.com,www.gatectr.com
+          alias-domains: |
+            gatectr.com
+            www.gatectr.com
 
       - name: Create Sentry release
         uses: getsentry/action-release@v1
