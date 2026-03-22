@@ -26,6 +26,8 @@ const isPublicRoute = createRouteMatcher([
   "/fr/docs(.*)",
   "/changelog(.*)",
   "/fr/changelog(.*)",
+  "/blocked",
+  "/fr/blocked",
   "/sign-in(.*)",
   "/fr/sign-in(.*)",
   "/sign-up(.*)",

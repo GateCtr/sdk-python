@@ -42,6 +42,7 @@ export default getRequestConfig(async ({ requestLocale }) => {
       await import(`../messages/${locale}/settings-security.json`)
     ).default,
     changelog: (await import(`../messages/${locale}/changelog.json`)).default,
+    blocked: (await import(`../messages/${locale}/blocked.json`)).default,
   };
 
   return {
