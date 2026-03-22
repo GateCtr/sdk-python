@@ -57,5 +57,5 @@ Puis :
 - Toujours partir de `develop` sauf pour les hotfixes
 - Jamais de push direct sur `main` ou `develop`
 - Une branche = une feature / un fix
-- Supprimer la branche après merge
+- Supprimer la branche après merge (sauf `develop` et `main`)
 - **JAMAIS supprimer `develop` ou `main`** — ces deux branches sont permanentes et protégées
