@@ -29,7 +29,15 @@ export async function generateMetadata({
   };
 }
 
-const RELEASES = [
+interface Release {
+  version: string;
+  date: string;
+  isInitial?: boolean;
+  added: string[];
+  infrastructure?: string[];
+}
+
+const RELEASES: Release[] = [
   {
     version: "v0.3.0",
     date: "2026-03-21",
@@ -127,7 +135,7 @@ export default async function ChangelogPage({
                   </time>
                 </div>
 
-                {"added" in release && release.added.length > 0 && (
+                {release.added.length > 0 && (
                   <section className="mb-4">
                     <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">
                       {release.isInitial
@@ -151,8 +159,7 @@ export default async function ChangelogPage({
                   </section>
                 )}
 
-                {"infrastructure" in release &&
-                  release.infrastructure &&
+                {release.infrastructure &&
                   release.infrastructure.length > 0 && (
                     <section>
                       <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">
