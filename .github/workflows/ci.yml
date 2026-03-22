@@ -192,17 +192,19 @@ jobs:
           SKIP_ENV_VALIDATION: true
           RESEND_API_KEY: 're_dummy_ci_key'
           DATABASE_URL: postgresql://gatectr:secret@localhost:5432/gatectr_test
+          NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
 
       - name: Start application server
         run: |
           export DATABASE_URL="postgresql://gatectr:secret@localhost:5432/gatectr_test"
           export REDIS_URL="redis://localhost:6379"
           export PORT="3000"
+          export HOSTNAME="0.0.0.0"
           export SKIP_ENV_VALIDATION="true"
           export RESEND_API_KEY="re_dummy_ci_key"
           export NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY="${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}"
           export CLERK_SECRET_KEY="${{ secrets.CLERK_SECRET_KEY }}"
-          pnpm start > /tmp/nextjs-server.log 2>&1 &
+          node .next/standalone/server.js > /tmp/nextjs-server.log 2>&1 &
           echo "Server PID: $!"
 
       - name: Wait for server to be ready
