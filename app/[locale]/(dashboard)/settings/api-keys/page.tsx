@@ -13,6 +13,19 @@ export default async function ApiKeysSettingsPage() {
 
   const ctx = await resolveTeamContext(clerkId);
 
+  type ApiKeyRow = {
+    id: string;
+    name: string;
+    prefix: string;
+    scopes: string[];
+    projectId: string | null;
+    isActive: boolean;
+    usageCount: number;
+    lastUsedAt: Date | null;
+    expiresAt: Date | null;
+    createdAt: Date;
+  };
+
   const [keys, projects] = ctx
     ? await Promise.all([
         prisma.apiKey.findMany({
@@ -26,6 +39,7 @@ export default async function ApiKeysSettingsPage() {
             isActive: true,
             usageCount: true,
             lastUsedAt: true,
+            expiresAt: true,
             createdAt: true,
           },
           orderBy: { createdAt: "desc" },
@@ -36,7 +50,7 @@ export default async function ApiKeysSettingsPage() {
           orderBy: { name: "asc" },
         }),
       ])
-    : [[], []];
+    : ([[], []] as [ApiKeyRow[], { id: string; name: string }[]]);
 
   return (
     <div className="max-w-2xl">

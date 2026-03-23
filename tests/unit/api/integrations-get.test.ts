@@ -20,7 +20,6 @@ vi.mock("@/lib/prisma", () => ({
 }));
 
 import { GET } from "@/app/api/v1/integrations/route";
-import { NextRequest } from "next/server";
 
 function makeReq() {
   return new NextRequest("http://localhost/api/v1/integrations");
@@ -58,7 +57,7 @@ describe("Property 13: Integration GET response never includes encryptedConfig",
         async (rows) => {
           mockFindMany.mockResolvedValue(rows);
 
-          const res = await GET(makeReq());
+          const res = await GET();
           const body = await res.json();
 
           expect(Array.isArray(body)).toBe(true);
@@ -75,7 +74,7 @@ describe("Property 13: Integration GET response never includes encryptedConfig",
     const { auth } = await import("@clerk/nextjs/server");
     vi.mocked(auth).mockResolvedValueOnce({ userId: null } as never);
 
-    const res = await GET(makeReq());
+    const res = await GET();
     expect(res.status).toBe(401);
   });
 });

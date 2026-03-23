@@ -39,6 +39,20 @@ interface Release {
 
 const RELEASES: Release[] = [
   {
+    version: "v4.0.0",
+    date: "2026-03-23",
+    added: [
+      "In-app notifications — bell icon in the dashboard header with real-time alerts, unread dot, and mark-all-read.",
+      "API key revoke & delete — revoke active keys or permanently delete any key from settings, with confirmation.",
+      "Team avatar in sidebar — team switcher shows your team logo when set, with initials fallback.",
+    ],
+    infrastructure: [
+      "New endpoints: GET /api/v1/notifications, PATCH /api/v1/alerts/[id], POST /api/v1/alerts/acknowledge-all.",
+      "avatarUrl exposed on GET /api/v1/teams/active and GET /api/v1/teams.",
+      "TypeScript build fixes — api-keys page and team settings page fallback types corrected.",
+    ],
+  },
+  {
     version: "v0.3.0",
     date: "2026-03-21",
     added: [

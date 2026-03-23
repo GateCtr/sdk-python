@@ -24,30 +24,36 @@ vi.mock("@/lib/redis", () => ({
 beforeEach(() => vi.clearAllMocks());
 
 // ── Complexity classification boundaries ──────────────────────────────────────
+// classifyComplexity takes a GatewayRequest — char count is derived from prompt/messages content.
+// We build requests with prompts of exact length to test boundaries.
+
+function makeReqWithChars(n: number): GatewayRequest {
+  return { model: "gpt-4", prompt: "a".repeat(n) };
+}
 
 describe("classifyComplexity — boundary values", () => {
   it("499 chars → 'low'", () => {
-    expect(classifyComplexity(499)).toBe("low");
+    expect(classifyComplexity(makeReqWithChars(499))).toBe("low");
   });
 
   it("500 chars → 'medium'", () => {
-    expect(classifyComplexity(500)).toBe("medium");
+    expect(classifyComplexity(makeReqWithChars(500))).toBe("medium");
   });
 
   it("2000 chars → 'medium'", () => {
-    expect(classifyComplexity(2000)).toBe("medium");
+    expect(classifyComplexity(makeReqWithChars(2000))).toBe("medium");
   });
 
   it("2001 chars → 'high'", () => {
-    expect(classifyComplexity(2001)).toBe("high");
+    expect(classifyComplexity(makeReqWithChars(2001))).toBe("high");
   });
 
   it("0 chars → 'low'", () => {
-    expect(classifyComplexity(0)).toBe("low");
+    expect(classifyComplexity(makeReqWithChars(0))).toBe("low");
   });
 
   it("very large count → 'high'", () => {
-    expect(classifyComplexity(100000)).toBe("high");
+    expect(classifyComplexity(makeReqWithChars(100000))).toBe("high");
   });
 });
 

@@ -29,36 +29,43 @@ export default async function TeamSettingsPage() {
     teamId = membership?.teamId;
   }
 
-  const [members, invitations] = teamId
-    ? await Promise.all([
-        prisma.teamMember.findMany({
-          where: { teamId },
-          include: { user: { select: { name: true, email: true } } },
-          orderBy: { createdAt: "asc" },
-        }),
-        prisma.teamInvitation.findMany({
-          where: {
-            teamId,
-            acceptedAt: null,
-            revokedAt: null,
-            expiresAt: { gt: new Date() },
-          },
-          include: {
-            invitedBy: { select: { name: true, email: true } },
-          },
-          orderBy: { createdAt: "desc" },
-        }),
-      ])
-    : ([[], []] as [
-        Awaited<ReturnType<typeof prisma.teamMember.findMany>>,
-        Awaited<
-          ReturnType<
-            typeof prisma.teamInvitation.findMany<{
-              include: { invitedBy: { select: { name: true; email: true } } };
-            }>
-          >
-        >,
-      ]);
+  type MemberWithUser = Awaited<
+    ReturnType<
+      typeof prisma.teamMember.findMany<{
+        include: { user: { select: { name: true; email: true } } };
+      }>
+    >
+  >;
+  type InvitationWithInvitedBy = Awaited<
+    ReturnType<
+      typeof prisma.teamInvitation.findMany<{
+        include: { invitedBy: { select: { name: true; email: true } } };
+      }>
+    >
+  >;
+
+  const [members, invitations]: [MemberWithUser, InvitationWithInvitedBy] =
+    teamId
+      ? await Promise.all([
+          prisma.teamMember.findMany({
+            where: { teamId },
+            include: { user: { select: { name: true, email: true } } },
+            orderBy: { createdAt: "asc" },
+          }),
+          prisma.teamInvitation.findMany({
+            where: {
+              teamId,
+              acceptedAt: null,
+              revokedAt: null,
+              expiresAt: { gt: new Date() },
+            },
+            include: {
+              invitedBy: { select: { name: true, email: true } },
+            },
+            orderBy: { createdAt: "desc" },
+          }),
+        ])
+      : [[], []];
 
   const isPro =
     dbUser?.plan === "PRO" ||

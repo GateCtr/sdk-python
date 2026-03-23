@@ -7,6 +7,28 @@ Versioning: [Semantic Versioning](https://semver.org/)
 
 ---
 
+## [4.0.0] — 2026-03-23
+
+### Added
+
+- **In-app notifications** — Bell icon in the dashboard header. Real-time alerts with unread dot, "Mark all read", and empty state. Polling every 30s.
+- **API key revoke & delete** — Revoke active keys or permanently delete any key directly from the settings page, with confirmation dialogs.
+- **Team avatar in sidebar** — Team switcher now displays the team logo when an `avatarUrl` is set, with initials fallback.
+- **Workspace modal z-index fix** — Create Workspace modal no longer renders behind other UI layers.
+
+### Fixed
+
+- TypeScript build error on `api-keys/page.tsx` — `expiresAt` missing from Prisma select fallback type.
+- TypeScript error on `settings/team/page.tsx` — `user` property missing from `teamMember.findMany` fallback type.
+- Test suite alignment — unit and property-based tests updated to match actual `classifyComplexity`, `estimateTokens`, `GET /integrations`, and ownership guard signatures.
+
+### Infrastructure
+
+- New API routes: `GET /api/v1/notifications`, `PATCH /api/v1/alerts/[id]`, `POST /api/v1/alerts/acknowledge-all`
+- `avatarUrl` exposed on `GET /api/v1/teams/active` and `GET /api/v1/teams`
+
+---
+
 ## [0.3.0] — 2026-03-21
 
 ### Added

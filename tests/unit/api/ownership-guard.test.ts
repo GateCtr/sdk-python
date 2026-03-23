@@ -22,6 +22,10 @@ vi.mock("@/lib/prisma", () => ({
   },
 }));
 
+vi.mock("@/lib/team-context", () => ({
+  resolveTeamContext: vi.fn(),
+}));
+
 vi.mock("@/lib/audit", () => ({
   logAudit: vi.fn().mockResolvedValue(undefined),
 }));
@@ -32,6 +36,7 @@ vi.mock("@/lib/webhooks", () => ({
 
 import { auth } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
+import { resolveTeamContext } from "@/lib/team-context";
 import { GET } from "@/app/api/v1/projects/[id]/route";
 
 describe("P1: ownership guard blocks non-owners", () => {
@@ -50,18 +55,25 @@ describe("P1: ownership guard blocks non-owners", () => {
           .filter(({ userId, resourceUserId }) => userId !== resourceUserId),
         async ({ userId, resourceUserId }) => {
           const clerkId = `clerk_${userId}`;
+          const teamId = `team_${userId}`;
 
           vi.mocked(auth).mockResolvedValue({ userId: clerkId } as ReturnType<
             typeof auth
           > extends Promise<infer T>
             ? T
             : never);
-          vi.mocked(prisma.user.findUnique).mockResolvedValue({
-            id: userId,
-          } as never);
+
+          // resolveTeamContext returns the authenticated user's context
+          vi.mocked(resolveTeamContext).mockResolvedValue({
+            userId,
+            teamId,
+          });
+
+          // Project belongs to a different user and a different team
           vi.mocked(prisma.project.findUnique).mockResolvedValue({
             id: "proj1",
             userId: resourceUserId,
+            teamId: `team_${resourceUserId}`,
           } as never);
 
           const req = new Request("http://localhost/api/v1/projects/proj1", {
