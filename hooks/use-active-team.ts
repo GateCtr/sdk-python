@@ -7,6 +7,7 @@ export interface ActiveTeam {
   id: string;
   name: string;
   slug: string;
+  avatarUrl: string | null;
   role: string;
   plan: string;
 }
@@ -15,6 +16,7 @@ export interface TeamMembership {
   id: string;
   name: string;
   slug: string;
+  avatarUrl: string | null;
   role: string;
 }
 
