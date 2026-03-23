@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "Pricing — GateCtr",
-    "description": "Free plan to get started. Pro at €29/mo. Team at €99/mo. Enterprise on request. You pay your LLM provider directly — GateCtr charges for the control layer."
+    "description": "Free plan to get started. Pro at $29/mo. Team at $99/mo. Enterprise on request. You pay your LLM provider directly — GateCtr charges for the control layer."
   },
   "hero": {
     "badge": "No token commission. Ever.",
@@ -100,7 +100,7 @@
       },
       {
         "model": "Additional seats",
-        "description": "€15/user/month for extra team members.",
+        "description": "$15/user/month for extra team members.",
         "segment": "Team"
       },
       {

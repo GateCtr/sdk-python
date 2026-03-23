@@ -21,18 +21,18 @@ export const PRODUCT = {
   },
   plans: {
     free: {
-      price: { en: "€0", fr: "0 €" },
+      price: { en: "$0", fr: "$0" },
       tokenLimit: "50K",
       projects: 1,
       webhooks: 1,
     },
     pro: {
-      price: { en: "€29", fr: "29 €" },
+      price: { en: "$29", fr: "$29" },
       tokenLimit: "2M",
       projects: 5,
     },
     team: {
-      price: { en: "€99", fr: "99 €" },
+      price: { en: "$99", fr: "$99" },
       tokenLimit: "10M",
     },
     enterprise: {

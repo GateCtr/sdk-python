@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "Tarifs — GateCtr",
-    "description": "Plan gratuit pour démarrer. Pro à 29 €/mois. Team à 99 €/mois. Enterprise sur devis. Vous payez votre provider LLM directement — GateCtr facture la couche de contrôle."
+    "description": "Plan gratuit pour démarrer. Pro à $29/mois. Team à $99/mois. Enterprise sur devis. Vous payez votre provider LLM directement — GateCtr facture la couche de contrôle."
   },
   "hero": {
     "badge": "Zéro commission sur les tokens. Jamais.",
@@ -100,7 +100,7 @@
       },
       {
         "model": "Sièges supplémentaires",
-        "description": "15 €/utilisateur/mois pour les membres additionnels.",
+        "description": "$15/utilisateur/mois pour les membres additionnels.",
         "segment": "Team"
       },
       {
