@@ -107,6 +107,22 @@ export default clerkMiddleware(
     }
 
     // ── Subdomain routing ─────────────────────────────────────────────────────
+    // api.gatectr.com → proxy to /api/v1/* routes
+    if (host === "api.gatectr.com") {
+      // Rewrite /v1/... → /api/v1/...
+      if (pathname.startsWith("/v1/")) {
+        const rewriteUrl = new URL(`/api${pathname}`, req.url);
+        rewriteUrl.search = req.nextUrl.search;
+        return secure(NextResponse.rewrite(rewriteUrl));
+      }
+      // /health → /api/health
+      if (pathname === "/health") {
+        return secure(NextResponse.rewrite(new URL("/api/health", req.url)));
+      }
+      // Anything else on api subdomain → 404
+      return NextResponse.json({ error: "Not Found" }, { status: 404 });
+    }
+
     // status.gatectr.com → /status page
     if (host === "status.gatectr.com") {
       const statusPath = "/en/status";
