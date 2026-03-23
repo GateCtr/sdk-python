@@ -94,7 +94,7 @@ const ENTERPRISE_LIMITS = {
 
 // getPlanLimits calls prisma.plan.findUnique with include: { limits: true }
 // and returns plan?.limits — so mock must return { limits: <limitsObj> }
-function setupPlan(planType: string, limits: typeof FREE_LIMITS) {
+function setupPlan(planType: string, limits: Record<string, unknown>) {
   vi.mocked(prisma.user.findUnique).mockResolvedValue({
     plan: planType,
   } as never);

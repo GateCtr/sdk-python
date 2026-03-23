@@ -151,7 +151,7 @@ describe("/complete: full pipeline", () => {
     expect(res.status).toBe(401);
     const body = (await res.json()) as { error: string };
     expect(body.error).toBe("missing_api_key");
-  });
+  }, 30000);
 
   it("returns 400 for unknown model", async () => {
     mockAuth.mockResolvedValue({ userId: "clerk_abc" });

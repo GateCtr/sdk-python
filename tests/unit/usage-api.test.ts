@@ -14,10 +14,15 @@ vi.mock("@clerk/nextjs/server", () => ({
   auth: vi.fn(),
 }));
 
+vi.mock("@/lib/team-context", () => ({
+  resolveTeamContext: vi.fn(),
+}));
+
 vi.mock("@/lib/prisma", () => ({
   prisma: {
     user: { findUnique: vi.fn() },
     project: { findFirst: vi.fn() },
+    teamMember: { findMany: vi.fn(), findFirst: vi.fn() },
     dailyUsageCache: {
       aggregate: vi.fn(),
       groupBy: vi.fn(),
@@ -50,6 +55,7 @@ vi.mock("@/lib/plan-guard", () => ({
 import { auth } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
 import { checkFeatureAccess } from "@/lib/plan-guard";
+import { resolveTeamContext } from "@/lib/team-context";
 import { GET } from "@/app/api/v1/usage/route";
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -63,6 +69,13 @@ function makeRequest(params: Record<string, string> = {}): NextRequest {
 function setupAuth(userId = "user-db-1") {
   vi.mocked(auth).mockResolvedValue({ userId: "clerk-1" } as never);
   vi.mocked(prisma.user.findUnique).mockResolvedValue({ id: userId } as never);
+  vi.mocked(resolveTeamContext).mockResolvedValue({
+    userId,
+    teamId: "team-1",
+  });
+  vi.mocked(prisma.teamMember.findMany).mockResolvedValue([
+    { userId } as never,
+  ]);
 }
 
 function setupEmptyUsage() {
@@ -304,11 +317,12 @@ describe("Authentication", () => {
   it("returns 404 when Clerk user not found in DB", async () => {
     vi.mocked(auth).mockResolvedValue({ userId: "clerk-1" } as never);
     vi.mocked(prisma.user.findUnique).mockResolvedValue(null);
+    vi.mocked(resolveTeamContext).mockResolvedValue(null);
 
     const res = await GET(makeRequest());
     const body = await res.json();
 
     expect(res.status).toBe(404);
-    expect(body.error).toBe("Not found");
+    expect(body.error).toBe("No active team");
   });
 });

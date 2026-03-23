@@ -21,10 +21,6 @@ vi.mock("@/lib/prisma", () => ({
 
 import { GET } from "@/app/api/v1/integrations/route";
 
-function makeReq() {
-  return new NextRequest("http://localhost/api/v1/integrations");
-}
-
 describe("Property 13: Integration GET response never includes encryptedConfig", () => {
   beforeEach(() => {
     vi.clearAllMocks();

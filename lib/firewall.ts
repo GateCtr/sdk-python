@@ -84,8 +84,8 @@ export async function checkBudget(
   const userCost = userAgg._sum.totalCostUsd ?? 0;
   const projectTokens = projectAgg?._sum.totalTokens ?? 0;
   const projectCost = projectAgg?._sum.totalCostUsd ?? 0;
-  const userDayTokens = userDayAgg._sum.totalTokens ?? 0;
-  const userDayCost = userDayAgg._sum.totalCostUsd ?? 0;
+  const userDayTokens = userDayAgg?._sum?.totalTokens ?? 0;
+  const userDayCost = userDayAgg?._sum?.totalCostUsd ?? 0;
   const projectDayTokens = projectDayAgg?._sum.totalTokens ?? 0;
   const projectDayCost = projectDayAgg?._sum.totalCostUsd ?? 0;
 

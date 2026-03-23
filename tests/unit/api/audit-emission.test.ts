@@ -15,6 +15,10 @@ vi.mock("@clerk/nextjs/server", () => ({
   auth: vi.fn(),
 }));
 
+vi.mock("@/lib/team-context", () => ({
+  resolveTeamContext: vi.fn(),
+}));
+
 vi.mock("@/lib/prisma", () => ({
   prisma: {
     user: { findUnique: vi.fn() },
@@ -33,6 +37,7 @@ vi.mock("@/lib/webhooks", () => ({
 import { auth } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
 import { logAudit } from "@/lib/audit";
+import { resolveTeamContext } from "@/lib/team-context";
 import { PATCH, DELETE } from "@/app/api/v1/projects/[id]/route";
 
 const OWNER_ID = "user-audit";
@@ -60,6 +65,10 @@ describe("P4: mutating operations emit audit log entries", () => {
     vi.mocked(prisma.user.findUnique).mockResolvedValue({
       id: OWNER_ID,
     } as never);
+    vi.mocked(resolveTeamContext).mockResolvedValue({
+      userId: OWNER_ID,
+      teamId: "team-1",
+    });
     vi.mocked(prisma.project.findUnique).mockResolvedValue(
       existingProject as never,
     );
@@ -85,6 +94,10 @@ describe("P4: mutating operations emit audit log entries", () => {
           vi.mocked(prisma.user.findUnique).mockResolvedValue({
             id: OWNER_ID,
           } as never);
+          vi.mocked(resolveTeamContext).mockResolvedValue({
+            userId: OWNER_ID,
+            teamId: "team-1",
+          });
           vi.mocked(prisma.project.findUnique).mockResolvedValue(
             existingProject as never,
           );
@@ -131,6 +144,10 @@ describe("P4: mutating operations emit audit log entries", () => {
         vi.mocked(prisma.user.findUnique).mockResolvedValue({
           id: OWNER_ID,
         } as never);
+        vi.mocked(resolveTeamContext).mockResolvedValue({
+          userId: OWNER_ID,
+          teamId: "team-1",
+        });
         vi.mocked(prisma.project.findUnique).mockResolvedValue(
           existingProject as never,
         );

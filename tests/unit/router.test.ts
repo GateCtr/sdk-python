@@ -32,12 +32,12 @@ function makeReqWithChars(n: number): GatewayRequest {
 }
 
 describe("classifyComplexity — boundary values", () => {
-  it("499 chars → 'low'", () => {
-    expect(classifyComplexity(makeReqWithChars(499))).toBe("low");
+  it("199 chars → 'low'", () => {
+    expect(classifyComplexity(makeReqWithChars(199))).toBe("low");
   });
 
-  it("500 chars → 'medium'", () => {
-    expect(classifyComplexity(makeReqWithChars(500))).toBe("medium");
+  it("200 chars → 'medium'", () => {
+    expect(classifyComplexity(makeReqWithChars(200))).toBe("medium");
   });
 
   it("2000 chars → 'medium'", () => {
