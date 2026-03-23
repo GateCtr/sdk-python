@@ -9,7 +9,7 @@ inclusion: always
 | Feature           | Min. plan | Description                               |
 | ----------------- | --------- | ----------------------------------------- |
 | Context Optimizer | Pro       | Automatic prompt compression              |
-| Model Router      | Pro       | Auto-selects the optimal model            |
+| Model Router      | Pro       | Semantic routing — picks the optimal model based on request complexity and cost/latency scoring |
 | Budget Firewall   | Free      | Token and budget limits per project       |
 | Webhooks Engine   | Pro       | Slack, Teams, Email, URL notifications    |
 | Usage Dashboard   | Free      | Real-time analytics (tokens, cost, model) |
@@ -49,7 +49,7 @@ inclusion: always
 | Feature            | EN one-liner                                           | FR one-liner                                                      |
 | ------------------ | ------------------------------------------------------ | ----------------------------------------------------------------- |
 | Context Optimizer  | Compresses your prompts. -40% tokens. Same output.     | Compresse vos prompts. -40% de tokens. Même résultat.             |
-| Model Router       | Picks the right LLM for each request automatically.    | Sélectionne le bon LLM pour chaque requête.                       |
+| Model Router       | Picks the right LLM for each request. Semantic complexity scoring. Cost + latency optimized. | Sélectionne le bon LLM. Scoring sémantique. Optimisé coût + latence. |
 | Budget Firewall    | Hard caps. Soft alerts. No surprise invoices.          | Limites strictes. Alertes douces. Zéro facture surprise.          |
 | Webhooks Engine    | Push events to Slack, Teams, or any URL.               | Envoyez les événements vers Slack, Teams ou n'importe quelle URL. |
 | Usage Dashboard    | Every token. Every cost. Real-time.                    | Chaque token. Chaque coût. En temps réel.                         |

@@ -6,6 +6,7 @@ const withNextIntl = createNextIntlPlugin();
 
 const nextConfig: NextConfig = {
   output: "standalone",
+  serverExternalPackages: ["ioredis", "bullmq"],
   allowedDevOrigins: [
     "nanci-oilier-overtolerantly.ngrok-free.app",
     "nanci-oilier-overtolerantly.ngrok-free.dev",
