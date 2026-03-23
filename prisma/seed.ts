@@ -441,6 +441,7 @@ async function main() {
   // Sources: OpenAI pricing (pecollective.com), Anthropic (claudefa.st),
   //          Mistral (inworld.ai / docs.mistral.ai), Google (winbuzzer / deepmind.google)
   // Costs stored per 1K tokens (divide published per-1M prices by 1000)
+  // avgLatencyMs: measured TTFT (time-to-first-token) p50 estimates from public benchmarks
   const models = [
     // ── OpenAI ────────────────────────────────────────────────────────────────
     // GPT-4.1 — recommended production model (replaced GPT-4o), 1M context
@@ -452,6 +453,7 @@ async function main() {
       maxOutputTokens: 32_768,
       inputCostPer1kTokens: 0.002, // $2.00 / 1M
       outputCostPer1kTokens: 0.008, // $8.00 / 1M
+      avgLatencyMs: 800,
       capabilities: ["chat", "complete", "vision", "function_calling"],
     },
     // GPT-4.1 Mini — mid-tier, 5× cheaper than GPT-4.1
@@ -463,6 +465,7 @@ async function main() {
       maxOutputTokens: 32_768,
       inputCostPer1kTokens: 0.0004, // $0.40 / 1M
       outputCostPer1kTokens: 0.0016, // $1.60 / 1M
+      avgLatencyMs: 400,
       capabilities: ["chat", "complete", "function_calling"],
     },
     // GPT-4.1 Nano — cheapest capable OpenAI model, routing & classification
@@ -474,6 +477,7 @@ async function main() {
       maxOutputTokens: 16_384,
       inputCostPer1kTokens: 0.0001, // $0.10 / 1M
       outputCostPer1kTokens: 0.0004, // $0.40 / 1M
+      avgLatencyMs: 200,
       capabilities: ["chat", "complete"],
     },
     // GPT-5 — flagship, agentic workflows
@@ -485,6 +489,7 @@ async function main() {
       maxOutputTokens: 16_384,
       inputCostPer1kTokens: 0.00125, // $1.25 / 1M
       outputCostPer1kTokens: 0.01, // $10.00 / 1M
+      avgLatencyMs: 1200,
       capabilities: ["chat", "complete", "vision", "function_calling"],
     },
     // o4-mini — best-value reasoning model
@@ -496,6 +501,7 @@ async function main() {
       maxOutputTokens: 100_000,
       inputCostPer1kTokens: 0.0011, // $1.10 / 1M
       outputCostPer1kTokens: 0.0044, // $4.40 / 1M
+      avgLatencyMs: 2500, // reasoning models have higher TTFT
       capabilities: ["chat", "complete", "function_calling"],
     },
     // o3 — advanced reasoning
@@ -507,6 +513,7 @@ async function main() {
       maxOutputTokens: 100_000,
       inputCostPer1kTokens: 0.002, // $2.00 / 1M
       outputCostPer1kTokens: 0.008, // $8.00 / 1M
+      avgLatencyMs: 4000, // heavy reasoning
       capabilities: ["chat", "complete", "function_calling"],
     },
 
@@ -520,6 +527,7 @@ async function main() {
       maxOutputTokens: 8_192,
       inputCostPer1kTokens: 0.003, // $3.00 / 1M
       outputCostPer1kTokens: 0.015, // $15.00 / 1M
+      avgLatencyMs: 700,
       capabilities: ["chat", "complete", "vision", "function_calling"],
     },
     // Claude Opus 4.6 — deep reasoning, 1M context GA, agent teams
@@ -531,6 +539,7 @@ async function main() {
       maxOutputTokens: 8_192,
       inputCostPer1kTokens: 0.005, // $5.00 / 1M
       outputCostPer1kTokens: 0.025, // $25.00 / 1M
+      avgLatencyMs: 1500,
       capabilities: ["chat", "complete", "vision", "function_calling"],
     },
     // Claude Haiku 4.5 — budget tier, fast & cheap
@@ -542,6 +551,7 @@ async function main() {
       maxOutputTokens: 8_192,
       inputCostPer1kTokens: 0.0008, // $0.80 / 1M (estimated budget tier)
       outputCostPer1kTokens: 0.004, // $4.00 / 1M
+      avgLatencyMs: 300,
       capabilities: ["chat", "complete", "vision"],
     },
 
@@ -555,6 +565,7 @@ async function main() {
       maxOutputTokens: 8_192,
       inputCostPer1kTokens: 0.0005, // $0.50 / 1M
       outputCostPer1kTokens: 0.0015, // $1.50 / 1M
+      avgLatencyMs: 600,
       capabilities: ["chat", "complete", "vision", "function_calling"],
     },
     // Mistral Medium 3 — frontier perf at fraction of cost
@@ -566,6 +577,7 @@ async function main() {
       maxOutputTokens: 8_192,
       inputCostPer1kTokens: 0.0004, // $0.40 / 1M
       outputCostPer1kTokens: 0.002, // $2.00 / 1M
+      avgLatencyMs: 450,
       capabilities: ["chat", "complete", "function_calling"],
     },
     // Mistral Small 3.2 — latest small, cost-efficient
@@ -577,6 +589,7 @@ async function main() {
       maxOutputTokens: 8_192,
       inputCostPer1kTokens: 0.0001, // $0.10 / 1M
       outputCostPer1kTokens: 0.0003, // $0.30 / 1M
+      avgLatencyMs: 250,
       capabilities: ["chat", "complete"],
     },
 
@@ -590,6 +603,7 @@ async function main() {
       maxOutputTokens: 8_192,
       inputCostPer1kTokens: 0.0005, // ~$0.50 / 1M (estimated, between 2.5 Flash and 3 Pro)
       outputCostPer1kTokens: 0.002,
+      avgLatencyMs: 350,
       capabilities: ["chat", "complete", "vision", "function_calling"],
     },
     // Gemini 3.1 Flash-Lite — fastest, cheapest Gemini, 2.5× faster TTFB
@@ -601,6 +615,7 @@ async function main() {
       maxOutputTokens: 8_192,
       inputCostPer1kTokens: 0.00025, // $0.25 / 1M
       outputCostPer1kTokens: 0.0015, // $1.50 / 1M
+      avgLatencyMs: 180,
       capabilities: ["chat", "complete", "vision"],
     },
     // Gemini 2.5 Pro — still widely used, top LMArena score
@@ -612,20 +627,171 @@ async function main() {
       maxOutputTokens: 8_192,
       inputCostPer1kTokens: 0.00125, // $1.25 / 1M
       outputCostPer1kTokens: 0.01, // $10.00 / 1M
+      avgLatencyMs: 900,
       capabilities: ["chat", "complete", "vision", "function_calling"],
     },
   ];
 
   for (const model of models) {
-    const { provider, ...modelData } = model;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { provider, capabilities, avgLatencyMs, ...modelData } = model;
     await prisma.modelCatalog.upsert({
       where: { modelId: model.modelId },
-      update: { ...modelData, providerId: providerIdMap[provider] },
-      create: { ...modelData, providerId: providerIdMap[provider] },
+      update: {
+        ...modelData,
+        avgLatencyMs,
+        providerId: providerIdMap[provider],
+      },
+      create: {
+        ...modelData,
+        avgLatencyMs,
+        providerId: providerIdMap[provider],
+      },
     });
   }
 
   console.log("✅ Model catalog seeded");
+
+  // ── Optimization Rules ─────────────────────────────────────────────────────
+  // Pruning rules: regex patterns that match filler/noise in prompts.
+  // These supplement the built-in FILLER_PATTERNS in lib/optimizer.ts.
+  // Ordered by priority (higher = applied first).
+
+  const optimizationRules = [
+    // ── Verbose preambles ────────────────────────────────────────────────────
+    {
+      name: "verbose_preamble_please",
+      description:
+        "Remove 'Please ...' preambles before the actual instruction",
+      ruleType: "pruning",
+      pattern: "^Please\\s+(can you\\s+|could you\\s+|would you\\s+)?",
+      priority: 90,
+    },
+    {
+      name: "verbose_preamble_i_want",
+      description: "Remove 'I want you to ...' preambles",
+      ruleType: "pruning",
+      pattern: "^I want you to\\s+",
+      priority: 90,
+    },
+    {
+      name: "verbose_preamble_i_need",
+      description: "Remove 'I need you to ...' preambles",
+      ruleType: "pruning",
+      pattern: "^I need you to\\s+",
+      priority: 90,
+    },
+    {
+      name: "verbose_preamble_your_task",
+      description: "Remove 'Your task is to ...' preambles",
+      ruleType: "pruning",
+      pattern: "^Your task is to\\s+",
+      priority: 85,
+    },
+    {
+      name: "verbose_preamble_you_are_an_expert",
+      description: "Remove 'You are an expert in X.' role-setting filler",
+      ruleType: "pruning",
+      pattern:
+        "You are an? (expert|specialist|professional) (in|at|with)[^.]*\\.\\s*",
+      priority: 80,
+    },
+    // ── Redundant instructions ───────────────────────────────────────────────
+    {
+      name: "redundant_think_step_by_step",
+      description:
+        "Remove redundant 'think step by step' when already in system prompt",
+      ruleType: "pruning",
+      pattern:
+        "\\bThink (carefully|step[- ]by[- ]step|through this)[^.]*\\.\\s*",
+      priority: 75,
+    },
+    {
+      name: "redundant_be_concise",
+      description: "Remove 'Be concise and clear' filler instructions",
+      ruleType: "pruning",
+      pattern:
+        "\\bBe (concise|clear|brief|thorough|detailed|comprehensive)[^.]*\\.\\s*",
+      priority: 70,
+    },
+    {
+      name: "redundant_respond_in_language",
+      description: "Remove 'Respond in English' when already obvious",
+      ruleType: "pruning",
+      pattern:
+        "\\bRespond (only )?in (English|French|Spanish|German)[^.]*\\.\\s*",
+      priority: 70,
+    },
+    // ── Closing filler ───────────────────────────────────────────────────────
+    {
+      name: "closing_let_me_know",
+      description: "Remove 'Let me know if you need anything else' closings",
+      ruleType: "pruning",
+      pattern: "\\bLet me know if (you need|there is|I can)[^.]*\\.\\s*$",
+      priority: 65,
+    },
+    {
+      name: "closing_thank_you",
+      description: "Remove 'Thank you' closings in user messages",
+      ruleType: "pruning",
+      pattern: "\\bThank you[^.]*\\.?\\s*$",
+      priority: 65,
+    },
+    {
+      name: "closing_thanks",
+      description: "Remove standalone 'Thanks' at end of message",
+      ruleType: "pruning",
+      pattern: "\\bThanks[!.]?\\s*$",
+      priority: 65,
+    },
+    // ── Whitespace / formatting noise ────────────────────────────────────────
+    {
+      name: "excessive_punctuation",
+      description: "Collapse repeated punctuation (!!!, ???)",
+      ruleType: "pruning",
+      pattern: "([!?])\\1{2,}",
+      priority: 50,
+    },
+    {
+      name: "repeated_dashes",
+      description: "Collapse repeated dashes used as separators",
+      ruleType: "pruning",
+      pattern: "-{4,}",
+      priority: 50,
+    },
+    {
+      name: "repeated_equals",
+      description: "Collapse repeated equals signs used as separators",
+      ruleType: "pruning",
+      pattern: "={4,}",
+      priority: 50,
+    },
+  ];
+
+  for (const rule of optimizationRules) {
+    await prisma.optimizationRule.upsert({
+      where: { id: rule.name }, // use name as stable key via findFirst workaround
+      update: {
+        description: rule.description,
+        pattern: rule.pattern,
+        priority: rule.priority,
+        isActive: true,
+      },
+      create: {
+        id: rule.name, // deterministic id for idempotent seeding
+        name: rule.name,
+        description: rule.description,
+        ruleType: rule.ruleType,
+        pattern: rule.pattern,
+        priority: rule.priority,
+        isActive: true,
+      },
+    });
+  }
+
+  console.log(
+    `✅ Optimization rules seeded (${optimizationRules.length} rules)`,
+  );
   console.log("🎉 Seeding completed!");
 }
 

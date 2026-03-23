@@ -43,6 +43,9 @@ model User {
   rateLimits            RateLimit[]
   ownedTeams            Team[]       @relation("TeamOwner")
   teamMemberships       TeamMember[]
+  teamMembershipsGiven  TeamMember[] @relation("InvitedByUser")
+  invitationsSent       TeamInvitation[] @relation("InvitationSender")
+  alertRules            AlertRule[]
 
   @@index([clerkId])
   @@index([email])
@@ -53,6 +56,7 @@ model User {
 model ApiKey {
   id          String    @id @default(cuid())
   userId      String
+  teamId      String?
   name        String
   keyHash     String    @unique // bcrypt hash of full key
   prefix      String // First 12 chars: "gct_xxxxxx"
@@ -67,10 +71,12 @@ model ApiKey {
   updatedAt   DateTime  @updatedAt
 
   user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  team      Team?       @relation(fields: [teamId], references: [id], onDelete: Cascade)
   project   Project?    @relation(fields: [projectId], references: [id])
   usageLogs UsageLog[]
 
   @@index([userId])
+  @@index([teamId])
   @@index([prefix])
   @@map("api_keys")
 }
@@ -79,6 +85,7 @@ model ApiKey {
 model LLMProviderKey {
   id              String   @id @default(cuid())
   userId          String
+  teamId          String?
   provider        String // openai, anthropic, mistral, gemini
   name            String // User-friendly name
   encryptedApiKey String // AES encrypted
@@ -87,10 +94,12 @@ model LLMProviderKey {
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  team Team? @relation(fields: [teamId], references: [id], onDelete: Cascade)
 
   @@unique([userId, provider, name])
   @@index([userId])
+  @@index([teamId])
   @@index([provider])
   @@map("llm_provider_keys")
 }
@@ -243,6 +252,8 @@ model Team {
   name        String
   slug        String   @unique
   description String?
+  avatarUrl   String?
+  settings    Json?    @default("{}")
   ownerId     String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -251,6 +262,9 @@ model Team {
   members     TeamMember[]
   projects    Project[]
   invitations TeamInvitation[]
+  apiKeys     ApiKey[]
+  webhooks    Webhook[]
+  providerKeys LLMProviderKey[]
 
   @@index([ownerId])
   @@index([slug])
@@ -258,15 +272,17 @@ model Team {
 }
 
 model TeamMember {
-  id        String   @id @default(cuid())
-  teamId    String
-  userId    String
-  role      TeamRole @default(MEMBER)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String   @id @default(cuid())
+  teamId      String
+  userId      String
+  role        TeamRole @default(MEMBER)
+  invitedById String?  // Who sent the invitation
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  team      Team  @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  user      User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  invitedBy User? @relation("InvitedByUser", fields: [invitedById], references: [id], onDelete: SetNull)
 
   @@unique([teamId, userId])
   @@index([teamId])
@@ -275,22 +291,26 @@ model TeamMember {
 }
 
 model TeamInvitation {
-  id         String    @id @default(cuid())
-  teamId     String
-  email      String
-  role       TeamRole  @default(MEMBER)
-  token      String    @unique
-  expiresAt  DateTime
-  acceptedAt DateTime?
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
+  id          String    @id @default(cuid())
+  teamId      String
+  email       String
+  role        TeamRole  @default(MEMBER)
+  token       String    @unique
+  invitedById String?
+  expiresAt   DateTime
+  acceptedAt  DateTime?
+  revokedAt   DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
-  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  team      Team  @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  invitedBy User? @relation("InvitationSender", fields: [invitedById], references: [id], onDelete: SetNull)
 
-  @@unique([teamId, email])
+  // Allow re-inviting after expiry/revocation — unique on active invitations enforced in app logic
   @@index([teamId])
   @@index([email])
   @@index([token])
+  @@index([teamId, email])
   @@map("team_invitations")
 }
 
@@ -378,6 +398,7 @@ model UsageLog {
   apiKey  ApiKey?  @relation(fields: [apiKeyId], references: [id])
 
   @@index([userId, createdAt])
+  @@index([userId, provider, createdAt])
   @@index([projectId, createdAt])
   @@index([createdAt])
   @@map("usage_logs")
@@ -409,6 +430,7 @@ model DailyUsageCache {
 model Webhook {
   id           String    @id @default(cuid())
   userId       String
+  teamId       String?
   name         String
   url          String
   secret       String
@@ -422,14 +444,17 @@ model Webhook {
   updatedAt    DateTime  @updatedAt
 
   user       User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  team       Team?              @relation(fields: [teamId], references: [id], onDelete: Cascade)
   deliveries WebhookDelivery[]
 
   @@index([userId])
+  @@index([teamId])
   @@map("webhooks")
 }
 
 model WebhookDelivery {
   id         String   @id @default(cuid())
+  deliveryId String   @default(cuid())
   webhookId  String
   event      String
   payload    Json
@@ -773,7 +798,8 @@ model AlertRule {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  alerts Alert[]
+  user    User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  alerts  Alert[]
 
   @@index([userId])
   @@index([projectId])
