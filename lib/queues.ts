@@ -2,13 +2,19 @@ import { Queue } from "bullmq";
 import IORedis from "ioredis";
 
 // Shared IORedis connection for BullMQ queues
-export const redisConnection = new IORedis(process.env.REDIS_URL!, {
-  maxRetriesPerRequest: null, // required by BullMQ
-  retryStrategy: (times) => {
-    if (times >= 10) return null; // stop retrying after 10 attempts
-    return Math.min(times * 1000, 30000); // exponential backoff up to 30s
+// REDIS_EXTERNAL_URL takes priority over REDIS_URL to avoid Railway's
+// auto-injected internal Redis URL (which has no auth) overriding our
+// Redis Labs URL that requires authentication.
+export const redisConnection = new IORedis(
+  process.env.REDIS_EXTERNAL_URL ?? process.env.REDIS_URL!,
+  {
+    maxRetriesPerRequest: null, // required by BullMQ
+    retryStrategy: (times) => {
+      if (times >= 10) return null; // stop retrying after 10 attempts
+      return Math.min(times * 1000, 30000); // exponential backoff up to 30s
+    },
   },
-});
+);
 
 // BullMQ shared options — skipVersionCheck suppresses the volatile-lru warning
 // on managed Redis plans (Redis.io Hobby, Upstash, etc.) that don't allow
