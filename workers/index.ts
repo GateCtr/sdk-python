@@ -10,6 +10,16 @@ import {
 
 console.info("[workers] starting all workers");
 
+// ── Global error handlers ────────────────────────────────────────────────────
+process.on("unhandledRejection", (reason, promise) => {
+  console.error("[workers] unhandledRejection", { reason, promise });
+});
+
+process.on("uncaughtException", (err) => {
+  console.error("[workers] uncaughtException", err);
+  process.exit(1);
+});
+
 scheduleDailyReport().catch((err) =>
   console.error("[workers] failed to schedule daily report", err),
 );

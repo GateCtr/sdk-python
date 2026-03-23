@@ -30,6 +30,12 @@ interface RenewalReminderJobData {
 // ─── Scheduler — runs daily at 09:00 UTC ─────────────────────────────────────
 
 export async function scheduleRenewalReminders(): Promise<void> {
+  // Remove stale repeatable jobs before re-adding
+  const repeatables = await billingEmailQueue.getRepeatableJobs();
+  for (const job of repeatables) {
+    await billingEmailQueue.removeRepeatableByKey(job.key);
+  }
+
   await billingEmailQueue.add(
     "scan-renewals",
     {},
