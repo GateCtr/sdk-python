@@ -23,7 +23,7 @@ export default function BillingRenewalReminderEmail({
   email,
   renewalDate,
   amount,
-  currency = "eur",
+  currency = "usd",
   locale = "en",
 }: BillingRenewalReminderEmailProps) {
   const formattedDate = new Intl.DateTimeFormat(

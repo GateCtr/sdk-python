@@ -26,7 +26,7 @@ export function BillingStats({
   const statCards = [
     {
       label: t("stats.mrr"),
-      value: `€${mrr.toLocaleString("en-US", { minimumFractionDigits: 0 })}`,
+      value: `$${mrr.toLocaleString("en-US", { minimumFractionDigits: 0 })}`,
     },
     {
       label: t("stats.activeSubscriptions"),

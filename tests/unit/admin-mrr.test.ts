@@ -80,7 +80,7 @@ describe("Property 18: Admin MRR calculation correctness", () => {
     );
   });
 
-  it("PRO subscriptions each contribute exactly €29 to MRR (>=100 iterations)", () => {
+  it("PRO subscriptions each contribute exactly $29 to MRR (>=100 iterations)", () => {
     fc.assert(
       fc.property(fc.integer({ min: 0, max: 100 }), (proCount) => {
         const subs: SubWithPlan[] = Array.from({ length: proCount }, () => ({
@@ -95,7 +95,7 @@ describe("Property 18: Admin MRR calculation correctness", () => {
     );
   });
 
-  it("TEAM subscriptions each contribute exactly €99 to MRR (>=100 iterations)", () => {
+  it("TEAM subscriptions each contribute exactly $99 to MRR (>=100 iterations)", () => {
     fc.assert(
       fc.property(fc.integer({ min: 0, max: 100 }), (teamCount) => {
         const subs: SubWithPlan[] = Array.from({ length: teamCount }, () => ({

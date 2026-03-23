@@ -2,7 +2,7 @@ import { stripe } from "@/lib/stripe";
 import { prisma } from "@/lib/prisma";
 import * as Sentry from "@sentry/nextjs";
 
-const INCLUDED_SEATS = 3; // TEAM plan base seats — 4th member and beyond billed at €15/user/month
+const INCLUDED_SEATS = 3; // TEAM plan base seats — 4th member and beyond billed at $15/user/month
 
 /**
  * Update the seat quantity on the Stripe subscription for a TEAM plan user.

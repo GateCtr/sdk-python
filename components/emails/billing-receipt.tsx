@@ -22,7 +22,7 @@ interface BillingReceiptEmailProps {
 export default function BillingReceiptEmail({
   email,
   amount,
-  currency = "eur",
+  currency = "usd",
   invoicePdfUrl,
   locale = "en",
 }: BillingReceiptEmailProps) {

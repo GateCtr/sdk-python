@@ -31,7 +31,7 @@
     "description": "Chaque appel API est une boîte noire. Aucune visibilité, aucun contrôle, aucune alerte. Jusqu'à la facture.",
     "items": [
       {
-        "stat": "0 € → 4 200 €",
+        "stat": "$0 → $4,200",
         "label": "Facture mensuelle inattendue",
         "description": "Une boucle d'agent. Aucune limite. Facture complète."
       },
