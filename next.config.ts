@@ -11,15 +11,6 @@ const nextConfig: NextConfig = {
     "nanci-oilier-overtolerantly.ngrok-free.app",
     "nanci-oilier-overtolerantly.ngrok-free.dev",
   ],
-  async rewrites() {
-    return [
-      {
-        source: "/",
-        destination: "/en/status",
-        has: [{ type: "host", value: "status.gatectr.com" }],
-      },
-    ];
-  },
 };
 
 export default withSentryConfig(withNextIntl(nextConfig), {

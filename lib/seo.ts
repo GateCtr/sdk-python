@@ -30,7 +30,9 @@ function resolveUrls(): { marketingUrl: string; appUrl: string } {
 export async function getSeoContext(): Promise<SeoContext> {
   const { headers } = await import("next/headers");
   const headerStore = await headers();
-  const host = headerStore.get("host") ?? "";
+  // x-forwarded-host is more reliable on Vercel/proxied environments
+  const host =
+    headerStore.get("x-forwarded-host") ?? headerStore.get("host") ?? "";
   return getSeoContextWithHost(host);
 }
 
@@ -39,7 +41,10 @@ export async function getSeoContext(): Promise<SeoContext> {
  */
 export function getSeoContextWithHost(host: string): SeoContext {
   const { marketingUrl, appUrl } = resolveUrls();
-  const isAppSubdomain = host.startsWith("app.");
+  // Strip port for comparison (e.g. localhost:3000)
+  const hostWithoutPort = host.split(":")[0];
+  const isAppSubdomain =
+    host.startsWith("app.") || hostWithoutPort === new URL(appUrl).hostname;
   return { marketingUrl, appUrl, isAppSubdomain };
 }
 

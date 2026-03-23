@@ -71,17 +71,32 @@ export default function OnboardingPage() {
     const result = await finalizeOnboarding(fd);
     if (result?.error) return;
 
-    try {
-      await user?.reload();
-      await getToken({ skipCache: true });
-    } catch {
-      // best-effort
+    // Force Clerk to issue a fresh token with onboardingComplete: true
+    // Retry up to 5 times with 800ms delay to wait for Clerk propagation
+    let attempts = 0;
+    let tokenRefreshed = false;
+    while (attempts < 5 && !tokenRefreshed) {
+      try {
+        await new Promise((r) => setTimeout(r, 800));
+        await user?.reload();
+        const token = await getToken({ skipCache: true });
+        if (token) {
+          // Decode payload to check if onboardingComplete is now true
+          const payload = JSON.parse(atob(token.split(".")[1]));
+          if (payload?.metadata?.onboardingComplete === true) {
+            tokenRefreshed = true;
+            break;
+          }
+        }
+      } catch {
+        // best-effort
+      }
+      attempts++;
     }
 
     localStorage.removeItem(STORAGE_KEY);
     const dashPath = locale === "fr" ? "/fr/dashboard" : "/dashboard";
-    // Use the refresh endpoint to force a new JWT before hitting the middleware gate
-    window.location.href = `/api/auth/refresh?redirect=${encodeURIComponent(dashPath)}`;
+    window.location.href = dashPath;
   }
 
   const currentIndex = STEPS.indexOf(step);

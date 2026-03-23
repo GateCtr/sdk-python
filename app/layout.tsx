@@ -32,7 +32,9 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_MARKETING_URL ?? "https://gatectr.com",
+    process.env.NEXT_PUBLIC_BASE_URL ??
+      process.env.NEXT_PUBLIC_MARKETING_URL ??
+      "https://gatectr.com",
   ),
   alternates: {
     canonical: process.env.NEXT_PUBLIC_MARKETING_URL ?? "https://gatectr.com",
