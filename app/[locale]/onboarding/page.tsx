@@ -68,14 +68,20 @@ export default function OnboardingPage() {
   async function finish() {
     const fd = new FormData();
     fd.set("locale", locale);
-    await finalizeOnboarding(fd);
+    const result = await finalizeOnboarding(fd);
+    if (result?.error) return;
+
     try {
       await user?.reload();
       await getToken({ skipCache: true });
     } catch {
       // best-effort
     }
-    setRedirectTo(locale === "fr" ? "/fr/dashboard" : "/dashboard");
+
+    localStorage.removeItem(STORAGE_KEY);
+    const dashPath = locale === "fr" ? "/fr/dashboard" : "/dashboard";
+    // Use the refresh endpoint to force a new JWT before hitting the middleware gate
+    window.location.href = `/api/auth/refresh?redirect=${encodeURIComponent(dashPath)}`;
   }
 
   const currentIndex = STEPS.indexOf(step);

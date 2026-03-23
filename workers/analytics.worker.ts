@@ -97,7 +97,7 @@ export const analyticsWorker = new Worker<AnalyticsJobData>(
   {
     connection: redisConnection,
     concurrency: 20,
-    // ── 7.8 Job retention ──────────────────────────────────────────────────────
+    skipVersionCheck: true,
     removeOnComplete: { count: 5000 },
     removeOnFail: { count: 10000 },
   },

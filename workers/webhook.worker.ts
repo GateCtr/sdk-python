@@ -213,6 +213,7 @@ export const webhookWorker = new Worker<WebhookJobData>(
     connection: redisConnection,
     concurrency: 10,
     lockDuration: 30_000,
+    skipVersionCheck: true,
   },
 );
 

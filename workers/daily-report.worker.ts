@@ -209,8 +209,9 @@ export const dailyReportWorker = new Worker<DailyReportJobData>(
   processJob,
   {
     connection: redisConnection,
-    concurrency: 1, // one day at a time
-    lockDuration: 5 * 60 * 1000, // 5 min max
+    concurrency: 1,
+    lockDuration: 5 * 60 * 1000,
+    skipVersionCheck: true,
   },
 );
 

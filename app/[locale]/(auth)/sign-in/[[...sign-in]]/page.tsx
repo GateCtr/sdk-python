@@ -24,5 +24,5 @@ export async function generateMetadata({
  * Requirements: 1.1, 1.4, 1.8
  */
 export default function SignInPage() {
-  return <SignIn signUpUrl="/sign-up" />;
+  return <SignIn signUpUrl="/sign-up" fallbackRedirectUrl="/dashboard" />;
 }

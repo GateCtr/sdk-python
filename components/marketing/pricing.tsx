@@ -114,7 +114,7 @@ export function Pricing() {
                         : "cta-secondary"
                   }
                   size="default"
-                  className="w-full"
+                  className="w-full h-auto min-h-9 whitespace-normal text-center py-2"
                   asChild
                 >
                   <Link href={isEnterprise ? "/contact" : "/sign-up"}>

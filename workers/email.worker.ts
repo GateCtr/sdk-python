@@ -60,6 +60,7 @@ export const emailWorker = new Worker<EmailJobData>("emails", processJob, {
   connection: redisConnection,
   concurrency: 5,
   lockDuration: 30_000,
+  skipVersionCheck: true,
 });
 
 emailWorker.on("failed", (job, err) => {

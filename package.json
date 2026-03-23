@@ -16,7 +16,7 @@
     "test:e2e": "playwright test",
     "postinstall": "prisma generate",
     "prepare": "husky",
-    "workers": "tsx workers/index.ts"
+    "workers": "tsx --env-file=.env workers/index.ts"
   },
   "pnpm": {
     "overrides": {

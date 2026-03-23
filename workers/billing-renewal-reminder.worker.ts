@@ -8,16 +8,14 @@
 import { Queue, Worker, Job } from "bullmq";
 import { prisma } from "@/lib/prisma";
 import { sendBillingRenewalReminderEmail } from "@/lib/resend";
-
-// ─── Redis connection ─────────────────────────────────────────────────────────
-// Pass connection string directly to avoid ioredis version mismatch with BullMQ
-
-const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379";
-const connection = { url: REDIS_URL, maxRetriesPerRequest: null } as const;
+import { redisConnection } from "@/lib/queues";
 
 // ─── Queue ────────────────────────────────────────────────────────────────────
 
-export const billingEmailQueue = new Queue("billing-emails", { connection });
+export const billingEmailQueue = new Queue("billing-emails", {
+  connection: redisConnection,
+  skipVersionCheck: true,
+});
 
 // ─── Job types ────────────────────────────────────────────────────────────────
 
@@ -111,7 +109,7 @@ export const billingEmailWorker = new Worker(
       );
     }
   },
-  { connection },
+  { connection: redisConnection, skipVersionCheck: true },
 );
 
 billingEmailWorker.on("failed", (job, err) => {

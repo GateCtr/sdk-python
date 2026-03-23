@@ -1,0 +1,28 @@
+{
+  "page": {
+    "title": "System Status",
+    "description": "Real-time status of all GateCtr services."
+  },
+  "overall": {
+    "healthy": "All systems operational",
+    "degraded": "Partial outage",
+    "down": "Major outage",
+    "unknown": "Status unknown"
+  },
+  "services": {
+    "app": "Application",
+    "database": "Database",
+    "redis": "Cache (Redis)",
+    "queue": "Job Queue",
+    "stripe": "Payments (Stripe)"
+  },
+  "status": {
+    "HEALTHY": "Operational",
+    "DEGRADED": "Degraded",
+    "DOWN": "Down",
+    "unknown": "Unknown"
+  },
+  "lastChecked": "Last checked {time}",
+  "noData": "No data yet",
+  "refresh": "Refresh"
+}

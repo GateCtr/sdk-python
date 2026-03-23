@@ -1,0 +1,28 @@
+{
+  "page": {
+    "title": "État du système",
+    "description": "État en temps réel de tous les services GateCtr."
+  },
+  "overall": {
+    "healthy": "Tous les systèmes opérationnels",
+    "degraded": "Panne partielle",
+    "down": "Panne majeure",
+    "unknown": "État inconnu"
+  },
+  "services": {
+    "app": "Application",
+    "database": "Base de données",
+    "redis": "Cache (Redis)",
+    "queue": "File de tâches",
+    "stripe": "Paiements (Stripe)"
+  },
+  "status": {
+    "HEALTHY": "Opérationnel",
+    "DEGRADED": "Dégradé",
+    "DOWN": "Hors service",
+    "unknown": "Inconnu"
+  },
+  "lastChecked": "Vérifié {time}",
+  "noData": "Aucune donnée",
+  "refresh": "Actualiser"
+}

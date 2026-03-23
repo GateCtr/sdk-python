@@ -10,6 +10,11 @@ export const redisConnection = new IORedis(process.env.REDIS_URL!, {
   },
 });
 
+// BullMQ shared options — skipVersionCheck suppresses the volatile-lru warning
+// on managed Redis plans (Redis.io Hobby, Upstash, etc.) that don't allow
+// changing the eviction policy to "noeviction".
+export const bullmqDefaults = { skipVersionCheck: true } as const;
+
 export interface WebhookJobData {
   webhookId?: string; // undefined = fan-out to all user webhooks
   userId: string;
@@ -53,8 +58,13 @@ export interface EmailJobData {
   locale?: "en" | "fr";
 }
 
+export interface HealthJobData {
+  triggeredAt: string; // ISO timestamp
+}
+
 export const webhooksQueue = new Queue<WebhookJobData>("webhooks", {
   connection: redisConnection,
+  ...bullmqDefaults,
   defaultJobOptions: {
     removeOnComplete: { count: 1000 },
     removeOnFail: { count: 5000 },
@@ -63,6 +73,7 @@ export const webhooksQueue = new Queue<WebhookJobData>("webhooks", {
 
 export const analyticsQueue = new Queue<AnalyticsJobData>("analytics", {
   connection: redisConnection,
+  ...bullmqDefaults,
   defaultJobOptions: {
     attempts: 3,
     backoff: { type: "fixed", delay: 2000 },
@@ -73,20 +84,33 @@ export const analyticsQueue = new Queue<AnalyticsJobData>("analytics", {
 
 export const dailyReportQueue = new Queue<DailyReportJobData>("daily-report", {
   connection: redisConnection,
+  ...bullmqDefaults,
   defaultJobOptions: {
     attempts: 3,
     backoff: { type: "fixed", delay: 5000 },
-    removeOnComplete: { count: 90 }, // keep 90 days of history
+    removeOnComplete: { count: 90 },
     removeOnFail: { count: 30 },
   },
 });
 
 export const emailQueue = new Queue<EmailJobData>("emails", {
   connection: redisConnection,
+  ...bullmqDefaults,
   defaultJobOptions: {
     attempts: 3,
     backoff: { type: "exponential", delay: 3000 },
     removeOnComplete: { count: 2000 },
     removeOnFail: { count: 5000 },
+  },
+});
+
+export const healthQueue = new Queue<HealthJobData>("health", {
+  connection: redisConnection,
+  ...bullmqDefaults,
+  defaultJobOptions: {
+    attempts: 2,
+    backoff: { type: "fixed", delay: 5000 },
+    removeOnComplete: { count: 100 },
+    removeOnFail: { count: 100 },
   },
 });

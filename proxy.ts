@@ -35,6 +35,7 @@ const isPublicRoute = createRouteMatcher([
   "/api/waitlist(.*)",
   "/api/v1/(.*)",
   "/api/health",
+  "/api/auth/refresh",
   "/sitemap.xml",
   "/robots.txt",
 ]);
@@ -47,9 +48,11 @@ const isOnboardingRoute = createRouteMatcher(["/onboarding", "/fr/onboarding"]);
 
 /** Allowed redirect hosts — prevents open-redirect attacks (Req 8.6, 17.5) */
 const ALLOWED_REDIRECT_HOSTS = new Set([
-  process.env.NEXT_PUBLIC_APP_URL
-    ? new URL(process.env.NEXT_PUBLIC_APP_URL).host
-    : "localhost:3000",
+  "localhost:3000",
+  "app.gatectr.com",
+  ...(process.env.NEXT_PUBLIC_APP_URL
+    ? [new URL(process.env.NEXT_PUBLIC_APP_URL).host]
+    : []),
 ]);
 
 /**
@@ -169,8 +172,11 @@ export default clerkMiddleware(
     }
 
     // ── Auth pages — redirect authenticated users to dashboard ──────────────
+    // Exclude sso-callback — Clerk needs to finish processing OAuth before redirect
+    const isSsoCallback = pathname.includes("/sso-callback");
     if (
       userId &&
+      !isSsoCallback &&
       (pathname.includes("/sign-in") || pathname.includes("/sign-up"))
     ) {
       const dashboardPath = locale === "fr" ? "/fr/dashboard" : "/dashboard";
@@ -198,13 +204,26 @@ export default clerkMiddleware(
     if (userId && !isPublicRoute(req)) {
       const meta = (sessionClaims?.metadata ??
         sessionClaims?.publicMetadata) as Record<string, unknown> | undefined;
+
+      // Debug — remove after confirming JWT template is configured
+      if (process.env.NODE_ENV !== "production") {
+        console.log(
+          "[middleware] sessionClaims keys:",
+          Object.keys(sessionClaims ?? {}),
+        );
+        console.log("[middleware] meta:", meta);
+      }
+
       const onboardingMeta = meta?.onboardingComplete;
       const onboardingDone = onboardingMeta === true;
-      // Treat undefined (legacy accounts without the key) same as false,
-      // unless the user has an explicit role (established admin/team accounts)
+      // If meta is entirely undefined, the JWT template is not configured in
+      // Clerk Dashboard — don't block the user, let them through.
       const hasRole = !!meta?.role;
+      const jwtTemplateConfigured = meta !== undefined;
       const onboardingNotDone =
-        onboardingMeta === false || (onboardingMeta === undefined && !hasRole);
+        jwtTemplateConfigured &&
+        (onboardingMeta === false ||
+          (onboardingMeta === undefined && !hasRole));
 
       if (onboardingDone && isOnboardingRoute(req)) {
         const dashboardPath = locale === "fr" ? "/fr/dashboard" : "/dashboard";
