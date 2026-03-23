@@ -116,13 +116,21 @@ export async function scheduleHealthCheck(): Promise<void> {
     await healthQueue.removeRepeatableByKey(job.key);
   }
 
+  // Repeatable job every 60s
   await healthQueue.add(
     "health-check",
     { triggeredAt: new Date().toISOString() },
     {
-      repeat: { every: 60_000 }, // every 60 seconds
+      repeat: { every: 60_000 },
       jobId: "health-check-repeatable",
     },
+  );
+
+  // Immediate job on startup so the status page is never empty
+  await healthQueue.add(
+    "health-check-startup",
+    { triggeredAt: new Date().toISOString() },
+    { jobId: `health-check-startup-${Date.now()}` },
   );
 
   console.info("[health.worker] health check scheduled every 60s");

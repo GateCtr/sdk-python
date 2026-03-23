@@ -13,7 +13,13 @@ function requestId() {
 
 export async function GET() {
   const rid = requestId();
-  const headers = { "X-GateCtr-Request-Id": rid };
+  const headers = {
+    "X-GateCtr-Request-Id": rid,
+    // Allow status.gatectr.com to call this endpoint cross-origin
+    "Access-Control-Allow-Origin":
+      process.env.NEXT_PUBLIC_MARKETING_URL ?? "https://gatectr.com",
+    "Access-Control-Allow-Methods": "GET",
+  };
 
   try {
     const results = await Promise.all(

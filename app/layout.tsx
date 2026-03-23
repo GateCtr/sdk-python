@@ -55,12 +55,23 @@ export const metadata: Metadata = {
     description:
       "Universal middleware hub for controlling, optimizing, and securing API calls to LLMs",
     type: "website",
+    images: [
+      {
+        url: `${process.env.NEXT_PUBLIC_APP_URL ?? "https://app.gatectr.com"}/opengraph-image`,
+        width: 1200,
+        height: 630,
+        alt: "GateCtr — One gateway. Every LLM.",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "GateCtr - Control Your LLM Costs",
     description:
       "Universal middleware hub for controlling, optimizing, and securing API calls to LLMs",
+    images: [
+      `${process.env.NEXT_PUBLIC_APP_URL ?? "https://app.gatectr.com"}/opengraph-image`,
+    ],
   },
 };
 
