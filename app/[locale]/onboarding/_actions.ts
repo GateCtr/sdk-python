@@ -115,18 +115,22 @@ export async function connectProvider(formData: FormData) {
     const dbUser = await getDbUser(userId);
     if (!dbUser) return { error: "user_not_found" };
 
+    const meta = dbUser.metadata as Record<string, unknown> | null;
+    const teamId = meta?.activeTeamId as string | undefined;
+
     const encryptedApiKey = encrypt(apiKey);
 
     await prisma.lLMProviderKey.upsert({
       where: { userId_provider_name: { userId: dbUser.id, provider, name } },
       create: {
         userId: dbUser.id,
+        teamId: teamId ?? null,
         provider,
         name,
         encryptedApiKey,
         isActive: true,
       },
-      update: { encryptedApiKey, isActive: true },
+      update: { encryptedApiKey, isActive: true, teamId: teamId ?? null },
     });
 
     await logAudit({
