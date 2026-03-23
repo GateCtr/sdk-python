@@ -131,7 +131,12 @@ export default function StatusPage() {
   const fetchHealth = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch("/api/v1/system/health");
+      // Use absolute URL — status.gatectr.com rewrites to this page but the
+      // API lives on app.gatectr.com (or the same origin in dev)
+      const apiBase =
+        process.env.NEXT_PUBLIC_APP_URL ??
+        (typeof window !== "undefined" ? window.location.origin : "");
+      const res = await fetch(`${apiBase}/api/v1/system/health`);
       if (res.ok) {
         const json = (await res.json()) as HealthResponse;
         setData(json);

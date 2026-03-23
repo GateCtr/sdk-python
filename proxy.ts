@@ -32,6 +32,10 @@ const isPublicRoute = createRouteMatcher([
   "/fr/sign-in(.*)",
   "/sign-up(.*)",
   "/fr/sign-up(.*)",
+  // Onboarding must be public so Clerk handshake doesn't redirect to sign-in
+  // before userId is resolved. The onboarding gate below handles auth logic.
+  "/onboarding",
+  "/fr/onboarding",
   "/api/waitlist(.*)",
   "/api/v1/(.*)",
   "/api/health",
@@ -223,39 +227,54 @@ export default clerkMiddleware(
     // Never run onboarding gate on auth pages or during Clerk handshake
     const isAuthPage =
       pathname.includes("/sign-in") || pathname.includes("/sign-up");
-    if (userId && !isPublicRoute(req) && !isAuthPage && !isClerkHandshake) {
-      const meta = (sessionClaims?.metadata ??
-        sessionClaims?.publicMetadata) as Record<string, unknown> | undefined;
-
-      // Debug — remove after confirming JWT template is configured
-      if (process.env.NODE_ENV !== "production") {
-        console.log(
-          "[middleware] sessionClaims keys:",
-          Object.keys(sessionClaims ?? {}),
-        );
-        console.log("[middleware] meta:", meta);
+    if (!isAuthPage && !isClerkHandshake) {
+      // Unauthenticated user on /onboarding → send to sign-in
+      if (!userId && isOnboardingRoute(req)) {
+        const signInPath = locale === "fr" ? "/fr/sign-in" : "/sign-in";
+        return secure(NextResponse.redirect(new URL(signInPath, req.url)));
       }
 
-      const onboardingMeta = meta?.onboardingComplete;
-      const onboardingDone = onboardingMeta === true;
-      // If meta is entirely undefined, the JWT template is not configured in
-      // Clerk Dashboard — don't block the user, let them through.
-      const hasRole = !!meta?.role;
-      const jwtTemplateConfigured = meta !== undefined;
-      const onboardingNotDone =
-        jwtTemplateConfigured &&
-        (onboardingMeta === false ||
-          (onboardingMeta === undefined && !hasRole));
+      if (userId) {
+        const meta = (sessionClaims?.metadata ??
+          sessionClaims?.publicMetadata) as Record<string, unknown> | undefined;
 
-      if (onboardingDone && isOnboardingRoute(req)) {
-        const dashboardPath = locale === "fr" ? "/fr/dashboard" : "/dashboard";
-        return secure(NextResponse.redirect(new URL(dashboardPath, req.url)));
-      }
+        // Debug — remove after confirming JWT template is configured
+        if (process.env.NODE_ENV !== "production") {
+          console.log(
+            "[middleware] sessionClaims keys:",
+            Object.keys(sessionClaims ?? {}),
+          );
+          console.log("[middleware] meta:", meta);
+        }
 
-      if (onboardingNotDone && !isOnboardingRoute(req) && !isClerkHandshake) {
-        const onboardingPath =
-          locale === "fr" ? "/fr/onboarding" : "/onboarding";
-        return secure(NextResponse.redirect(new URL(onboardingPath, req.url)));
+        const onboardingMeta = meta?.onboardingComplete;
+        const onboardingDone = onboardingMeta === true;
+        // If meta is entirely undefined, the JWT template is not configured —
+        // don't block the user, let them through.
+        const hasRole = !!meta?.role;
+        const jwtTemplateConfigured = meta !== undefined;
+        const onboardingNotDone =
+          jwtTemplateConfigured &&
+          (onboardingMeta === false ||
+            (onboardingMeta === undefined && !hasRole));
+
+        if (onboardingDone && isOnboardingRoute(req)) {
+          const dashboardPath =
+            locale === "fr" ? "/fr/dashboard" : "/dashboard";
+          return secure(NextResponse.redirect(new URL(dashboardPath, req.url)));
+        }
+
+        if (
+          onboardingNotDone &&
+          !isOnboardingRoute(req) &&
+          !isPublicRoute(req)
+        ) {
+          const onboardingPath =
+            locale === "fr" ? "/fr/onboarding" : "/onboarding";
+          return secure(
+            NextResponse.redirect(new URL(onboardingPath, req.url)),
+          );
+        }
       }
     }
 
