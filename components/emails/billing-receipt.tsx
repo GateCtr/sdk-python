@@ -23,6 +23,7 @@ export default function BillingReceiptEmail({
   email,
   amount,
   currency = "usd",
+  invoicePdfUrl,
   locale = "en",
 }: BillingReceiptEmailProps) {
   const formatted = new Intl.NumberFormat(locale === "fr" ? "fr-FR" : "en-US", {
