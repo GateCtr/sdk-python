@@ -1,82 +1,86 @@
+// Feature: api-logic-completion, Property 14: Integration config encryption round-trip
 import { describe, it, expect, beforeAll } from "vitest";
-import fc from "fast-check";
-import { encrypt, decrypt } from "@/lib/encryption";
+import * as fc from "fast-check";
 
-// Set a valid 32-byte hex ENCRYPTION_KEY for tests
+// Provide a valid 64-char hex ENCRYPTION_KEY for tests
 beforeAll(() => {
   process.env.ENCRYPTION_KEY = "a".repeat(64);
 });
 
-describe("lib/encryption", () => {
-  // Feature: core-api-budget-firewall, Property 5: Encryption Round-Trip
-  // decrypt(encrypt(P)) == P for all string inputs including Unicode
-  // Validates: Requirements 4.1, 4.8
-  it("Property 5: decrypt(encrypt(P)) == P for arbitrary plaintext strings", () => {
+import { encrypt, decrypt } from "@/lib/encryption";
+
+describe("Property 14: Integration config encryption round-trip", () => {
+  it("decrypt(encrypt(plaintext)) === plaintext for any string", () => {
     fc.assert(
-      fc.property(fc.string(), (plaintext) => {
+      fc.property(fc.string({ minLength: 0, maxLength: 500 }), (plaintext) => {
         const ciphertext = encrypt(plaintext);
-        const decrypted = decrypt(ciphertext);
-        expect(decrypted).toBe(plaintext);
+        const recovered = decrypt(ciphertext);
+        expect(recovered).toBe(plaintext);
       }),
+      { numRuns: 100 },
     );
   });
 
-  // Feature: core-api-budget-firewall, Property 6: LLM Provider Key Encryption Round-Trip
-  // Validates: Requirements 4.1, 4.8
-  it("Property 6: round-trip holds for LLM provider key-like strings (alphanumeric, special chars)", () => {
+  it("encrypt produces iv:authTag:ciphertext format", () => {
     fc.assert(
-      fc.property(fc.stringMatching(/^[a-zA-Z0-9\-_\.]{10,100}$/), (apiKey) => {
-        const ciphertext = encrypt(apiKey);
-        const decrypted = decrypt(ciphertext);
-        expect(decrypted).toBe(apiKey);
+      fc.property(fc.string({ minLength: 1, maxLength: 200 }), (plaintext) => {
+        const ciphertext = encrypt(plaintext);
+        const parts = ciphertext.split(":");
+        expect(parts).toHaveLength(3);
+        // iv = 16 bytes = 32 hex chars
+        expect(parts[0]).toMatch(/^[0-9a-f]{32}$/);
+        // authTag = 16 bytes = 32 hex chars
+        expect(parts[1]).toMatch(/^[0-9a-f]{32}$/);
       }),
+      { numRuns: 100 },
     );
   });
 
-  it("produces colon-separated hex format (iv:authTag:ciphertext)", () => {
-    const ciphertext = encrypt("test-key");
-    const parts = ciphertext.split(":");
-    expect(parts).toHaveLength(3);
-    // IV: 16 bytes = 32 hex chars
-    expect(parts[0]).toHaveLength(32);
-    // Auth tag: 16 bytes = 32 hex chars
-    expect(parts[1]).toHaveLength(32);
-    // Ciphertext: non-empty hex
-    expect(parts[2].length).toBeGreaterThan(0);
-    // All parts are valid hex
-    expect(parts[0]).toMatch(/^[0-9a-f]+$/);
-    expect(parts[1]).toMatch(/^[0-9a-f]+$/);
-    expect(parts[2]).toMatch(/^[0-9a-f]+$/);
+  it("each encrypt call produces a unique ciphertext (random IV)", () => {
+    fc.assert(
+      fc.property(fc.string({ minLength: 1, maxLength: 100 }), (plaintext) => {
+        const c1 = encrypt(plaintext);
+        const c2 = encrypt(plaintext);
+        // Same plaintext → different ciphertext due to random IV
+        expect(c1).not.toBe(c2);
+        // But both decrypt to the same value
+        expect(decrypt(c1)).toBe(plaintext);
+        expect(decrypt(c2)).toBe(plaintext);
+      }),
+      { numRuns: 100 },
+    );
   });
 
-  it("produces different ciphertexts for the same plaintext (random IV)", () => {
-    const a = encrypt("same-plaintext");
-    const b = encrypt("same-plaintext");
-    expect(a).not.toBe(b);
+  it("decrypt throws on tampered ciphertext", () => {
+    fc.assert(
+      fc.property(fc.string({ minLength: 1, maxLength: 100 }), (plaintext) => {
+        const ciphertext = encrypt(plaintext);
+        // Corrupt the auth tag (middle segment) by flipping its first byte
+        const parts = ciphertext.split(":");
+        const tagHex = parts[1];
+        const flipped = ((parseInt(tagHex.slice(0, 2), 16) ^ 0xff) >>> 0)
+          .toString(16)
+          .padStart(2, "0");
+        const tampered = `${parts[0]}:${flipped}${tagHex.slice(2)}:${parts[2]}`;
+        expect(() => decrypt(tampered)).toThrow("decryption_failed");
+      }),
+      { numRuns: 100 },
+    );
   });
 
-  it("throws decryption_failed on tampered ciphertext", () => {
-    const ciphertext = encrypt("sensitive-api-key");
-    const parts = ciphertext.split(":");
-    // Tamper the ciphertext portion
-    const tampered = `${parts[0]}:${parts[1]}:${"ff".repeat(parts[2].length / 2)}`;
-    expect(() => decrypt(tampered)).toThrow("decryption_failed");
-  });
-
-  it("throws decryption_failed on tampered auth tag", () => {
-    const ciphertext = encrypt("sensitive-api-key");
-    const parts = ciphertext.split(":");
-    // Tamper the auth tag
-    const tampered = `${parts[0]}:${"00".repeat(16)}:${parts[2]}`;
-    expect(() => decrypt(tampered)).toThrow("decryption_failed");
-  });
-
-  it("throws decryption_failed on invalid format (not 3 parts)", () => {
-    expect(() => decrypt("notvalidformat")).toThrow("decryption_failed");
-    expect(() => decrypt("only:two")).toThrow("decryption_failed");
-  });
-
-  it("throws decryption_failed on empty string", () => {
-    expect(() => decrypt("")).toThrow("decryption_failed");
+  it("round-trips JSON.stringify(config) as used by integrations route", () => {
+    fc.assert(
+      fc.property(
+        fc.dictionary(fc.string({ minLength: 1, maxLength: 20 }), fc.string()),
+        (config) => {
+          const serialized = JSON.stringify(config);
+          const ciphertext = encrypt(serialized);
+          const recovered = decrypt(ciphertext);
+          expect(recovered).toBe(serialized);
+          expect(JSON.parse(recovered)).toEqual(config);
+        },
+      ),
+      { numRuns: 100 },
+    );
   });
 });

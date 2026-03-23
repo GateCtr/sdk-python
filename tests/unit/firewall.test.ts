@@ -389,7 +389,9 @@ describe("P8/P12: Budget Alert Idempotence", () => {
         fc.integer({ min: 1, max: 99 }),
         async (limit, thresholdPct) => {
           vi.clearAllMocks();
-          const currentTokens = Math.ceil((limit * thresholdPct) / 100);
+          // Add 1 to avoid floating-point boundary issues:
+          // (Math.ceil(limit * pct / 100) / limit) * 100 can be slightly < pct
+          const currentTokens = Math.ceil((limit * thresholdPct) / 100) + 1;
           setup({
             userBudget: makeBudget({
               maxTokensPerMonth: limit,
@@ -401,6 +403,8 @@ describe("P8/P12: Budget Alert Idempotence", () => {
             redisSetResult: "OK",
           });
           await checkBudget("user_1");
+          // flush microtasks — dispatchWebhook is fire-and-forget (.catch(() => {}))
+          await new Promise((res) => setTimeout(res, 0));
           expect(mockDispatchWebhook).toHaveBeenCalledTimes(1);
           expect(mockDispatchWebhook).toHaveBeenCalledWith(
             "user_1",
