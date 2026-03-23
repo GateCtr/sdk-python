@@ -4,6 +4,8 @@ import { prisma } from "@/lib/prisma";
 import { updateSeatCount } from "@/lib/seats";
 import { checkQuota } from "@/lib/plan-guard";
 import { quotaExceededResponse } from "@/lib/quota-response";
+import { dispatchWebhook } from "@/lib/webhooks";
+import { logAudit } from "@/lib/audit";
 
 // ─── POST /api/v1/teams/members — add a member ────────────────────────────────
 
@@ -35,6 +37,21 @@ export async function POST(req: NextRequest) {
   const newCount = await prisma.teamMember.count({ where: { teamId } });
   await updateSeatCount(user.id, newCount).catch(console.error);
 
+  logAudit({
+    userId: user.id,
+    resource: "team",
+    action: "member.added",
+    resourceId: teamId,
+    newValue: { memberId, role: role ?? "MEMBER" },
+    success: true,
+  }).catch(() => {});
+
+  dispatchWebhook(user.id, "team.member.added", {
+    team_id: teamId,
+    member_id: memberId,
+    role: role ?? "MEMBER",
+  }).catch(() => {});
+
   return NextResponse.json({ success: true });
 }
 
@@ -63,6 +80,20 @@ export async function DELETE(req: NextRequest) {
   // Update seat billing after removing member
   const newCount = await prisma.teamMember.count({ where: { teamId } });
   await updateSeatCount(user.id, newCount).catch(console.error);
+
+  logAudit({
+    userId: user.id,
+    resource: "team",
+    action: "member.removed",
+    resourceId: teamId,
+    oldValue: { memberId },
+    success: true,
+  }).catch(() => {});
+
+  dispatchWebhook(user.id, "team.member.removed", {
+    team_id: teamId,
+    member_id: memberId,
+  }).catch(() => {});
 
   return NextResponse.json({ success: true });
 }

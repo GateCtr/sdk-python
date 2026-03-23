@@ -33,6 +33,7 @@ export async function GET() {
     id: membership.team.id,
     name: membership.team.name,
     slug: membership.team.slug,
+    avatarUrl: membership.team.avatarUrl ?? null,
     role: membership.role,
     plan: dbUser.plan,
   });

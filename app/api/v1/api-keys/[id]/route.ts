@@ -4,6 +4,7 @@ import type { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { logAudit } from "@/lib/audit";
 import { dispatchWebhook } from "@/lib/webhooks";
+import { resolveTeamContext } from "@/lib/team-context";
 import { randomBytes } from "crypto";
 
 function requestId(): string {
@@ -25,31 +26,24 @@ export async function DELETE(
       { status: 401, headers },
     );
 
-  const dbUser = await prisma.user.findUnique({
-    where: { clerkId },
-    select: { id: true },
-  });
-  if (!dbUser)
+  const ctx = await resolveTeamContext(clerkId);
+  if (!ctx)
     return NextResponse.json(
-      { error: "User not found" },
+      { error: "No active team" },
       { status: 404, headers },
     );
 
   const apiKey = await prisma.apiKey.findFirst({
-    where: { id, userId: dbUser.id },
+    where: { id, teamId: ctx.teamId },
   });
 
   if (!apiKey)
     return NextResponse.json({ error: "Not found" }, { status: 404, headers });
 
-  await prisma.apiKey.update({
-    where: { id },
-    data: { isActive: false },
-  });
+  await prisma.apiKey.update({ where: { id }, data: { isActive: false } });
 
-  // Fire-and-forget side effects
   logAudit({
-    userId: dbUser.id,
+    userId: ctx.userId,
     resource: "api_key",
     action: "revoked",
     resourceId: id,
@@ -58,7 +52,7 @@ export async function DELETE(
       req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? undefined,
   }).catch(() => {});
 
-  dispatchWebhook(dbUser.id, "api_key.revoked", {
+  dispatchWebhook(ctx.userId, "api_key.revoked", {
     api_key_id: id,
     name: apiKey.name,
   }).catch(() => {});

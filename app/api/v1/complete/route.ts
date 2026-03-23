@@ -9,6 +9,7 @@ import { optimize } from "@/lib/optimizer";
 import { route } from "@/lib/router";
 import { decrypt } from "@/lib/encryption";
 import { dispatchWebhook } from "@/lib/webhooks";
+import { analyticsQueue } from "@/lib/queues";
 import { ProviderError } from "@/lib/llm/types";
 import type { GatewayRequest } from "@/lib/llm/types";
 import * as openai from "@/lib/llm/openai";
@@ -61,6 +62,7 @@ export async function POST(req: NextRequest) {
   let body: {
     model?: string;
     prompt?: string;
+    messages?: { role: string; content: string }[];
     max_tokens?: number;
     temperature?: number;
     stream?: boolean;
@@ -220,6 +222,10 @@ export async function POST(req: NextRequest) {
   let gatewayReq: GatewayRequest = {
     model: body.model,
     prompt: body.prompt,
+    messages: body.messages?.map((m) => ({
+      role: m.role as import("@/lib/llm/types").Message["role"],
+      content: m.content,
+    })),
     maxTokens: body.max_tokens,
     temperature: body.temperature,
     stream: body.stream,
@@ -237,9 +243,16 @@ export async function POST(req: NextRequest) {
 
   let routed = false;
   if (planLimits?.modelRouterEnabled) {
-    const result = await route(gatewayReq);
+    const result = await route(gatewayReq, userId);
     gatewayReq = { ...gatewayReq, model: result.model };
     routed = result.routed;
+    if (routed) {
+      dispatchWebhook(userId, "request.routed", {
+        original_model: body.model,
+        routed_model: result.model,
+        project_id: projectId,
+      }).catch(() => {});
+    }
   }
 
   // ── 10. Resolve provider key ─────────────────────────────────────────────────
@@ -299,6 +312,12 @@ export async function POST(req: NextRequest) {
             decrypt(fallbackKey.encryptedApiKey),
           );
           usedFallback = true;
+          dispatchWebhook(userId, "provider.fallback", {
+            original_provider: providerName,
+            fallback_provider: fallbackKey.provider,
+            model: gatewayReq.model,
+            project_id: projectId,
+          }).catch(() => {});
         } catch (err) {
           lastError = err as Error;
         }
@@ -308,6 +327,12 @@ export async function POST(req: NextRequest) {
 
   if (!llmResponse) {
     const isProviderErr = lastError instanceof ProviderError;
+    dispatchWebhook(userId, "request.failed", {
+      model: gatewayReq.model,
+      provider: providerName,
+      error: lastError?.message ?? "provider_unavailable",
+      project_id: projectId,
+    }).catch(() => {});
     return NextResponse.json(
       {
         error: "provider_unavailable",
@@ -335,38 +360,62 @@ export async function POST(req: NextRequest) {
   const ip =
     req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? undefined;
 
-  prisma.usageLog
-    .create({
-      data: {
-        userId,
-        projectId: projectId ?? null,
-        apiKeyId: apiKeyId ?? null,
-        model: gatewayReq.model,
-        provider: usedFallback
-          ? ((
-              await prisma.lLMProviderKey.findFirst({
-                where: {
-                  userId,
-                  isActive: true,
-                  provider: { not: providerName },
-                },
-              })
-            )?.provider ?? providerName)
-          : providerName,
-        promptTokens: llmResponse.promptTokens,
-        completionTokens: llmResponse.completionTokens,
-        totalTokens: llmResponse.totalTokens,
-        savedTokens,
-        costUsd,
-        latencyMs: llmResponse.latencyMs,
-        statusCode: 200,
-        optimized,
-        routed,
-        fallback: usedFallback,
-        ipAddress: ip,
-      },
-    })
-    .catch(() => {});
+  const fallbackProviderName = usedFallback
+    ? ((
+        await prisma.lLMProviderKey.findFirst({
+          where: { userId, isActive: true, provider: { not: providerName } },
+        })
+      )?.provider ?? providerName)
+    : providerName;
+
+  const analyticsPayload = {
+    userId,
+    projectId: projectId ?? undefined,
+    apiKeyId: apiKeyId ?? undefined,
+    model: gatewayReq.model,
+    provider: fallbackProviderName,
+    promptTokens: llmResponse.promptTokens,
+    completionTokens: llmResponse.completionTokens,
+    totalTokens: llmResponse.totalTokens,
+    savedTokens,
+    costUsd,
+    latencyMs: llmResponse.latencyMs,
+    statusCode: 200,
+    optimized,
+    routed,
+    fallback: usedFallback,
+    ipAddress: ip,
+  };
+
+  // Enqueue analytics job; fall back to direct DB write if queue unavailable
+  analyticsQueue.add("analytics", analyticsPayload).catch((queueErr) => {
+    console.warn(
+      "[complete] analyticsQueue.add failed — falling back to direct write",
+      queueErr,
+    );
+    prisma.usageLog
+      .create({
+        data: {
+          userId,
+          projectId: projectId ?? null,
+          apiKeyId: apiKeyId ?? null,
+          model: gatewayReq.model,
+          provider: fallbackProviderName,
+          promptTokens: llmResponse.promptTokens,
+          completionTokens: llmResponse.completionTokens,
+          totalTokens: llmResponse.totalTokens,
+          savedTokens,
+          costUsd,
+          latencyMs: llmResponse.latencyMs,
+          statusCode: 200,
+          optimized,
+          routed,
+          fallback: usedFallback,
+          ipAddress: ip ?? null,
+        },
+      })
+      .catch(() => {});
+  });
 
   recordBudgetUsage(userId, projectId, llmResponse.totalTokens, costUsd).catch(
     () => {},

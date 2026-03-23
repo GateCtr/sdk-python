@@ -7,6 +7,7 @@ import { quotaExceededResponse } from "@/lib/quota-response";
 import { rateLimit, rateLimitResponse, RATE_LIMITS } from "@/lib/rate-limit";
 import { logAudit } from "@/lib/audit";
 import { dispatchWebhook } from "@/lib/webhooks";
+import { resolveTeamContext } from "@/lib/team-context";
 import { randomBytes, createHash } from "crypto";
 
 const ALLOWED_SCOPES = ["complete", "chat", "read", "admin"];
@@ -32,18 +33,15 @@ export async function GET() {
       { status: 401, headers: { [REQUEST_ID_HEADER]: rid } },
     );
 
-  const dbUser = await prisma.user.findUnique({
-    where: { clerkId },
-    select: { id: true },
-  });
-  if (!dbUser)
+  const ctx = await resolveTeamContext(clerkId);
+  if (!ctx)
     return NextResponse.json(
-      { error: "User not found" },
+      { error: "No active team" },
       { status: 404, headers: { [REQUEST_ID_HEADER]: rid } },
     );
 
   const keys = await prisma.apiKey.findMany({
-    where: { userId: dbUser.id },
+    where: { teamId: ctx.teamId },
     select: {
       id: true,
       name: true,
@@ -71,21 +69,17 @@ export async function POST(req: NextRequest) {
       { status: 401, headers },
     );
 
-  const dbUser = await prisma.user.findUnique({
-    where: { clerkId },
-    select: { id: true },
-  });
-  if (!dbUser)
+  const ctx = await resolveTeamContext(clerkId);
+  if (!ctx)
     return NextResponse.json(
-      { error: "User not found" },
+      { error: "No active team" },
       { status: 404, headers },
     );
 
-  // Rate limit: 10 creations/hour per user
-  const rl = await rateLimit(dbUser.id, RATE_LIMITS.apiKeys);
+  const rl = await rateLimit(ctx.userId, RATE_LIMITS.apiKeys);
   if (!rl.allowed) return rateLimitResponse(rl);
 
-  const quotaResult = await checkQuota(dbUser.id, "api_keys");
+  const quotaResult = await checkQuota(ctx.userId, "api_keys");
   if (!quotaResult.allowed) return quotaExceededResponse(quotaResult);
 
   const body = (await req.json()) as {
@@ -101,7 +95,6 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Validate scopes
   const scopes = body.scopes ?? ["complete", "read"];
   const invalidScopes = scopes.filter((s) => !ALLOWED_SCOPES.includes(s));
   if (invalidScopes.length > 0) {
@@ -119,7 +112,8 @@ export async function POST(req: NextRequest) {
 
   const apiKey = await prisma.apiKey.create({
     data: {
-      userId: dbUser.id,
+      userId: ctx.userId,
+      teamId: ctx.teamId,
       name: body.name,
       keyHash: hash,
       prefix,
@@ -128,9 +122,8 @@ export async function POST(req: NextRequest) {
     },
   });
 
-  // Fire-and-forget side effects
   logAudit({
-    userId: dbUser.id,
+    userId: ctx.userId,
     resource: "api_key",
     action: "created",
     resourceId: apiKey.id,
@@ -139,7 +132,7 @@ export async function POST(req: NextRequest) {
       req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? undefined,
   }).catch(() => {});
 
-  dispatchWebhook(dbUser.id, "api_key.created", {
+  dispatchWebhook(ctx.userId, "api_key.created", {
     api_key_id: apiKey.id,
     name: apiKey.name,
     scopes: apiKey.scopes,

@@ -2,15 +2,26 @@ import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getPlanLimits } from "@/lib/plan-guard";
+import { resolveTeamContext } from "@/lib/team-context";
 
 export async function GET(): Promise<NextResponse> {
   const { userId: clerkId } = await auth();
   if (!clerkId)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  const ctx = await resolveTeamContext(clerkId);
+  if (!ctx)
+    return NextResponse.json({ error: "No active team" }, { status: 404 });
+
+  const members = await prisma.teamMember.findMany({
+    where: { teamId: ctx.teamId },
+    select: { userId: true },
+  });
+  const userIds = members.map((m) => m.userId);
+
   const user = await prisma.user.findUnique({
-    where: { clerkId },
-    select: { id: true, plan: true },
+    where: { id: ctx.userId },
+    select: { plan: true },
   });
   if (!user) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
@@ -19,11 +30,11 @@ export async function GET(): Promise<NextResponse> {
 
   const [agg, limits, budget] = await Promise.all([
     prisma.dailyUsageCache.aggregate({
-      where: { userId: user.id, date: { startsWith: monthStart } },
+      where: { userId: { in: userIds }, date: { startsWith: monthStart } },
       _sum: { totalTokens: true, totalCostUsd: true },
     }),
     getPlanLimits(user.plan),
-    prisma.budget.findUnique({ where: { userId: user.id } }),
+    prisma.budget.findUnique({ where: { userId: ctx.userId } }),
   ]);
 
   const tokensUsed = agg._sum.totalTokens ?? 0;

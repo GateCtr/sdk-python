@@ -2,6 +2,7 @@ import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { resolveTeamContext } from "@/lib/team-context";
 import { randomBytes } from "crypto";
 
 function requestId(): string {
@@ -23,27 +24,33 @@ export async function DELETE(
       { status: 401, headers },
     );
 
-  const dbUser = await prisma.user.findUnique({
-    where: { clerkId },
-    select: { id: true },
-  });
-  if (!dbUser)
+  const ctx = await resolveTeamContext(clerkId);
+  if (!ctx)
     return NextResponse.json(
-      { error: "User not found" },
+      { error: "No active team" },
       { status: 404, headers },
     );
 
   const key = await prisma.lLMProviderKey.findFirst({
-    where: { id, userId: dbUser.id },
+    where: {
+      id,
+      OR: [{ teamId: ctx.teamId }, { userId: ctx.userId, teamId: null }],
+    },
   });
-
   if (!key)
     return NextResponse.json({ error: "Not found" }, { status: 404, headers });
 
-  await prisma.lLMProviderKey.update({
-    where: { id },
-    data: { isActive: false },
-  });
+  // ?hard=true → permanent delete, otherwise soft revoke
+  const hard = new URL(req.url).searchParams.get("hard") === "true";
+
+  if (hard) {
+    await prisma.lLMProviderKey.delete({ where: { id } });
+  } else {
+    await prisma.lLMProviderKey.update({
+      where: { id },
+      data: { isActive: false },
+    });
+  }
 
   return NextResponse.json({ success: true }, { headers });
 }

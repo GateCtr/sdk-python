@@ -2,6 +2,7 @@ import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { resolveTeamContext } from "@/lib/team-context";
 import { randomBytes } from "crypto";
 
 function requestId(): string {
@@ -19,23 +20,17 @@ export async function GET() {
       { status: 401, headers },
     );
 
-  const dbUser = await prisma.user.findUnique({
-    where: { clerkId },
-    select: { id: true },
-  });
-  if (!dbUser)
+  const ctx = await resolveTeamContext(clerkId);
+  if (!ctx)
     return NextResponse.json(
-      { error: "User not found" },
+      { error: "No active team" },
       { status: 404, headers },
     );
 
-  // Fetch user-level budget + all project-level budgets for user's projects
   const [userBudget, projectBudgets] = await Promise.all([
-    prisma.budget.findUnique({ where: { userId: dbUser.id } }),
+    prisma.budget.findUnique({ where: { userId: ctx.userId } }),
     prisma.budget.findMany({
-      where: {
-        project: { userId: dbUser.id },
-      },
+      where: { project: { teamId: ctx.teamId } },
       include: { project: { select: { id: true, name: true, slug: true } } },
     }),
   ]);
@@ -54,19 +49,18 @@ export async function POST(req: NextRequest) {
       { status: 401, headers },
     );
 
-  const dbUser = await prisma.user.findUnique({
-    where: { clerkId },
-    select: { id: true },
-  });
-  if (!dbUser)
+  const ctx = await resolveTeamContext(clerkId);
+  if (!ctx)
     return NextResponse.json(
-      { error: "User not found" },
+      { error: "No active team" },
       { status: 404, headers },
     );
 
   const body = (await req.json()) as {
     projectId?: string;
+    maxTokensPerDay?: number;
     maxTokensPerMonth?: number;
+    maxCostPerDay?: number;
     maxCostPerMonth?: number;
     alertThresholdPct?: number;
     hardStop?: boolean;
@@ -89,6 +83,21 @@ export async function POST(req: NextRequest) {
   }
 
   // Validate positive numbers
+  if (body.maxTokensPerDay !== undefined && body.maxTokensPerDay <= 0) {
+    return NextResponse.json(
+      {
+        error: "validation_error",
+        message: "maxTokensPerDay must be positive",
+      },
+      { status: 400, headers },
+    );
+  }
+  if (body.maxCostPerDay !== undefined && body.maxCostPerDay <= 0) {
+    return NextResponse.json(
+      { error: "validation_error", message: "maxCostPerDay must be positive" },
+      { status: 400, headers },
+    );
+  }
   if (body.maxTokensPerMonth !== undefined && body.maxTokensPerMonth <= 0) {
     return NextResponse.json(
       {
@@ -109,7 +118,9 @@ export async function POST(req: NextRequest) {
   }
 
   const budgetData = {
+    maxTokensPerDay: body.maxTokensPerDay ?? null,
     maxTokensPerMonth: body.maxTokensPerMonth ?? null,
+    maxCostPerDay: body.maxCostPerDay ?? null,
     maxCostPerMonth: body.maxCostPerMonth ?? null,
     alertThresholdPct: body.alertThresholdPct ?? 80,
     hardStop: body.hardStop ?? false,
@@ -118,16 +129,13 @@ export async function POST(req: NextRequest) {
   };
 
   if (body.projectId) {
-    // Verify project belongs to user
+    // Verify project belongs to the active team
     const project = await prisma.project.findFirst({
-      where: { id: body.projectId, userId: dbUser.id },
+      where: { id: body.projectId, teamId: ctx.teamId },
     });
     if (!project) {
       return NextResponse.json(
-        {
-          error: "forbidden",
-          message: "Project not found or not owned by user",
-        },
+        { error: "forbidden", message: "Project not found in active team" },
         { status: 403, headers },
       );
     }
@@ -143,8 +151,8 @@ export async function POST(req: NextRequest) {
 
   // User-level budget
   const budget = await prisma.budget.upsert({
-    where: { userId: dbUser.id },
-    create: { userId: dbUser.id, ...budgetData },
+    where: { userId: ctx.userId },
+    create: { userId: ctx.userId, ...budgetData },
     update: budgetData,
   });
 

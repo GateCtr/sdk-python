@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { encrypt } from "@/lib/encryption";
+import { resolveTeamContext } from "@/lib/team-context";
 import { randomBytes } from "crypto";
 
 const VALID_PROVIDERS = ["openai", "anthropic", "mistral", "gemini"] as const;
@@ -23,18 +24,18 @@ export async function GET() {
       { status: 401, headers },
     );
 
-  const dbUser = await prisma.user.findUnique({
-    where: { clerkId },
-    select: { id: true },
-  });
-  if (!dbUser)
+  const ctx = await resolveTeamContext(clerkId);
+  if (!ctx)
     return NextResponse.json(
-      { error: "User not found" },
+      { error: "No active team" },
       { status: 404, headers },
     );
 
   const keys = await prisma.lLMProviderKey.findMany({
-    where: { userId: dbUser.id },
+    where: {
+      isActive: true,
+      OR: [{ teamId: ctx.teamId }, { userId: ctx.userId, teamId: null }],
+    },
     select: {
       id: true,
       provider: true,
@@ -60,13 +61,10 @@ export async function POST(req: NextRequest) {
       { status: 401, headers },
     );
 
-  const dbUser = await prisma.user.findUnique({
-    where: { clerkId },
-    select: { id: true },
-  });
-  if (!dbUser)
+  const ctx = await resolveTeamContext(clerkId);
+  if (!ctx)
     return NextResponse.json(
-      { error: "User not found" },
+      { error: "No active team" },
       { status: 404, headers },
     );
 
@@ -92,15 +90,9 @@ export async function POST(req: NextRequest) {
 
   const name = body.name ?? "Default";
 
-  // Check for duplicate (userId, provider, name)
-  const existing = await prisma.lLMProviderKey.findUnique({
-    where: {
-      userId_provider_name: {
-        userId: dbUser.id,
-        provider: body.provider,
-        name,
-      },
-    },
+  // Check for duplicate (teamId, provider, name)
+  const existing = await prisma.lLMProviderKey.findFirst({
+    where: { teamId: ctx.teamId, provider: body.provider, name },
   });
   if (existing) {
     return NextResponse.json(
@@ -116,7 +108,8 @@ export async function POST(req: NextRequest) {
 
   const providerKey = await prisma.lLMProviderKey.create({
     data: {
-      userId: dbUser.id,
+      userId: ctx.userId,
+      teamId: ctx.teamId,
       provider: body.provider,
       name,
       encryptedApiKey,

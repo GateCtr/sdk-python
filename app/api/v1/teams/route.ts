@@ -22,6 +22,7 @@ export async function GET() {
       id: m.team.id,
       name: m.team.name,
       slug: m.team.slug,
+      avatarUrl: m.team.avatarUrl ?? null,
       role: m.role,
     })),
   );
