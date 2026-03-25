@@ -159,7 +159,7 @@
     },
     "s5": {
       "title": "5. Facturation et paiements",
-      "body": "GateCtr ne facture pas les tokens — vous payez directement votre fournisseur LLM avec votre propre clé API. GateCtr facture l'accès à la plateforme (routage, optimisation, analytics). Les plans payants sont facturés mensuellement ou annuellement via Stripe. Les prix sont affichés hors taxes applicables. Les mises à niveau prennent effet immédiatement. Les passages à un plan inférieur et les annulations prennent effet à la fin de la période de facturation en cours. Nous n'offrons pas de remboursements sauf si requis par la loi ou à notre seule discrétion. Pour les litiges de facturation, contactez billing@gatectr.com dans les 30 jours suivant le débit."
+      "body": "GateCtr ne facture pas les tokens — vous payez directement votre fournisseur LLM avec votre propre clé API. GateCtr facture l'accès à la plateforme (routage, optimisation, analytics). Les plans payants sont facturés mensuellement ou annuellement via Stripe. Les prix affichés incluent toutes les taxes applicables. Les mises à niveau prennent effet immédiatement. Les passages à un plan inférieur et les annulations prennent effet à la fin de la période de facturation en cours. Nous n'offrons pas de remboursements sauf si requis par la loi ou à notre seule discrétion. Pour les litiges de facturation, contactez billing@gatectr.com dans les 30 jours suivant le débit."
     },
     "s6": {
       "title": "6. Propriété intellectuelle",
@@ -182,7 +182,7 @@
     },
     "s10": {
       "title": "10. Droit applicable",
-      "body": "Ces conditions sont régies par le droit français. Tout litige découlant de ces conditions sera soumis à la compétence exclusive des tribunaux de Paris, France, sauf disposition contraire de la loi applicable sur la protection des consommateurs dans votre juridiction."
+      "body": "Ces conditions sont régies par les lois de l'État du Delaware, États-Unis, sans égard aux dispositions relatives aux conflits de lois. Tout litige découlant de ces conditions sera soumis à la compétence exclusive des tribunaux fédéraux et d'État situés dans le Delaware, États-Unis, sauf disposition contraire de la loi applicable sur la protection des consommateurs dans votre juridiction."
     },
     "contact": {
       "eyebrow": "Contact",

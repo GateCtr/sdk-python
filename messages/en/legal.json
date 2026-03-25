@@ -159,7 +159,7 @@
     },
     "s5": {
       "title": "5. Billing and Payments",
-      "body": "GateCtr does not charge for tokens — you pay your LLM provider directly using your own API key. GateCtr charges for access to the platform (routing, optimization, analytics). Paid plans are billed monthly or annually via Stripe. Prices are displayed exclusive of applicable taxes. Upgrades take effect immediately. Downgrades and cancellations take effect at the end of the current billing period. We do not offer refunds except where required by law or at our sole discretion. For billing disputes, contact billing@gatectr.com within 30 days of the charge."
+      "body": "GateCtr does not charge for tokens — you pay your LLM provider directly using your own API key. GateCtr charges for access to the platform (routing, optimization, analytics). Paid plans are billed monthly or annually via Stripe. Prices are displayed inclusive of all applicable taxes. Upgrades take effect immediately. Downgrades and cancellations take effect at the end of the current billing period. We do not offer refunds except where required by law or at our sole discretion. For billing disputes, contact billing@gatectr.com within 30 days of the charge."
     },
     "s6": {
       "title": "6. Intellectual Property",
@@ -182,7 +182,7 @@
     },
     "s10": {
       "title": "10. Governing Law",
-      "body": "These terms are governed by the laws of France. Any disputes arising from these terms shall be subject to the exclusive jurisdiction of the courts of Paris, France, unless otherwise required by applicable consumer protection law in your jurisdiction."
+      "body": "These terms are governed by the laws of the State of Delaware, United States, without regard to its conflict of law provisions. Any disputes arising from these terms shall be subject to the exclusive jurisdiction of the federal and state courts located in Delaware, United States, unless otherwise required by applicable consumer protection law in your jurisdiction."
     },
     "contact": {
       "eyebrow": "Contact",
