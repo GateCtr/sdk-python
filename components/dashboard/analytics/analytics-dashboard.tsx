@@ -10,7 +10,8 @@ import {
   Zap,
   DollarSign,
   Activity,
-  Sparkles,
+  Lock,
+  Zap,
   Download,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -169,7 +170,7 @@ function Section({
 function ProBadge({ label }: { label: string }) {
   return (
     <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary uppercase tracking-wide">
-      <Sparkles className="size-2.5" />
+      <Lock className="size-2.5" />
       {label}
     </span>
   );
@@ -335,7 +336,7 @@ export function AnalyticsDashboard({
         <KpiCard
           label={t("stats.savedTokens")}
           value={(usage?.savedTokens ?? 0).toLocaleString()}
-          icon={<Sparkles className="size-3.5" />}
+          icon={<Zap className="size-3.5" />}
           loading={isLoading}
         />
       </div>
