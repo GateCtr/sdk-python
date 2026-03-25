@@ -32,9 +32,9 @@
   "story": {
     "label": "Notre histoire",
     "headline": "Pourquoi nous avons construit GateCtr.",
-    "p1": "En 2024, nous construisions un produit propulsé par l'IA et regardions notre facture OpenAI croître plus vite que nos revenus. Nous n'avions aucune visibilité sur les prompts coûteux, aucun moyen de plafonner les coûts par utilisateur, et aucun fallback en cas de panne d'un fournisseur.",
+    "p1": "En 2025, nous construisions un produit propulsé par l'IA et regardions notre facture OpenAI croître plus vite que nos revenus. Nous n'avions aucune visibilité sur les prompts coûteux, aucun moyen de plafonner les coûts par utilisateur, et aucun fallback en cas de panne d'un fournisseur.",
     "p2": "Nous avons regardé les outils existants. Des plateformes d'observabilité qui enregistraient tout mais ne contrôlaient rien. Des wrappers qui vous enfermaient dans leur SDK. Rien qui se plaçait simplement au milieu, de façon transparente, et vous donnait le contrôle sans friction.",
-    "p3": "Alors nous avons construit GateCtr. Un seul changement d'endpoint. Votre clé API existante. Contrôle total sur les coûts, le routage et l'optimisation. Nous avons lancé en 2025 et livrons rapidement depuis."
+    "p3": "Alors nous avons construit GateCtr. Un seul changement d'endpoint. Votre clé API existante. Contrôle total sur les coûts, le routage et l'optimisation. Nous avons lancé en 2026 et livrons rapidement depuis."
   },
   "values": {
     "label": "Valeurs",
