@@ -15,11 +15,6 @@ export function ClerkProvider({
   return (
     <ClerkNextJSProvider
       localization={getClerkLocalization(locale)}
-      signInUrl="/sign-in"
-      signUpUrl="/sign-up"
-      signInFallbackRedirectUrl="/dashboard"
-      signUpFallbackRedirectUrl="/onboarding"
-      afterSignOutUrl="/sign-in"
       appearance={{
         theme: shadcn,
         ...appearance,

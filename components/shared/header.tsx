@@ -14,8 +14,7 @@ import {
 } from "@/components/ui/sheet";
 import { Link } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
-import { useAuth } from "@clerk/nextjs";
-import { Menu, LayoutDashboard } from "lucide-react";
+import { Menu } from "lucide-react";
 import { useState, useEffect } from "react";
 
 export type HeaderVariant = "marketing" | "auth" | "dashboard" | "minimal";
@@ -59,40 +58,24 @@ function DesktopNav() {
 
 function DesktopActions() {
   const t = useTranslations("common.nav");
-  const { isSignedIn, isLoaded } = useAuth();
-
-  if (!isLoaded)
-    return <div className="hidden md:flex items-center gap-1 w-48" />;
 
   return (
     <div className="hidden md:flex items-center gap-1">
       <LanguageSwitcher />
       <ThemeToggle />
       <div className="w-px h-4 bg-border mx-1" aria-hidden />
-      {isSignedIn ? (
-        <Button variant="cta-primary" size="sm" asChild>
-          <a href={appUrl("/dashboard")}>
-            <LayoutDashboard className="size-3.5" />
-            {t("dashboard")}
-          </a>
-        </Button>
-      ) : (
-        <>
-          <Button variant="cta-ghost" size="sm" asChild>
-            <a href={appUrl("/sign-in")}>{t("signIn")}</a>
-          </Button>
-          <Button variant="cta-primary" size="sm" asChild>
-            <a href={appUrl("/sign-up")}>{t("signUp")}</a>
-          </Button>
-        </>
-      )}
+      <Button variant="cta-ghost" size="sm" asChild>
+        <a href={appUrl("/sign-in")}>{t("signIn")}</a>
+      </Button>
+      <Button variant="cta-primary" size="sm" asChild>
+        <a href={appUrl("/sign-up")}>{t("signUp")}</a>
+      </Button>
     </div>
   );
 }
 
 function MobileSheet() {
   const t = useTranslations("common.nav");
-  const { isSignedIn, isLoaded } = useAuth();
   const [open, setOpen] = useState(false);
 
   return (
@@ -133,39 +116,16 @@ function MobileSheet() {
             <LanguageSwitcher />
             <ThemeToggle />
           </div>
-          {isLoaded && isSignedIn ? (
-            <Button variant="cta-primary" size="sm" asChild className="w-full">
-              <SheetClose asChild>
-                <a href={appUrl("/dashboard")}>
-                  <LayoutDashboard className="size-3.5" />
-                  {t("dashboard")}
-                </a>
-              </SheetClose>
-            </Button>
-          ) : (
-            <>
-              <Button
-                variant="cta-secondary"
-                size="sm"
-                asChild
-                className="w-full"
-              >
-                <SheetClose asChild>
-                  <a href={appUrl("/sign-in")}>{t("signIn")}</a>
-                </SheetClose>
-              </Button>
-              <Button
-                variant="cta-primary"
-                size="sm"
-                asChild
-                className="w-full"
-              >
-                <SheetClose asChild>
-                  <a href={appUrl("/sign-up")}>{t("signUp")}</a>
-                </SheetClose>
-              </Button>
-            </>
-          )}
+          <Button variant="cta-secondary" size="sm" asChild className="w-full">
+            <SheetClose asChild>
+              <a href={appUrl("/sign-in")}>{t("signIn")}</a>
+            </SheetClose>
+          </Button>
+          <Button variant="cta-primary" size="sm" asChild className="w-full">
+            <SheetClose asChild>
+              <a href={appUrl("/sign-up")}>{t("signUp")}</a>
+            </SheetClose>
+          </Button>
         </div>
       </SheetContent>
     </Sheet>
