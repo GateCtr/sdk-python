@@ -18,7 +18,7 @@ jobs:
           python-version: "3.12"
 
       - name: Install Hatch
-        run: pip install hatch
+        run: pip install "hatch>=1.12" "virtualenv>=20.26"
 
       - name: Lint
         run: hatch run lint
@@ -44,10 +44,10 @@ jobs:
           python-version: "3.12"
 
       - name: Install Hatch
-        run: pip install hatch
+        run: pip install "hatch>=1.12" "virtualenv>=20.26"
 
       - name: Build
         run: hatch build
 
       - name: Publish
-        uses: pypa/gh-action-pypi-publish@release/v1
+        uses: pypa/gh-action-pypi-publish@v1.12.4
