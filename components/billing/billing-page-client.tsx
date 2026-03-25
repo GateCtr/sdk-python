@@ -6,7 +6,7 @@ import {
   AlertTriangle,
   Clock,
   Info,
-  Zap,
+  ArrowUpCircle,
   CreditCard,
   Calendar,
 } from "lucide-react";
@@ -175,7 +175,7 @@ function CurrentPlanCard({
                 onClick={() => onUpgrade(nextPlanDef.name)}
                 className="gap-1.5"
               >
-                <Zap className="size-3.5" />
+                <ArrowUpCircle className="size-3.5" />
                 {t("page.upgradeNext", { plan: nextPlanDef.displayName })}
               </Button>
             )}

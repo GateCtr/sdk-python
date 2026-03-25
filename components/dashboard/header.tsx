@@ -11,7 +11,7 @@ import { Link } from "@/i18n/routing";
 import { useActiveTeam } from "@/hooks/use-active-team";
 import { useUsageSummary } from "@/hooks/use-usage-summary";
 import { NotificationPanel } from "@/components/dashboard/notification-panel";
-import { Zap, ChevronRight } from "lucide-react";
+import { Zap, ChevronRight, ArrowUpCircle } from "lucide-react";
 
 // ─── Breadcrumb map ───────────────────────────────────────────────────────────
 
@@ -154,7 +154,7 @@ export function DashboardHeader() {
             className="hidden sm:flex h-7 px-2.5 text-xs gap-1.5"
           >
             <Link href="/billing">
-              <Zap className="size-3" />
+              <ArrowUpCircle className="size-3" />
               {t("header.upgrade")}
             </Link>
           </Button>
