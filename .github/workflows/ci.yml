@@ -26,9 +26,8 @@ jobs:
       - name: Install dependencies
         run: |
           pip install --upgrade pip
-          pip install "virtualenv>=20.26" "hatch>=1.12"
           pip install -e .
-          pip install pytest pytest-asyncio pytest-cov respx hypothesis mypy ruff httpx pydantic eval-type-backport
+          pip install pytest pytest-asyncio pytest-cov respx hypothesis mypy ruff httpx pydantic eval-type-backport build
 
       - name: Lint
         run: ruff check gatectr/ tests/
@@ -40,4 +39,4 @@ jobs:
         run: pytest --cov=gatectr --cov-report=term-missing --cov-fail-under=80
 
       - name: Build
-        run: hatch build
+        run: python -m build
