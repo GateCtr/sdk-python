@@ -323,15 +323,6 @@ export default clerkMiddleware(
         const meta = (sessionClaims?.metadata ??
           sessionClaims?.publicMetadata) as Record<string, unknown> | undefined;
 
-        // Debug — remove after confirming JWT template is configured
-        if (process.env.NODE_ENV !== "production") {
-          console.log(
-            "[middleware] sessionClaims keys:",
-            Object.keys(sessionClaims ?? {}),
-          );
-          console.log("[middleware] meta:", meta);
-        }
-
         const onboardingMeta = meta?.onboardingComplete;
         const onboardingDone = onboardingMeta === true;
         // If meta is entirely undefined, the JWT template is not configured —
