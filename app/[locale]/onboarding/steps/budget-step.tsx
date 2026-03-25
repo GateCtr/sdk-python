@@ -177,11 +177,13 @@ export function BudgetStep({
       </div>
 
       {/* Hard stop toggle */}
-      <button
-        type="button"
+      <div
+        role="button"
+        tabIndex={0}
         onClick={() => setHardStop((v) => !v)}
+        onKeyDown={(e) => e.key === "Enter" && setHardStop((v) => !v)}
         className={cn(
-          "w-full flex items-start justify-between gap-4 rounded-lg border p-4 transition-all duration-200 text-left",
+          "w-full flex items-start justify-between gap-4 rounded-lg border p-4 transition-all duration-200 text-left cursor-pointer",
           hardStop
             ? "border-primary/30 bg-primary/5 shadow-sm"
             : "border-border hover:border-primary/20 hover:bg-accent/20",
@@ -214,7 +216,7 @@ export function BudgetStep({
           onCheckedChange={setHardStop}
           onClick={(e) => e.stopPropagation()}
         />
-      </button>
+      </div>
 
       {/* Summary card */}
       <div className="rounded-lg border border-border bg-muted/20 px-4 py-3">
