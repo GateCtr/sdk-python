@@ -141,6 +141,38 @@ export default clerkMiddleware(
       return secure(intlMiddleware(req));
     }
 
+    // ── Clerk cookie desync — session-token-but-no-client-uat ────────────────
+    // Caused by residual cookies from old domain=.gatectr.com config.
+    // When __session exists but __client_uat is missing, middleware sees userId:null
+    // while the client thinks the user is signed in. Clear orphaned cookies and
+    // redirect to sign-in to force a clean session.
+    const hsReason = req.nextUrl.searchParams.get("__clerk_hs_reason");
+    if (hsReason === "session-token-but-no-client-uat") {
+      const signInPath = pathname.startsWith("/fr")
+        ? "/fr/sign-in"
+        : "/sign-in";
+      const res = NextResponse.redirect(new URL(signInPath, req.url));
+      // Clear all Clerk cookies on app subdomain
+      for (const cookieName of [
+        "__session",
+        "__client_uat",
+        "__clerk_db_jwt",
+      ]) {
+        res.cookies.set(cookieName, "", {
+          maxAge: 0,
+          path: "/",
+          domain: "app.gatectr.com",
+        });
+        // Also clear on root domain in case they were set there
+        res.cookies.set(cookieName, "", {
+          maxAge: 0,
+          path: "/",
+          domain: ".gatectr.com",
+        });
+      }
+      return secure(res);
+    }
+
     // ── Geo-blocking ──────────────────────────────────────────────────────────
     const geoEnabled = process.env.ENABLE_GEO_BLOCKING === "true";
     const isBlockedPage = pathname === "/blocked" || pathname === "/fr/blocked";
