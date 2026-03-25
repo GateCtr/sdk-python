@@ -1,0 +1,79 @@
+{
+  "meta": {
+    "title": "Careers at GateCtr",
+    "description": "Join the team building the intelligent gateway for every LLM request."
+  },
+  "hero": {
+    "badge": "Careers",
+    "headline": "Build the infrastructure for AI.",
+    "description": "We're a small, focused team building the middleware layer that every AI-powered product needs. If you care about developer experience, reliability, and shipping fast — we want to hear from you.",
+    "cta": "See open positions"
+  },
+  "why": {
+    "label": "Why GateCtr",
+    "headline": "What it's like to work here.",
+    "description": "We're remote-first, move fast, and give everyone ownership over what they build.",
+    "items": [
+      {
+        "title": "Remote-first",
+        "body": "Work from anywhere. We're async by default and trust you to manage your time. No mandatory standups, no micromanagement."
+      },
+      {
+        "title": "Real ownership",
+        "body": "Small team means high impact. You'll own features end-to-end, from design to deployment. Your work ships to production fast."
+      },
+      {
+        "title": "Competitive compensation",
+        "body": "Market-rate salary, equity, and benefits. We believe in paying people fairly for the value they create."
+      },
+      {
+        "title": "Learning budget",
+        "body": "$2,000/year for courses, conferences, and books. We invest in your growth because it's good for everyone."
+      },
+      {
+        "title": "Modern stack",
+        "body": "Next.js, TypeScript, PostgreSQL, Redis. We use the best tools for the job and keep the codebase clean."
+      },
+      {
+        "title": "Meaningful work",
+        "body": "Every feature you ship helps developers save real money and ship better AI products. The impact is direct and measurable."
+      }
+    ]
+  },
+  "openings": {
+    "label": "Open positions",
+    "headline": "Current openings.",
+    "apply": "Apply",
+    "jobs": [
+      {
+        "title": "Senior Full-Stack Engineer",
+        "team": "Engineering",
+        "location": "Remote",
+        "type": "Full-time"
+      },
+      {
+        "title": "Developer Advocate",
+        "team": "Growth",
+        "location": "Remote",
+        "type": "Full-time"
+      },
+      {
+        "title": "Product Designer",
+        "team": "Design",
+        "location": "Remote",
+        "type": "Full-time"
+      }
+    ],
+    "empty": {
+      "title": "No open positions right now.",
+      "body": "We're not actively hiring, but we're always interested in exceptional people.",
+      "cta": "Send a speculative application"
+    }
+  },
+  "culture": {
+    "label": "Culture",
+    "headline": "We ship. We learn. We improve.",
+    "body": "We're not a company that talks about culture — we just try to do good work, treat each other well, and build something developers actually love. If that sounds like your kind of place, reach out.",
+    "cta": "careers@gatectr.com"
+  }
+}

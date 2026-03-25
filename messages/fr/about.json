@@ -1,0 +1,88 @@
+{
+  "meta": {
+    "title": "À propos de GateCtr",
+    "description": "L'équipe et la mission derrière GateCtr — la passerelle intelligente pour chaque requête LLM."
+  },
+  "hero": {
+    "badge": "À propos",
+    "headline": "Conçu pour les développeurs qui livrent de l'IA.",
+    "description": "GateCtr est né d'une frustration. Les coûts LLM étaient imprévisibles, les prompts trop lourds, et il n'existait aucun moyen simple de contrôler ce qui se passait entre votre application et le modèle. Nous avons construit la couche qui manquait."
+  },
+  "mission": {
+    "label": "Mission",
+    "headline": "Le contrôle sans la complexité.",
+    "body1": "Nous croyons que chaque développeur qui construit avec des LLM mérite une visibilité et un contrôle total sur son infrastructure IA — sans changer une ligne de code ni changer de fournisseur.",
+    "body2": "GateCtr est la couche middleware qui se place entre votre application et n'importe quel LLM. Un seul changement d'endpoint. Contrôle budgétaire, optimisation des prompts, routage intelligent et analytics en temps réel — tout transparent, tout mesurable.",
+    "stat1": {
+      "value": "-40%",
+      "label": "Réduction de tokens",
+      "desc": "Économies moyennes via le Context Optimizer"
+    },
+    "stat2": {
+      "value": "< 10ms",
+      "label": "Latence ajoutée",
+      "desc": "Surcharge médiane par requête"
+    },
+    "stat3": {
+      "value": "4",
+      "label": "Fournisseurs LLM",
+      "desc": "OpenAI, Anthropic, Mistral, Gemini"
+    }
+  },
+  "story": {
+    "label": "Notre histoire",
+    "headline": "Pourquoi nous avons construit GateCtr.",
+    "p1": "En 2024, nous construisions un produit propulsé par l'IA et regardions notre facture OpenAI croître plus vite que nos revenus. Nous n'avions aucune visibilité sur les prompts coûteux, aucun moyen de plafonner les coûts par utilisateur, et aucun fallback en cas de panne d'un fournisseur.",
+    "p2": "Nous avons regardé les outils existants. Des plateformes d'observabilité qui enregistraient tout mais ne contrôlaient rien. Des wrappers qui vous enfermaient dans leur SDK. Rien qui se plaçait simplement au milieu, de façon transparente, et vous donnait le contrôle sans friction.",
+    "p3": "Alors nous avons construit GateCtr. Un seul changement d'endpoint. Votre clé API existante. Contrôle total sur les coûts, le routage et l'optimisation. Nous avons lancé en 2025 et livrons rapidement depuis."
+  },
+  "values": {
+    "label": "Valeurs",
+    "headline": "Ce en quoi nous croyons.",
+    "items": [
+      {
+        "title": "Transparence avant tout",
+        "body": "Votre clé API reste la vôtre. Nous ne stockons jamais le contenu des prompts. Chaque token, chaque coût, chaque décision est visible dans votre tableau de bord."
+      },
+      {
+        "title": "Developer-first",
+        "body": "Un seul changement d'endpoint. Pas de lock-in SDK. Pas de changements d'architecture. Si l'intégration prend plus de 5 minutes, nous avons échoué."
+      },
+      {
+        "title": "Impact mesurable",
+        "body": "Nous ne faisons pas de promesses vagues. -40% de tokens est un chiffre que nous assumons. Chaque fonctionnalité est livrée avec une métrique."
+      },
+      {
+        "title": "Fiabilité avant les fonctionnalités",
+        "body": "Nous préférons 99,9% de disponibilité avec moins de fonctionnalités qu'une plateforme surchargée qui tombe. L'infrastructure n'est pas un terrain d'expérimentation."
+      },
+      {
+        "title": "Privacy by design",
+        "body": "Nous collectons le minimum de données nécessaires. Nous n'entraînons jamais de modèles sur vos prompts. Vos données vous appartiennent — toujours."
+      }
+    ]
+  },
+  "team": {
+    "label": "Équipe",
+    "headline": "Petite équipe. Grandes ambitions.",
+    "description": "Nous sommes une équipe réduite d'ingénieurs et de designers qui ont construit des systèmes IA en production. Nous avançons vite, livrons souvent et nous soucions profondément de l'expérience développeur.",
+    "members": [
+      {
+        "name": "Ryan Sabowa",
+        "role": "Fondateur & CEO",
+        "bio": "A précédemment construit de l'infrastructure IA à grande échelle. Obsédé par l'expérience développeur et l'efficacité des coûts."
+      },
+      {
+        "name": "Équipe GateCtr",
+        "role": "Ingénierie",
+        "bio": "Ingénieurs full-stack avec des expériences en systèmes distribués, infrastructure LLM et outils pour développeurs."
+      }
+    ]
+  },
+  "cta": {
+    "headline": "Prêt à reprendre le contrôle ?",
+    "description": "Rejoignez les développeurs qui ont réduit leurs coûts LLM de 40% sans changer une ligne de code.",
+    "primary": "Démarrer gratuitement",
+    "secondary": "Nous contacter"
+  }
+}

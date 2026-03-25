@@ -1,0 +1,88 @@
+{
+  "meta": {
+    "title": "About GateCtr",
+    "description": "The team and mission behind GateCtr — the intelligent gateway for every LLM request."
+  },
+  "hero": {
+    "badge": "About us",
+    "headline": "Built for developers who ship AI.",
+    "description": "GateCtr started as a frustration. LLM costs were unpredictable, prompts were bloated, and there was no easy way to control what was happening between your app and the model. We built the layer that was missing."
+  },
+  "mission": {
+    "label": "Mission",
+    "headline": "Control without complexity.",
+    "body1": "We believe every developer building with LLMs deserves full visibility and control over their AI infrastructure — without changing a line of code or switching providers.",
+    "body2": "GateCtr is the middleware layer that sits between your app and any LLM. One endpoint swap. Budget enforcement, prompt optimization, intelligent routing, and real-time analytics — all transparent, all measurable.",
+    "stat1": {
+      "value": "-40%",
+      "label": "Token reduction",
+      "desc": "Average savings via Context Optimizer"
+    },
+    "stat2": {
+      "value": "< 10ms",
+      "label": "Added latency",
+      "desc": "Median overhead per request"
+    },
+    "stat3": {
+      "value": "4",
+      "label": "LLM providers",
+      "desc": "OpenAI, Anthropic, Mistral, Gemini"
+    }
+  },
+  "story": {
+    "label": "Our story",
+    "headline": "Why we built GateCtr.",
+    "p1": "In 2024, we were building an AI-powered product and watching our OpenAI bill grow faster than our revenue. We had no visibility into which prompts were expensive, no way to cap costs per user, and no fallback when a provider had an outage.",
+    "p2": "We looked at the existing tools. Observability platforms that logged everything but controlled nothing. Wrappers that locked you into their SDK. Nothing that just sat in the middle, transparently, and gave you control without friction.",
+    "p3": "So we built GateCtr. One endpoint swap. Your existing API key. Full control over costs, routing, and optimization. We launched in 2025 and have been shipping fast ever since."
+  },
+  "values": {
+    "label": "Values",
+    "headline": "What we stand for.",
+    "items": [
+      {
+        "title": "Transparency first",
+        "body": "Your API key stays yours. We never store prompt content. Every token, every cost, every decision is visible in your dashboard."
+      },
+      {
+        "title": "Developer-first",
+        "body": "One endpoint swap. No SDK lock-in. No architecture changes. If it takes more than 5 minutes to integrate, we've failed."
+      },
+      {
+        "title": "Measurable impact",
+        "body": "We don't make vague promises. -40% tokens is a number we stand behind. Every feature ships with a metric."
+      },
+      {
+        "title": "Reliability over features",
+        "body": "We'd rather have 99.9% uptime and fewer features than a bloated platform that goes down. Infrastructure is not a place for experiments."
+      },
+      {
+        "title": "Privacy by design",
+        "body": "We collect the minimum data necessary. We never train models on your prompts. Your data is yours — always."
+      }
+    ]
+  },
+  "team": {
+    "label": "Team",
+    "headline": "Small team. Big ambitions.",
+    "description": "We're a lean team of engineers and designers who've built production AI systems. We move fast, ship often, and care deeply about the developer experience.",
+    "members": [
+      {
+        "name": "Ryan Sabowa",
+        "role": "Founder & CEO",
+        "bio": "Previously built AI infrastructure at scale. Obsessed with developer experience and cost efficiency."
+      },
+      {
+        "name": "GateCtr Team",
+        "role": "Engineering",
+        "bio": "Full-stack engineers with backgrounds in distributed systems, LLM infrastructure, and developer tooling."
+      }
+    ]
+  },
+  "cta": {
+    "headline": "Ready to take control?",
+    "description": "Join developers who've cut their LLM costs by 40% without changing a line of code.",
+    "primary": "Start free",
+    "secondary": "Get in touch"
+  }
+}

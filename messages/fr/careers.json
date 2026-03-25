@@ -1,0 +1,79 @@
+{
+  "meta": {
+    "title": "Carrières chez GateCtr",
+    "description": "Rejoignez l'équipe qui construit la passerelle intelligente pour chaque requête LLM."
+  },
+  "hero": {
+    "badge": "Carrières",
+    "headline": "Construisez l'infrastructure pour l'IA.",
+    "description": "Nous sommes une petite équipe focalisée qui construit la couche middleware dont chaque produit propulsé par l'IA a besoin. Si vous vous souciez de l'expérience développeur, de la fiabilité et de livrer vite — nous voulons vous entendre.",
+    "cta": "Voir les postes ouverts"
+  },
+  "why": {
+    "label": "Pourquoi GateCtr",
+    "headline": "Comment c'est de travailler ici.",
+    "description": "Nous sommes remote-first, avançons vite et donnons à chacun la propriété de ce qu'il construit.",
+    "items": [
+      {
+        "title": "Remote-first",
+        "body": "Travaillez de n'importe où. Nous sommes async par défaut et vous faisons confiance pour gérer votre temps. Pas de standups obligatoires, pas de micromanagement."
+      },
+      {
+        "title": "Vraie propriété",
+        "body": "Petite équipe = fort impact. Vous posséderez des fonctionnalités de bout en bout, du design au déploiement. Votre travail arrive en production rapidement."
+      },
+      {
+        "title": "Rémunération compétitive",
+        "body": "Salaire au marché, equity et avantages. Nous croyons en une rémunération juste pour la valeur créée."
+      },
+      {
+        "title": "Budget formation",
+        "body": "2 000 $/an pour les cours, conférences et livres. Nous investissons dans votre croissance parce que c'est bon pour tout le monde."
+      },
+      {
+        "title": "Stack moderne",
+        "body": "Next.js, TypeScript, PostgreSQL, Redis. Nous utilisons les meilleurs outils et maintenons une codebase propre."
+      },
+      {
+        "title": "Travail qui a du sens",
+        "body": "Chaque fonctionnalité que vous livrez aide des développeurs à économiser de l'argent réel et à construire de meilleurs produits IA. L'impact est direct et mesurable."
+      }
+    ]
+  },
+  "openings": {
+    "label": "Postes ouverts",
+    "headline": "Offres actuelles.",
+    "apply": "Postuler",
+    "jobs": [
+      {
+        "title": "Ingénieur Full-Stack Senior",
+        "team": "Ingénierie",
+        "location": "Remote",
+        "type": "Temps plein"
+      },
+      {
+        "title": "Developer Advocate",
+        "team": "Croissance",
+        "location": "Remote",
+        "type": "Temps plein"
+      },
+      {
+        "title": "Product Designer",
+        "team": "Design",
+        "location": "Remote",
+        "type": "Temps plein"
+      }
+    ],
+    "empty": {
+      "title": "Aucun poste ouvert pour l'instant.",
+      "body": "Nous ne recrutons pas activement, mais nous sommes toujours intéressés par les personnes exceptionnelles.",
+      "cta": "Envoyer une candidature spontanée"
+    }
+  },
+  "culture": {
+    "label": "Culture",
+    "headline": "On livre. On apprend. On s'améliore.",
+    "body": "Nous ne sommes pas une entreprise qui parle de culture — nous essayons simplement de faire du bon travail, de bien nous traiter et de construire quelque chose que les développeurs aiment vraiment. Si ça vous ressemble, contactez-nous.",
+    "cta": "careers@gatectr.com"
+  }
+}

@@ -68,6 +68,8 @@ export default getRequestConfig(async ({ requestLocale }) => {
       .default,
     status: (await import(`../messages/${locale}/status.json`)).default,
     legal: (await import(`../messages/${locale}/legal.json`)).default,
+    about: (await import(`../messages/${locale}/about.json`)).default,
+    careers: (await import(`../messages/${locale}/careers.json`)).default,
   };
 
   return {
