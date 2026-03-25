@@ -28,7 +28,7 @@ jobs:
           pip install --upgrade pip
           pip install "virtualenv>=20.26" "hatch>=1.12"
           pip install -e .
-          pip install pytest pytest-asyncio pytest-cov respx hypothesis mypy ruff httpx pydantic
+          pip install pytest pytest-asyncio pytest-cov respx hypothesis mypy ruff httpx pydantic eval-type-backport
 
       - name: Lint
         run: ruff check gatectr/ tests/
