@@ -33,6 +33,12 @@ vi.mock("@/components/idle-timeout-dialog", () => ({
   IdleTimeoutDialog: () => null,
 }));
 
+vi.mock("@/components/clerk-provider", () => ({
+  ClerkProvider: ({ children }: { children: React.ReactNode }) => (
+    <>{children}</>
+  ),
+}));
+
 vi.mock("@/components/ui/sidebar", () => ({
   SidebarProvider: ({ children }: { children: React.ReactNode }) => (
     <div>{children}</div>
