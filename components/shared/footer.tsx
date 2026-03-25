@@ -316,6 +316,14 @@ export function Footer({ variant = "marketing", className }: FooterProps) {
                   {t("footer.terms")}
                 </Link>
               </li>
+              <li>
+                <Link
+                  href="/cookies"
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  {t("footer.cookies")}
+                </Link>
+              </li>
             </ul>
           </div>
         </div>

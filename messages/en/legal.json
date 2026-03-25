@@ -1,0 +1,112 @@
+{
+  "privacy": {
+    "title": "Privacy Policy",
+    "description": "How GateCtr collects, uses, and protects your data.",
+    "eyebrow": "Legal",
+    "lastUpdated": "Last updated: March 2026",
+    "s1": {
+      "title": "Who we are",
+      "body": "GateCtr is an LLM middleware gateway operated by GateCtr SAS. We sit between your application and LLM providers to optimize, route, and enforce budgets on your API calls. This policy explains how we handle your data."
+    },
+    "s2": {
+      "title": "What we collect",
+      "body": "We collect only what is necessary to operate the service:",
+      "item1": "Account information: email address, name, and authentication data via Clerk.",
+      "item2": "Usage data: token counts, request counts, model used, cost estimates — never the content of your prompts or responses.",
+      "item3": "Provider keys: your LLM API keys, stored AES-encrypted at rest. We never log or expose them.",
+      "item4": "Technical data: IP address, user agent, and request timestamps for security and abuse prevention."
+    },
+    "s3": {
+      "title": "How we use your data",
+      "body": "We use your data to provide the service (routing, budget enforcement, analytics), send transactional emails (account events, alerts), improve reliability and performance, and comply with legal obligations. We do not sell your data. We do not use your prompts to train models."
+    },
+    "s4": {
+      "title": "Data retention",
+      "body": "Usage logs are retained for 90 days on the Team plan and 30 days on Free and Pro. Account data is retained for the duration of your account. You can request deletion at any time."
+    },
+    "s5": {
+      "title": "Third-party services",
+      "body": "We use Clerk for authentication, Stripe for payments, Neon for database hosting, Upstash for caching, and Sentry for error monitoring. Each provider processes data under their own privacy policy. We do not share your data with LLM providers — your API key is used directly from your infrastructure."
+    },
+    "s6": {
+      "title": "Your rights",
+      "body": "You have the right to access, correct, export, or delete your personal data at any time. To exercise these rights, contact us at the address below. We will respond within 30 days."
+    },
+    "s7": {
+      "title": "Contact",
+      "body": "For privacy-related questions or requests:"
+    }
+  },
+  "terms": {
+    "title": "Terms of Service",
+    "description": "The terms governing your use of GateCtr.",
+    "eyebrow": "Legal",
+    "lastUpdated": "Last updated: March 2026",
+    "s1": {
+      "title": "Acceptance",
+      "body": "By using GateCtr, you agree to these Terms of Service. If you do not agree, do not use the service. These terms apply to all users, including free and paid plans."
+    },
+    "s2": {
+      "title": "The service",
+      "body": "GateCtr provides a middleware gateway for LLM API calls. We route requests, enforce budgets, compress prompts, and provide analytics. We do not store the content of your prompts or responses. We are not responsible for the output of LLM providers."
+    },
+    "s3": {
+      "title": "Your account",
+      "body": "You are responsible for maintaining the security of your account and API keys. You must not share your account credentials. You must not use GateCtr to violate the terms of service of any LLM provider. You must not use GateCtr for illegal purposes."
+    },
+    "s4": {
+      "title": "Billing",
+      "body": "Paid plans are billed monthly or annually via Stripe. GateCtr does not charge for tokens — you pay your LLM provider directly. Refunds are handled on a case-by-case basis. Downgrading or cancelling takes effect at the end of the current billing period."
+    },
+    "s5": {
+      "title": "Availability",
+      "body": "We aim for 99.9% uptime on paid plans. We do not guarantee uninterrupted service. Scheduled maintenance will be announced in advance. We are not liable for losses caused by service interruptions."
+    },
+    "s6": {
+      "title": "Limitation of liability",
+      "body": "GateCtr is provided as-is. We are not liable for indirect, incidental, or consequential damages arising from your use of the service, including but not limited to unexpected LLM costs, data loss, or service interruptions."
+    },
+    "s7": {
+      "title": "Contact",
+      "body": "For legal inquiries:"
+    }
+  },
+  "cookies": {
+    "title": "Cookie Policy",
+    "description": "How GateCtr uses cookies and similar technologies.",
+    "eyebrow": "Legal",
+    "lastUpdated": "Last updated: March 2026",
+    "s1": {
+      "title": "What are cookies",
+      "body": "Cookies are small text files stored on your device when you visit a website. GateCtr uses cookies to keep you signed in, remember your preferences, and understand how the service is used."
+    },
+    "s2": {
+      "title": "Cookies we use",
+      "body": "We use three categories of cookies:",
+      "essential": {
+        "label": "Essential",
+        "desc": "Required for authentication and security. Set by Clerk to maintain your session. Cannot be disabled."
+      },
+      "functional": {
+        "label": "Functional",
+        "desc": "Remember your preferences such as language and theme. Stored in localStorage."
+      },
+      "analytics": {
+        "label": "Analytics",
+        "desc": "Vercel Analytics collects anonymous usage data to help us improve the service. No personal data is shared."
+      }
+    },
+    "s3": {
+      "title": "Third-party cookies",
+      "body": "Clerk sets authentication cookies scoped to app.gatectr.com. Stripe may set cookies during checkout. We do not use advertising or tracking cookies."
+    },
+    "s4": {
+      "title": "Managing cookies",
+      "body": "You can control cookies through your browser settings. Disabling essential cookies will prevent you from signing in. Disabling functional cookies will reset your preferences on each visit."
+    },
+    "s5": {
+      "title": "Contact",
+      "body": "For questions about our use of cookies:"
+    }
+  }
+}
