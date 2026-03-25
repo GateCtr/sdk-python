@@ -1,0 +1,4 @@
+# file: C:\Users\sabow\OneDrive\Documents\projects\gatectr\sdk-python\gatectr\http.py
+# hypothesis_version: 6.151.9
+
+[0.0, 0.1, 0.5, 10.0, 30.0, 400, 401, 403, 404, 429, 500, 502, 503, 504, 'X-GateCtr-Request-Id', 'code', 'message']

@@ -1,0 +1,4 @@
+# file: C:\Users\sabow\OneDrive\Documents\projects\gatectr\sdk-python\gatectr\errors.py
+# hypothesis_version: 6.151.9
+
+['code', 'message', 'name', 'request_id', 'status']

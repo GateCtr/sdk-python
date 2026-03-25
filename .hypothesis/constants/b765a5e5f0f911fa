@@ -1,0 +1,4 @@
+# file: C:\Users\sabow\OneDrive\Documents\projects\gatectr\sdk-python\gatectr\types.py
+# hypothesis_version: 6.151.9
+
+[30.0, 'assistant', 'chat.completion', 'from', 'populate_by_name', 'system', 'text_completion', 'user']
