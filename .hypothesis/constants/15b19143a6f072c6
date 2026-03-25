@@ -1,0 +1,4 @@
+# file: C:\Users\sabow\OneDrive\Documents\projects\gatectr\sdk-python\gatectr\client.py
+# hypothesis_version: 6.151.9
+
+[30.0, '/', '0.0.0', 'Authorization', 'Content-Type', 'GATECTR_API_KEY', 'GET', 'GateCtr(', 'POST', 'SyncGateCtr(', 'User-Agent', 'X-GateCtr-Latency-Ms', 'X-GateCtr-Overage', 'X-GateCtr-Request-Id', '^https?://', '_api_key', '_base_url', '_http', '_max_retries', '_optimize', '_route', '_timeout', 'application/json', 'budget_id', 'from', 'gatectr', 'gatectr-sdk', 'max_tokens', 'messages', 'model', 'optimize', 'project_id', 'request_id', 'route', 'saved_tokens', 'stream', 'temperature', 'to', 'true', 'usage']

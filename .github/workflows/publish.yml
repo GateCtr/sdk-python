@@ -1,0 +1,56 @@
+name: Publish to PyPI
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  ci:
+    name: CI before publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -e .
+          pip install pytest pytest-asyncio pytest-cov respx hypothesis mypy ruff httpx pydantic
+
+      - name: Lint
+        run: ruff check gatectr/ tests/
+
+      - name: Type check
+        run: mypy gatectr/
+
+      - name: Test
+        run: pytest --cov=gatectr --cov-report=term-missing --cov-fail-under=80
+
+  publish:
+    name: Publish to PyPI
+    needs: ci
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Hatch
+        run: pip install "hatch>=1.12" "virtualenv>=20.26"
+
+      - name: Build
+        run: hatch build
+
+      - name: Publish
+        uses: pypa/gh-action-pypi-publish@v1.12.4
