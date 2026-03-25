@@ -17,6 +17,7 @@
 
 | Example                                | Stack                   | What it shows                                      |
 | -------------------------------------- | ----------------------- | -------------------------------------------------- |
+| [`node-sdk`](./node-sdk)               | Node.js + TypeScript    | All 11 SDK methods — complete, chat, stream, usage, models, errors, optimizer, router |
 | [`nextjs-app`](./nextjs-app)           | Next.js 15 + App Router | API route with GateCtr, budget firewall, streaming |
 | [`langchain-agent`](./langchain-agent) | Python + LangChain      | Agent with token cap and auto-fallback to Mistral  |
 | [`fastapi-service`](./fastapi-service) | Python + FastAPI        | Async completions with budget per endpoint         |

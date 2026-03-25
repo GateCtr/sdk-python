@@ -123,8 +123,20 @@ export default clerkMiddleware(
       return NextResponse.json({ error: "Not Found" }, { status: 404 });
     }
 
-    // status.gatectr.com → /status page
+    // status.gatectr.com → /status page (root only)
+    // Any other path → redirect to gatectr.com/<path>
     if (host === "status.gatectr.com") {
+      const isRoot =
+        pathname === "/" || pathname === "" || pathname === "/en/status";
+      if (!isRoot) {
+        const marketingBase =
+          process.env.NEXT_PUBLIC_MARKETING_URL ?? "https://gatectr.com";
+        return secure(
+          NextResponse.redirect(
+            new URL(pathname + req.nextUrl.search, marketingBase),
+          ),
+        );
+      }
       const statusPath = "/en/status";
       if (pathname !== statusPath) {
         return secure(NextResponse.rewrite(new URL(statusPath, req.url)));

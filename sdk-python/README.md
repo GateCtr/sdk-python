@@ -1,184 +1,127 @@
-<div align="center">
-
-<img src="https://raw.githubusercontent.com/GateCtr/.github/main/profile/logo.svg" width="56" height="56" alt="GateCtr" />
-
 # gatectr-sdk
 
-**Python SDK for GateCtr — One gateway. Every LLM.**
+The official Python SDK for [GateCtr](https://gatectr.com) — the intelligent LLM gateway.
 
-[![PyPI](https://img.shields.io/pypi/v/gatectr-sdk?color=1B4F82)](https://pypi.org/project/gatectr-sdk)
-[![license](https://img.shields.io/badge/license-MIT-00B4C8)](LICENSE)
-[![python](https://img.shields.io/badge/python-3.9+-00B4C8)](https://pypi.org/project/gatectr-sdk)
-[![status](https://img.shields.io/badge/status-operational-38A169)](https://status.gatectr.com)
+One endpoint swap. Full control. -40% tokens.
 
-</div>
-
----
-
-## Install
+## Installation
 
 ```bash
 pip install gatectr-sdk
-# or
-uv add gatectr-sdk
 ```
 
-## Quick start
+Requires Python 3.9+.
 
-```python
-from gatectr import GateCtr
+## Quickstart
 
-client = GateCtr(api_key="your-api-key")
-
-response = client.complete(
-    model="gpt-4o",
-    messages=[{"role": "user", "content": "Hello"}],
-)
-
-print(response.choices[0].message.content)
-```
-
-One endpoint swap. Your existing OpenAI-compatible code works as-is.
-
----
-
-## What GateCtr adds automatically
-
-- **-40% tokens** — Context Optimizer compresses prompts before they hit the LLM
-- **Budget Firewall** — Hard caps per project. Requests blocked when limit is reached.
-- **Model Router** — Optionally let GateCtr pick the right model for each request
-- **Analytics** — Every token, every cost tracked in your dashboard
-- **Webhooks** — Budget alerts pushed to Slack, Teams, or any URL
-
----
-
-## Usage
-
-### Chat completion
-
-```python
-response = client.complete(
-    model="gpt-4o",
-    messages=[
-        {"role": "system", "content": "You are a helpful assistant."},
-        {"role": "user", "content": "Summarize this document."},
-    ],
-)
-```
-
-### Async
+### Async (recommended)
 
 ```python
 import asyncio
-from gatectr import AsyncGateCtr
-
-client = AsyncGateCtr(api_key="your-api-key")
+from gatectr import GateCtr
 
 async def main():
+    client = GateCtr(api_key="gct_your_api_key")
+
+    # Text completion
     response = await client.complete(
         model="gpt-4o",
-        messages=[{"role": "user", "content": "Hello"}],
+        messages=[{"role": "user", "content": "Hello, world!"}],
     )
-    print(response.choices[0].message.content)
+    print(response.choices[0].text)
+    print(f"Tokens saved: {response.gatectr.tokens_saved}")
+
+    # Chat completion
+    chat = await client.chat(
+        model="gpt-4o",
+        messages=[
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": "What is GateCtr?"},
+        ],
+    )
+    print(chat.choices[0].message.content)
+
+    # Streaming
+    async for chunk in client.stream(
+        model="gpt-4o",
+        messages=[{"role": "user", "content": "Tell me a story."}],
+    ):
+        if chunk.delta:
+            print(chunk.delta, end="", flush=True)
+
+    await client.aclose()
 
 asyncio.run(main())
 ```
 
-### Streaming
+### Async context manager
 
 ```python
-for chunk in client.stream(
-    model="gpt-4o",
-    messages=[{"role": "user", "content": "Hello"}],
-):
-    print(chunk.delta or "", end="", flush=True)
+from gatectr import GateCtr
+
+async with GateCtr(api_key="gct_your_api_key") as client:
+    response = await client.complete(
+        model="gpt-4o",
+        messages=[{"role": "user", "content": "Hello!"}],
+    )
+    print(response.choices[0].text)
 ```
 
-### With budget override
+### Sync wrapper
 
 ```python
+from gatectr import SyncGateCtr
+
+client = SyncGateCtr(api_key="gct_your_api_key")
+
 response = client.complete(
     model="gpt-4o",
-    messages=messages,
-    gatectr={
-        "budget_id": "proj_123",  # enforce a specific budget
-        "optimize": True,          # enable context optimizer
-        "route": False,            # disable model router for this call
-    },
+    messages=[{"role": "user", "content": "Hello!"}],
 )
+print(response.choices[0].text)
 ```
 
-### Model Router (auto-select)
+### Environment variable
+
+Set `GATECTR_API_KEY` and omit the `api_key` argument:
+
+```bash
+export GATECTR_API_KEY=gct_your_api_key
+```
 
 ```python
-response = client.complete(
-    model="auto",  # GateCtr picks the optimal model
-    messages=messages,
-)
+from gatectr import GateCtr
 
-print(response.gatectr.model_used)    # e.g. "gpt-3.5-turbo"
-print(response.gatectr.tokens_saved)  # e.g. 312
+client = GateCtr()  # reads from GATECTR_API_KEY
 ```
-
----
 
 ## Configuration
 
 ```python
 client = GateCtr(
-    api_key="your-api-key",                      # required
-    base_url="https://api.gatectr.com/v1",       # default
-    timeout=30.0,                                 # seconds
-    optimize=True,                                # context optimizer
-    route=False,                                  # model router
+    api_key="gct_your_api_key",
+    base_url="https://api.gatectr.com/v1",  # default
+    timeout=30.0,                            # seconds, default 30
+    max_retries=3,                           # default 3
+    optimize=True,                           # Context Optimizer, default True
+    route=False,                             # Model Router, default False
 )
 ```
 
-| Option     | Type    | Default                      | Description                |
-| ---------- | ------- | ---------------------------- | -------------------------- |
-| `api_key`  | `str`   | —                            | Your GateCtr API key       |
-| `base_url` | `str`   | `https://api.gatectr.com/v1` | API base URL               |
-| `timeout`  | `float` | `30.0`                       | Request timeout in seconds |
-| `optimize` | `bool`  | `True`                       | Enable context optimizer   |
-| `route`    | `bool`  | `False`                      | Enable model router        |
-
----
-
-## Drop-in for OpenAI SDK
-
-Already using the OpenAI Python SDK? Swap the base URL:
+## Error handling
 
 ```python
-from openai import OpenAI
+from gatectr import GateCtr, GateCtrApiError, GateCtrTimeoutError
 
-client = OpenAI(
-    api_key="your-gatectr-api-key",
-    base_url="https://api.gatectr.com/v1",
-)
-
-# Everything else stays the same
+async with GateCtr() as client:
+    try:
+        response = await client.complete(model="gpt-4o", messages=[...])
+    except GateCtrApiError as e:
+        print(f"API error {e.status}: {e.code}")
+    except GateCtrTimeoutError as e:
+        print(f"Timed out: {e}")
 ```
 
-## Drop-in for LangChain
+## License
 
-```python
-from langchain_openai import ChatOpenAI
-
-llm = ChatOpenAI(
-    api_key="your-gatectr-api-key",
-    base_url="https://api.gatectr.com/v1",
-    model="gpt-4o",
-)
-```
-
----
-
-## Requirements
-
-- Python 3.9+
-
----
-
-## Links
-
-[Dashboard](https://gatectr.com) · [Docs](https://docs.gatectr.com) · [Status](https://status.gatectr.com) · [X](https://x.com/gatectrl)
+MIT — see [LICENSE](LICENSE).
