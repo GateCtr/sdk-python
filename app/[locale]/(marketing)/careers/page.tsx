@@ -25,7 +25,7 @@ export default async function CareersPage({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "careers" });
 
-  const perks = t.raw("perks.items") as Array<{ title: string; body: string }>;
+  const perks = t.raw("why.items") as Array<{ title: string; body: string }>;
   const openings = t.raw("openings.jobs") as Array<{
     title: string;
     team: string;
