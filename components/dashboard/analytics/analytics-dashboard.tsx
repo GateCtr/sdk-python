@@ -11,7 +11,6 @@ import {
   DollarSign,
   Activity,
   Lock,
-  Zap,
   Download,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
