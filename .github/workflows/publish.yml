@@ -17,17 +17,20 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install Hatch
-        run: pip install "hatch>=1.12" "virtualenv>=20.26"
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -e .
+          pip install pytest pytest-asyncio pytest-cov respx hypothesis mypy ruff httpx pydantic
 
       - name: Lint
-        run: hatch run lint
+        run: ruff check gatectr/ tests/
 
       - name: Type check
-        run: hatch run typecheck
+        run: mypy gatectr/
 
       - name: Test
-        run: hatch run test-cov
+        run: pytest --cov=gatectr --cov-report=term-missing --cov-fail-under=80
 
   publish:
     name: Publish to PyPI
