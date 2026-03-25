@@ -23,17 +23,20 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Install Hatch
-        run: pip install "hatch>=1.12" "virtualenv>=20.26"
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install "virtualenv>=20.26" "hatch>=1.12"
+          pip install pytest pytest-asyncio pytest-cov respx hypothesis mypy ruff httpx pydantic
 
       - name: Lint
-        run: hatch run lint
+        run: ruff check gatectr/ tests/
 
       - name: Type check
-        run: hatch run typecheck
+        run: mypy gatectr/
 
       - name: Test with coverage
-        run: hatch run test-cov
+        run: pytest --cov=gatectr --cov-report=term-missing --cov-fail-under=80
 
       - name: Build
         run: hatch build
