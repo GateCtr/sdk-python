@@ -1,112 +1,287 @@
 {
   "privacy": {
+    "meta": {
+      "title": "Privacy Policy",
+      "description": "How GateCtr collects, uses, and protects your personal data."
+    },
+    "eyebrow": "Legal",
     "title": "Privacy Policy",
-    "description": "How GateCtr collects, uses, and protects your data.",
-    "eyebrow": "Legal",
-    "lastUpdated": "Last updated: March 2026",
+    "lastUpdated": "Last updated: March 25, 2026",
+    "intro": "GateCtr is committed to protecting your privacy. This policy explains what data we collect, why we collect it, how we use it, and your rights. We built GateCtr on a simple principle: your API keys and your prompts are yours. We never sell your data, never train models on your content, and never share your keys with third parties.",
     "s1": {
-      "title": "Who we are",
-      "body": "GateCtr is an LLM middleware gateway operated by GateCtr SAS. We sit between your application and LLM providers to optimize, route, and enforce budgets on your API calls. This policy explains how we handle your data."
-    },
-    "s2": {
-      "title": "What we collect",
-      "body": "We collect only what is necessary to operate the service:",
-      "item1": "Account information: email address, name, and authentication data via Clerk.",
-      "item2": "Usage data: token counts, request counts, model used, cost estimates — never the content of your prompts or responses.",
-      "item3": "Provider keys: your LLM API keys, stored AES-encrypted at rest. We never log or expose them.",
-      "item4": "Technical data: IP address, user agent, and request timestamps for security and abuse prevention."
-    },
-    "s3": {
-      "title": "How we use your data",
-      "body": "We use your data to provide the service (routing, budget enforcement, analytics), send transactional emails (account events, alerts), improve reliability and performance, and comply with legal obligations. We do not sell your data. We do not use your prompts to train models."
-    },
-    "s4": {
-      "title": "Data retention",
-      "body": "Usage logs are retained for 90 days on the Team plan and 30 days on Free and Pro. Account data is retained for the duration of your account. You can request deletion at any time."
-    },
-    "s5": {
-      "title": "Third-party services",
-      "body": "We use Clerk for authentication, Stripe for payments, Neon for database hosting, Upstash for caching, and Sentry for error monitoring. Each provider processes data under their own privacy policy. We do not share your data with LLM providers — your API key is used directly from your infrastructure."
-    },
-    "s6": {
-      "title": "Your rights",
-      "body": "You have the right to access, correct, export, or delete your personal data at any time. To exercise these rights, contact us at the address below. We will respond within 30 days."
-    },
-    "s7": {
-      "title": "Contact",
-      "body": "For privacy-related questions or requests:"
-    }
-  },
-  "terms": {
-    "title": "Terms of Service",
-    "description": "The terms governing your use of GateCtr.",
-    "eyebrow": "Legal",
-    "lastUpdated": "Last updated: March 2026",
-    "s1": {
-      "title": "Acceptance",
-      "body": "By using GateCtr, you agree to these Terms of Service. If you do not agree, do not use the service. These terms apply to all users, including free and paid plans."
-    },
-    "s2": {
-      "title": "The service",
-      "body": "GateCtr provides a middleware gateway for LLM API calls. We route requests, enforce budgets, compress prompts, and provide analytics. We do not store the content of your prompts or responses. We are not responsible for the output of LLM providers."
-    },
-    "s3": {
-      "title": "Your account",
-      "body": "You are responsible for maintaining the security of your account and API keys. You must not share your account credentials. You must not use GateCtr to violate the terms of service of any LLM provider. You must not use GateCtr for illegal purposes."
-    },
-    "s4": {
-      "title": "Billing",
-      "body": "Paid plans are billed monthly or annually via Stripe. GateCtr does not charge for tokens — you pay your LLM provider directly. Refunds are handled on a case-by-case basis. Downgrading or cancelling takes effect at the end of the current billing period."
-    },
-    "s5": {
-      "title": "Availability",
-      "body": "We aim for 99.9% uptime on paid plans. We do not guarantee uninterrupted service. Scheduled maintenance will be announced in advance. We are not liable for losses caused by service interruptions."
-    },
-    "s6": {
-      "title": "Limitation of liability",
-      "body": "GateCtr is provided as-is. We are not liable for indirect, incidental, or consequential damages arising from your use of the service, including but not limited to unexpected LLM costs, data loss, or service interruptions."
-    },
-    "s7": {
-      "title": "Contact",
-      "body": "For legal inquiries:"
-    }
-  },
-  "cookies": {
-    "title": "Cookie Policy",
-    "description": "How GateCtr uses cookies and similar technologies.",
-    "eyebrow": "Legal",
-    "lastUpdated": "Last updated: March 2026",
-    "s1": {
-      "title": "What are cookies",
-      "body": "Cookies are small text files stored on your device when you visit a website. GateCtr uses cookies to keep you signed in, remember your preferences, and understand how the service is used."
-    },
-    "s2": {
-      "title": "Cookies we use",
-      "body": "We use three categories of cookies:",
-      "essential": {
-        "label": "Essential",
-        "desc": "Required for authentication and security. Set by Clerk to maintain your session. Cannot be disabled."
+      "title": "1. Who We Are",
+      "body": "GateCtr is an LLM middleware gateway. We sit between your application and LLM providers (OpenAI, Anthropic, Mistral, Gemini) to optimize, route, and enforce budgets on your API calls. GateCtr is operated by GateCtr SAS. For privacy inquiries, contact us at privacy@gatectr.com.",
+      "item1": {
+        "label": "Service",
+        "desc": "LLM middleware gateway — routing, budget enforcement, prompt optimization, analytics."
       },
-      "functional": {
-        "label": "Functional",
-        "desc": "Remember your preferences such as language and theme. Stored in localStorage."
+      "item2": {
+        "label": "Data controller",
+        "desc": "GateCtr SAS, reachable at privacy@gatectr.com."
       },
-      "analytics": {
-        "label": "Analytics",
-        "desc": "Vercel Analytics collects anonymous usage data to help us improve the service. No personal data is shared."
+      "item3": {
+        "label": "Scope",
+        "desc": "This policy applies to all users of gatectr.com, app.gatectr.com, and the GateCtr API."
+      }
+    },
+    "s2": {
+      "title": "2. Data We Collect",
+      "body": "We collect only what is necessary to operate the service. We do not collect the content of your prompts or LLM responses.",
+      "item1": {
+        "label": "Account data",
+        "desc": "Email address, name, and authentication data provided when you sign up via Clerk (Google OAuth or email)."
+      },
+      "item2": {
+        "label": "Usage metadata",
+        "desc": "Token counts, request counts, model used, provider, latency, cost estimates, and timestamps. Never the content of prompts or responses."
+      },
+      "item3": {
+        "label": "Provider keys",
+        "desc": "Your LLM API keys, stored AES-256 encrypted at rest. We never log, display, or transmit them in plaintext."
+      },
+      "item4": {
+        "label": "Technical data",
+        "desc": "IP address, user agent, browser type, and request timestamps — used for security, abuse prevention, and analytics."
       }
     },
     "s3": {
-      "title": "Third-party cookies",
-      "body": "Clerk sets authentication cookies scoped to app.gatectr.com. Stripe may set cookies during checkout. We do not use advertising or tracking cookies."
+      "title": "3. How We Use Your Data",
+      "body": "We use your data exclusively to:",
+      "item1": "Provide the service: route API calls, enforce budgets, compress prompts, and display analytics.",
+      "item2": "Send transactional emails: account creation, budget alerts, onboarding completion, and billing events.",
+      "item3": "Improve reliability: monitor errors, latency, and system health via Sentry and Vercel Analytics.",
+      "item4": "Comply with legal obligations: respond to lawful requests from authorities when required."
     },
     "s4": {
-      "title": "Managing cookies",
-      "body": "You can control cookies through your browser settings. Disabling essential cookies will prevent you from signing in. Disabling functional cookies will reset your preferences on each visit."
+      "title": "4. Data Retention",
+      "body": "We retain data for the minimum period necessary to provide the service.",
+      "col1": "Data type",
+      "col2": "What it includes",
+      "col3": "Retention",
+      "row1": {
+        "type": "Usage logs",
+        "data": "Token counts, request counts, cost",
+        "retention": "30 days (Free/Pro) · 90 days (Team)"
+      },
+      "row2": {
+        "type": "Account data",
+        "data": "Email, name, plan",
+        "retention": "Duration of account"
+      },
+      "row3": {
+        "type": "Provider keys",
+        "data": "Encrypted API keys",
+        "retention": "Until revoked by user"
+      },
+      "row4": {
+        "type": "Audit logs",
+        "data": "Security events, admin actions",
+        "retention": "90 days (Team) · Unlimited (Enterprise)"
+      }
     },
     "s5": {
-      "title": "Contact",
+      "title": "5. Third-Party Services",
+      "body": "We use the following sub-processors to operate GateCtr. Each processes data under their own privacy policy and DPA.",
+      "clerk": "Authentication and session management. Processes email and OAuth data.",
+      "stripe": "Payment processing. Processes billing information and invoices.",
+      "neon": "PostgreSQL database hosting (AWS us-east-1). Stores account and usage data.",
+      "upstash": "Redis caching. Stores temporary session and rate-limit data.",
+      "sentry": "Error monitoring. Receives anonymized stack traces and performance data.",
+      "vercel": "Hosting and edge network. Processes all HTTP requests.",
+      "note": "We do not share your data with LLM providers. Your API key is used directly from your infrastructure — GateCtr acts as a transparent proxy."
+    },
+    "s6": {
+      "title": "6. Your Rights",
+      "body": "Depending on your jurisdiction, you have the following rights regarding your personal data:",
+      "item1": "Right of access — request a copy of all data we hold about you.",
+      "item2": "Right to rectification — correct inaccurate or incomplete data.",
+      "item3": "Right to erasure — request deletion of your account and associated data.",
+      "item4": "Right to portability — export your usage data in CSV format from the dashboard.",
+      "item5": "Right to object — opt out of non-essential data processing.",
+      "how": "To exercise any of these rights, email privacy@gatectr.com. We will respond within 30 days. Account deletion can also be initiated directly from Settings → Account."
+    },
+    "s7": {
+      "title": "7. Security",
+      "body": "We implement industry-standard security measures: AES-256 encryption for API keys at rest, TLS 1.3 for all data in transit, multi-tenant isolation at the database level, role-based access control (RBAC) for team accounts, and regular security audits. We do not store LLM prompt content. In the event of a data breach affecting your personal data, we will notify you within 72 hours as required by applicable law."
+    },
+    "s8": {
+      "title": "8. International Transfers",
+      "body": "GateCtr is hosted on Vercel and Neon infrastructure primarily in the United States (AWS us-east-1). If you are located in the European Economic Area (EEA), your data may be transferred to and processed in the United States. We rely on Standard Contractual Clauses (SCCs) approved by the European Commission for such transfers."
+    },
+    "s9": {
+      "title": "9. Changes to This Policy",
+      "body": "We may update this Privacy Policy from time to time. We will notify you of material changes by email or by displaying a notice in the dashboard. The date at the top of this page reflects the most recent update. Continued use of GateCtr after changes constitutes acceptance of the updated policy."
+    },
+    "contact": {
+      "eyebrow": "Contact",
+      "title": "Privacy inquiries",
+      "body": "For questions, requests, or concerns about your personal data:"
+    },
+    "related": {
+      "terms": "Terms of Service",
+      "cookies": "Cookie Policy"
+    }
+  },
+  "terms": {
+    "meta": {
+      "title": "Terms of Service",
+      "description": "The terms and conditions governing your use of GateCtr."
+    },
+    "eyebrow": "Legal",
+    "title": "Terms of Service",
+    "lastUpdated": "Last updated: March 25, 2026",
+    "intro": "These Terms of Service govern your access to and use of GateCtr. By creating an account or using the service, you agree to be bound by these terms. If you do not agree, do not use GateCtr. These terms apply to all users, including free and paid plans.",
+    "s1": {
+      "title": "1. The Service",
+      "body": "GateCtr provides a middleware gateway for LLM API calls. The service includes: request routing to LLM providers (OpenAI, Anthropic, Mistral, Gemini), budget enforcement and alerting, prompt compression via the Context Optimizer, usage analytics and reporting, and webhook notifications. GateCtr acts as a transparent proxy. We do not store the content of your prompts or LLM responses. We are not responsible for the output, accuracy, or availability of any LLM provider."
+    },
+    "s2": {
+      "title": "2. Eligibility",
+      "body": "To use GateCtr, you must:",
+      "item1": "Be at least 18 years old or have the legal capacity to enter into contracts in your jurisdiction.",
+      "item2": "Provide accurate and complete information when creating your account.",
+      "item3": "Comply with the terms of service of any LLM provider you connect through GateCtr."
+    },
+    "s3": {
+      "title": "3. Account Responsibilities",
+      "body": "You are solely responsible for:",
+      "item1": "Maintaining the confidentiality of your account credentials and API keys.",
+      "item2": "All activity that occurs under your account, including usage by team members.",
+      "item3": "Ensuring your use of GateCtr complies with applicable laws and regulations.",
+      "item4": "Promptly notifying us at security@gatectr.com if you suspect unauthorized access to your account."
+    },
+    "s4": {
+      "title": "4. Acceptable Use",
+      "body": "You agree not to use GateCtr to:",
+      "item1": "Violate any applicable law, regulation, or third-party rights.",
+      "item2": "Circumvent rate limits, abuse the service, or attempt to gain unauthorized access to our systems.",
+      "item3": "Resell or sublicense access to GateCtr without our written consent."
+    },
+    "s5": {
+      "title": "5. Billing and Payments",
+      "body": "GateCtr does not charge for tokens — you pay your LLM provider directly using your own API key. GateCtr charges for access to the platform (routing, optimization, analytics). Paid plans are billed monthly or annually via Stripe. Prices are displayed exclusive of applicable taxes. Upgrades take effect immediately. Downgrades and cancellations take effect at the end of the current billing period. We do not offer refunds except where required by law or at our sole discretion. For billing disputes, contact billing@gatectr.com within 30 days of the charge."
+    },
+    "s6": {
+      "title": "6. Intellectual Property",
+      "body": "GateCtr and its content, features, and functionality are owned by GateCtr SAS and are protected by intellectual property laws. You retain all rights to your data, prompts, and API keys. By using GateCtr, you grant us a limited license to process your data solely to provide the service.",
+      "item1": "You may not copy, modify, or distribute GateCtr's software without our written consent.",
+      "item2": "You may not reverse-engineer or attempt to extract the source code of GateCtr.",
+      "item3": "The GateCtr name, logo, and trademarks may not be used without our prior written permission."
+    },
+    "s7": {
+      "title": "7. Availability and SLA",
+      "body": "We target 99.9% uptime for paid plans (Pro, Team, Enterprise). We do not guarantee uninterrupted service. Scheduled maintenance will be announced at least 24 hours in advance via status.gatectr.com. We are not liable for losses caused by service interruptions, including unexpected LLM costs incurred during downtime."
+    },
+    "s8": {
+      "title": "8. Limitation of Liability",
+      "body": "To the maximum extent permitted by applicable law, GateCtr SAS shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including but not limited to: unexpected LLM provider costs, loss of data, loss of revenue, or business interruption. Our total liability to you for any claim arising from these terms or your use of the service shall not exceed the amount you paid to GateCtr in the 12 months preceding the claim."
+    },
+    "s9": {
+      "title": "9. Termination",
+      "body": "You may terminate your account at any time from Settings → Account. We may suspend or terminate your account if you violate these terms, engage in fraudulent activity, or fail to pay amounts owed. Upon termination, your data will be retained for 30 days before deletion, during which you may export it from the dashboard."
+    },
+    "s10": {
+      "title": "10. Governing Law",
+      "body": "These terms are governed by the laws of France. Any disputes arising from these terms shall be subject to the exclusive jurisdiction of the courts of Paris, France, unless otherwise required by applicable consumer protection law in your jurisdiction."
+    },
+    "contact": {
+      "eyebrow": "Contact",
+      "title": "Legal inquiries",
+      "body": "For questions about these Terms of Service:"
+    },
+    "related": {
+      "privacy": "Privacy Policy",
+      "cookies": "Cookie Policy"
+    }
+  },
+  "cookies": {
+    "meta": {
+      "title": "Cookie Policy",
+      "description": "How GateCtr uses cookies and similar technologies."
+    },
+    "eyebrow": "Legal",
+    "title": "Cookie Policy",
+    "lastUpdated": "Last updated: March 25, 2026",
+    "intro": "GateCtr uses cookies and similar technologies to keep you signed in, remember your preferences, and understand how the service is used. This policy explains what cookies we use, why, and how you can control them.",
+    "s1": {
+      "title": "1. What Are Cookies",
+      "body": "Cookies are small text files stored on your device when you visit a website. They allow the website to recognize your device on subsequent visits. GateCtr uses both session cookies (deleted when you close your browser) and persistent cookies (stored for a defined period). We also use localStorage for client-side preference storage."
+    },
+    "s2": {
+      "title": "2. Cookies We Use",
+      "body": "The following cookies are set when you use GateCtr:",
+      "col1": "Cookie",
+      "col2": "Purpose",
+      "col3": "Type",
+      "col4": "Duration",
+      "row1": {
+        "name": "__session",
+        "purpose": "Clerk authentication session token. Required to keep you signed in.",
+        "type": "Essential",
+        "duration": "Session"
+      },
+      "row2": {
+        "name": "__client_uat",
+        "purpose": "Clerk client update token. Ensures session consistency across tabs.",
+        "type": "Essential",
+        "duration": "Session"
+      },
+      "row3": {
+        "name": "NEXT_LOCALE",
+        "purpose": "Remembers your language preference (English or French).",
+        "type": "Functional",
+        "duration": "1 year"
+      },
+      "row4": {
+        "name": "_vercel_analytics",
+        "purpose": "Anonymous usage analytics collected by Vercel. No personal data.",
+        "type": "Analytics",
+        "duration": "90 days"
+      },
+      "row5": {
+        "name": "stripe_*",
+        "purpose": "Set by Stripe during checkout to prevent fraud and ensure payment security.",
+        "type": "Essential",
+        "duration": "Session"
+      }
+    },
+    "s3": {
+      "title": "3. Third-Party Cookies",
+      "body": "Clerk sets authentication cookies scoped to app.gatectr.com. These cookies are required for the service to function and cannot be disabled without preventing sign-in. Stripe may set cookies during the checkout process for fraud prevention. We do not use advertising cookies, tracking pixels, or third-party analytics that identify you personally."
+    },
+    "s4": {
+      "title": "4. Managing Cookies",
+      "body": "You can control cookies through your browser settings. Here is how to manage cookies in the most common browsers:",
+      "chrome": {
+        "label": "Chrome",
+        "desc": "Settings → Privacy and security → Cookies and other site data."
+      },
+      "firefox": {
+        "label": "Firefox",
+        "desc": "Settings → Privacy & Security → Cookies and Site Data."
+      },
+      "safari": {
+        "label": "Safari",
+        "desc": "Preferences → Privacy → Manage Website Data."
+      },
+      "edge": {
+        "label": "Edge",
+        "desc": "Settings → Cookies and site permissions → Cookies and site data."
+      },
+      "warning": "Disabling essential cookies (Clerk session cookies) will prevent you from signing in to GateCtr. Disabling functional cookies will reset your language and theme preferences on each visit."
+    },
+    "s5": {
+      "title": "5. Changes to This Policy",
+      "body": "We may update this Cookie Policy from time to time. We will notify you of material changes by email or by displaying a notice in the dashboard. The date at the top of this page reflects the most recent update."
+    },
+    "contact": {
+      "eyebrow": "Contact",
+      "title": "Cookie inquiries",
       "body": "For questions about our use of cookies:"
+    },
+    "related": {
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Service"
     }
   }
 }
