@@ -228,3 +228,72 @@ def test_sync_gatectr_models_delegates():
     assert isinstance(result, ModelsResponse)
     assert result.models[0].model_id == "gpt-4o"
     assert result.request_id == "req_sync_models"
+
+
+# ─── usage_trends ─────────────────────────────────────────────────────────────
+
+async def test_usage_trends_returns_series(client: GateCtr, mock_api: object) -> None:
+    """usage_trends() returns a UsageTrendsResponse with correct series."""
+    res = await client.usage_trends()
+    assert res.granularity == "day"
+    assert res.from_ == "2025-01-01"
+    assert res.to == "2025-01-07"
+    assert len(res.series) == 2
+    assert res.series[0].date == "2025-01-01"
+    assert res.series[0].total_tokens == 10000
+
+
+# ─── webhooks ─────────────────────────────────────────────────────────────────
+
+async def test_list_webhooks(client: GateCtr, mock_api: object) -> None:
+    res = await client.list_webhooks()
+    assert len(res.webhooks) == 1
+    assert res.webhooks[0].id == "wh_test123"
+
+
+async def test_create_webhook(client: GateCtr, mock_api: object) -> None:
+    res = await client.create_webhook("My Webhook", "https://example.com/hook")
+    assert res.id == "wh_test123"
+    assert res.name == "My Webhook"
+
+
+async def test_update_webhook(client: GateCtr, mock_api: object) -> None:
+    res = await client.update_webhook("wh_test123", name="Updated")
+    assert res.name == "Updated"
+
+
+async def test_delete_webhook(client: GateCtr, mock_api: object) -> None:
+    await client.delete_webhook("wh_test123")  # should not raise
+
+
+# ─── budget ───────────────────────────────────────────────────────────────────
+
+async def test_get_budget(client: GateCtr, mock_api: object) -> None:
+    res = await client.get_budget()
+    assert res.user_budget is not None
+    assert res.user_budget.id == "bgt_test123"
+    assert res.project_budgets == []
+
+
+async def test_set_budget(client: GateCtr, mock_api: object) -> None:
+    res = await client.set_budget(max_tokens_per_day=100000)
+    assert res.id == "bgt_test123"
+    assert res.max_tokens_per_day == 100000
+
+
+# ─── provider_keys ────────────────────────────────────────────────────────────
+
+async def test_list_provider_keys(client: GateCtr, mock_api: object) -> None:
+    res = await client.list_provider_keys()
+    assert len(res) == 1
+    assert res[0].provider == "openai"
+
+
+async def test_add_provider_key(client: GateCtr, mock_api: object) -> None:
+    res = await client.add_provider_key("openai", "sk-test")
+    assert res.id == "pk_test123"
+    assert res.provider == "openai"
+
+
+async def test_remove_provider_key(client: GateCtr, mock_api: object) -> None:
+    await client.remove_provider_key("pk_test123")  # should not raise

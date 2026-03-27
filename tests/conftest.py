@@ -127,6 +127,61 @@ def mock_usage_body() -> dict[str, object]:
     }
 
 
+def mock_usage_trends_body() -> dict[str, object]:
+    return {
+        "granularity": "day",
+        "from": "2025-01-01",
+        "to": "2025-01-07",
+        "series": [
+            {"date": "2025-01-01", "total_tokens": 10000, "saved_tokens": 2000, "total_requests": 50, "total_cost_usd": 0.3},
+            {"date": "2025-01-02", "total_tokens": 12000, "saved_tokens": 2400, "total_requests": 60, "total_cost_usd": 0.36},
+        ],
+    }
+
+
+def mock_webhook_body() -> dict[str, object]:
+    return {
+        "id": "wh_test123",
+        "name": "My Webhook",
+        "url": "https://example.com/hook",
+        "events": ["budget.alert"],
+        "is_active": True,
+        "last_fired_at": None,
+        "fail_count": 0,
+        "success_count": 5,
+        "created_at": "2025-01-01T00:00:00Z",
+    }
+
+
+def mock_budget_body() -> dict[str, object]:
+    return {
+        "id": "bgt_test123",
+        "user_id": "user_abc",
+        "project_id": None,
+        "max_tokens_per_day": 100000,
+        "max_tokens_per_month": None,
+        "max_cost_per_day": None,
+        "max_cost_per_month": None,
+        "alert_threshold_pct": 80,
+        "hard_stop": False,
+        "notify_on_threshold": True,
+        "notify_on_exceeded": True,
+        "created_at": "2025-01-01T00:00:00Z",
+        "updated_at": "2025-01-01T00:00:00Z",
+    }
+
+
+def mock_provider_key_body() -> dict[str, object]:
+    return {
+        "id": "pk_test123",
+        "provider": "openai",
+        "name": "Default",
+        "is_active": True,
+        "last_used_at": None,
+        "created_at": "2025-01-01T00:00:00Z",
+    }
+
+
 # ---------------------------------------------------------------------------
 # Fixtures
 # ---------------------------------------------------------------------------
@@ -134,16 +189,7 @@ def mock_usage_body() -> dict[str, object]:
 
 @pytest.fixture
 def mock_api():
-    """Fixture that registers respx mock handlers for all GateCtr endpoints.
-
-    Registers:
-    - POST  https://test.gatectr.com/v1/complete  → mock_complete_body()
-    - POST  https://test.gatectr.com/v1/chat      → mock_chat_body()
-    - GET   https://test.gatectr.com/v1/models    → mock_models_body()
-    - GET   https://test.gatectr.com/v1/usage     → mock_usage_body()
-
-    All responses include the standard GateCtr headers.
-    """
+    """Fixture that registers respx mock handlers for all GateCtr endpoints."""
     with respx.mock(assert_all_called=False) as mock:
         mock.post(f"{_BASE_URL}/complete").mock(
             return_value=Response(200, json=mock_complete_body(), headers=_GATECTR_HEADERS)
@@ -156,6 +202,36 @@ def mock_api():
         )
         mock.get(f"{_BASE_URL}/usage").mock(
             return_value=Response(200, json=mock_usage_body(), headers=_GATECTR_HEADERS)
+        )
+        mock.get(f"{_BASE_URL}/usage/trends").mock(
+            return_value=Response(200, json=mock_usage_trends_body(), headers=_GATECTR_HEADERS)
+        )
+        mock.get(f"{_BASE_URL}/webhooks").mock(
+            return_value=Response(200, json={"webhooks": [mock_webhook_body()]}, headers=_GATECTR_HEADERS)
+        )
+        mock.post(f"{_BASE_URL}/webhooks").mock(
+            return_value=Response(201, json=mock_webhook_body(), headers=_GATECTR_HEADERS)
+        )
+        mock.patch(f"{_BASE_URL}/webhooks/wh_test123").mock(
+            return_value=Response(200, json={**mock_webhook_body(), "name": "Updated"}, headers=_GATECTR_HEADERS)
+        )
+        mock.delete(f"{_BASE_URL}/webhooks/wh_test123").mock(
+            return_value=Response(204)
+        )
+        mock.get(f"{_BASE_URL}/budget").mock(
+            return_value=Response(200, json={"user_budget": mock_budget_body(), "project_budgets": []}, headers=_GATECTR_HEADERS)
+        )
+        mock.post(f"{_BASE_URL}/budget").mock(
+            return_value=Response(200, json=mock_budget_body(), headers=_GATECTR_HEADERS)
+        )
+        mock.get(f"{_BASE_URL}/provider-keys").mock(
+            return_value=Response(200, json=[mock_provider_key_body()], headers=_GATECTR_HEADERS)
+        )
+        mock.post(f"{_BASE_URL}/provider-keys").mock(
+            return_value=Response(201, json=mock_provider_key_body(), headers=_GATECTR_HEADERS)
+        )
+        mock.delete(f"{_BASE_URL}/provider-keys/pk_test123").mock(
+            return_value=Response(200, json={"success": True})
         )
         yield mock
 
