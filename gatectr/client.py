@@ -21,6 +21,13 @@ from .types import (
     StreamChunk,
     UsageParams,
     UsageResponse,
+    UsageTrendsParams,
+    UsageTrendsResponse,
+    Webhook,
+    WebhooksListResponse,
+    Budget,
+    BudgetGetResponse,
+    ProviderKey,
 )
 
 try:
@@ -244,6 +251,116 @@ class GateCtr:
         )
         return UsageResponse.model_validate(resp.json())
 
+    async def usage_trends(self, params: UsageTrendsParams | None = None) -> UsageTrendsResponse:
+        """Fetch usage trends (time series) — GET /usage/trends. Requires scope: read."""
+        query: dict[str, str] = {}
+        if params:
+            if params.from_:
+                query["from"] = params.from_
+            if params.to:
+                query["to"] = params.to
+            if params.project_id:
+                query["projectId"] = params.project_id
+            if params.granularity:
+                query["granularity"] = params.granularity
+
+        resp = await http_request(
+            self._http,
+            method="GET",
+            url=f"{self._base_url}/usage/trends",
+            headers={},
+            params=query or None,
+            max_retries=self._max_retries,
+        )
+        return UsageTrendsResponse.model_validate(resp.json())
+
+    # ── Webhooks ──────────────────────────────────────────────────────────────
+
+    async def list_webhooks(self) -> WebhooksListResponse:
+        """List webhooks — GET /webhooks. Requires scope: read."""
+        resp = await http_request(
+            self._http, method="GET", url=f"{self._base_url}/webhooks",
+            headers={}, max_retries=self._max_retries,
+        )
+        return WebhooksListResponse.model_validate(resp.json())
+
+    async def create_webhook(self, name: str, url: str, events: list[str] | None = None) -> Webhook:
+        """Create a webhook — POST /webhooks. Requires scope: admin."""
+        body: dict[str, object] = {"name": name, "url": url}
+        if events is not None:
+            body["events"] = events
+        resp = await http_request(
+            self._http, method="POST", url=f"{self._base_url}/webhooks",
+            headers={"Content-Type": "application/json"}, json=body,
+            max_retries=self._max_retries,
+        )
+        return Webhook.model_validate(resp.json())
+
+    async def update_webhook(self, webhook_id: str, **kwargs: object) -> Webhook:
+        """Update a webhook — PATCH /webhooks/{id}. Requires scope: admin."""
+        resp = await http_request(
+            self._http, method="PATCH", url=f"{self._base_url}/webhooks/{webhook_id}",
+            headers={"Content-Type": "application/json"}, json=kwargs,
+            max_retries=self._max_retries,
+        )
+        return Webhook.model_validate(resp.json())
+
+    async def delete_webhook(self, webhook_id: str) -> None:
+        """Delete a webhook — DELETE /webhooks/{id}. Requires scope: admin."""
+        await http_request(
+            self._http, method="DELETE", url=f"{self._base_url}/webhooks/{webhook_id}",
+            headers={}, max_retries=self._max_retries,
+        )
+
+    # ── Budget ────────────────────────────────────────────────────────────────
+
+    async def get_budget(self) -> BudgetGetResponse:
+        """Get budget configuration — GET /budget. Requires scope: read."""
+        resp = await http_request(
+            self._http, method="GET", url=f"{self._base_url}/budget",
+            headers={}, max_retries=self._max_retries,
+        )
+        return BudgetGetResponse.model_validate(resp.json())
+
+    async def set_budget(self, **kwargs: object) -> Budget:
+        """Set budget — POST /budget. Requires scope: admin."""
+        resp = await http_request(
+            self._http, method="POST", url=f"{self._base_url}/budget",
+            headers={"Content-Type": "application/json"}, json=kwargs,
+            max_retries=self._max_retries,
+        )
+        return Budget.model_validate(resp.json())
+
+    # ── Provider Keys ─────────────────────────────────────────────────────────
+
+    async def list_provider_keys(self) -> list[ProviderKey]:
+        """List provider keys — GET /provider-keys. Requires scope: read."""
+        resp = await http_request(
+            self._http, method="GET", url=f"{self._base_url}/provider-keys",
+            headers={}, max_retries=self._max_retries,
+        )
+        return [ProviderKey.model_validate(k) for k in resp.json()]
+
+    async def add_provider_key(self, provider: str, api_key: str, name: str = "Default") -> ProviderKey:
+        """Add a provider key — POST /provider-keys. Requires scope: admin."""
+        resp = await http_request(
+            self._http, method="POST", url=f"{self._base_url}/provider-keys",
+            headers={"Content-Type": "application/json"},
+            json={"provider": provider, "apiKey": api_key, "name": name},
+            max_retries=self._max_retries,
+        )
+        return ProviderKey.model_validate(resp.json())
+
+    async def remove_provider_key(self, key_id: str, hard: bool = False) -> None:
+        """Remove a provider key — DELETE /provider-keys/{id}. Requires scope: admin."""
+        url = f"{self._base_url}/provider-keys/{key_id}"
+        if hard:
+            url += "?hard=true"
+        await http_request(
+            self._http, method="DELETE", url=url,
+            headers={}, max_retries=self._max_retries,
+        )
+
     async def aclose(self) -> None:
         await self._http.aclose()
 
@@ -291,3 +408,33 @@ class SyncGateCtr:
 
     def usage(self, params: UsageParams | None = None) -> UsageResponse:
         return asyncio.run(self._async.usage(params))
+
+    def usage_trends(self, params: UsageTrendsParams | None = None) -> UsageTrendsResponse:
+        return asyncio.run(self._async.usage_trends(params))
+
+    def list_webhooks(self) -> WebhooksListResponse:
+        return asyncio.run(self._async.list_webhooks())
+
+    def create_webhook(self, name: str, url: str, events: list[str] | None = None) -> Webhook:
+        return asyncio.run(self._async.create_webhook(name, url, events))
+
+    def update_webhook(self, webhook_id: str, **kwargs: object) -> Webhook:
+        return asyncio.run(self._async.update_webhook(webhook_id, **kwargs))
+
+    def delete_webhook(self, webhook_id: str) -> None:
+        asyncio.run(self._async.delete_webhook(webhook_id))
+
+    def get_budget(self) -> BudgetGetResponse:
+        return asyncio.run(self._async.get_budget())
+
+    def set_budget(self, **kwargs: object) -> Budget:
+        return asyncio.run(self._async.set_budget(**kwargs))
+
+    def list_provider_keys(self) -> list[ProviderKey]:
+        return asyncio.run(self._async.list_provider_keys())
+
+    def add_provider_key(self, provider: str, api_key: str, name: str = "Default") -> ProviderKey:
+        return asyncio.run(self._async.add_provider_key(provider, api_key, name))
+
+    def remove_provider_key(self, key_id: str, hard: bool = False) -> None:
+        asyncio.run(self._async.remove_provider_key(key_id, hard))

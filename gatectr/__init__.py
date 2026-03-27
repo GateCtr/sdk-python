@@ -21,6 +21,14 @@ from .types import (
     UsageCounts,
     UsageParams,
     UsageResponse,
+    UsageTrendsParams,
+    UsageTrendPoint,
+    UsageTrendsResponse,
+    Webhook,
+    WebhooksListResponse,
+    Budget,
+    BudgetGetResponse,
+    ProviderKey,
 )
 
 __all__ = [
@@ -45,4 +53,12 @@ __all__ = [
     "UsageResponse",
     "UsageCounts",
     "UsageByProject",
+    "UsageTrendsParams",
+    "UsageTrendPoint",
+    "UsageTrendsResponse",
+    "Webhook",
+    "WebhooksListResponse",
+    "Budget",
+    "BudgetGetResponse",
+    "ProviderKey",
 ]
