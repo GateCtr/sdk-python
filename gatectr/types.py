@@ -114,3 +114,93 @@ class GateCtrConfig:
     max_retries: int = 3
     optimize: bool = True
     route: bool = False
+
+
+# ─── Usage Trends ─────────────────────────────────────────────────────────────
+
+class UsageTrendsParams(BaseModel):
+    from_: str | None = Field(None, alias="from")
+    to: str | None = None
+    project_id: str | None = None
+    granularity: str | None = None  # "day" | "week" | "month"
+
+    model_config = {"populate_by_name": True}
+
+
+class UsageTrendPoint(BaseModel):
+    date: str
+    total_tokens: int
+    saved_tokens: int
+    total_requests: int
+    total_cost_usd: float
+
+
+class UsageTrendsResponse(BaseModel):
+    granularity: str
+    from_: str = Field(alias="from")
+    to: str
+    series: list[UsageTrendPoint]
+
+    model_config = {"populate_by_name": True}
+
+
+# ─── Webhooks ─────────────────────────────────────────────────────────────────
+
+class Webhook(BaseModel):
+    id: str
+    name: str
+    url: str
+    events: list[str]
+    is_active: bool
+    last_fired_at: str | None = None
+    fail_count: int
+    success_count: int
+    created_at: str
+
+
+class WebhooksListResponse(BaseModel):
+    webhooks: list[Webhook]
+
+
+# ─── Budget ───────────────────────────────────────────────────────────────────
+
+class Budget(BaseModel):
+    id: str
+    user_id: str | None = None
+    project_id: str | None = None
+    max_tokens_per_day: int | None = None
+    max_tokens_per_month: int | None = None
+    max_cost_per_day: float | None = None
+    max_cost_per_month: float | None = None
+    alert_threshold_pct: int
+    hard_stop: bool
+    notify_on_threshold: bool
+    notify_on_exceeded: bool
+    created_at: str
+    updated_at: str
+
+
+class BudgetProject(BaseModel):
+    id: str
+    name: str
+    slug: str
+
+
+class BudgetWithProject(Budget):
+    project: BudgetProject | None = None
+
+
+class BudgetGetResponse(BaseModel):
+    user_budget: Budget | None = None
+    project_budgets: list[BudgetWithProject]
+
+
+# ─── Provider Keys ────────────────────────────────────────────────────────────
+
+class ProviderKey(BaseModel):
+    id: str
+    provider: str
+    name: str
+    is_active: bool
+    last_used_at: str | None = None
+    created_at: str
